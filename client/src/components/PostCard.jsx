@@ -1,0 +1,39 @@
+import { Link } from "react-router-dom"
+
+const PostCard = ({ post }) => {
+  return (
+    <article className="bg-white p-4 rounded shadow-sm">
+      {/* Tampilkan gambar jika ada */}
+      {post.coverImage && (
+        <Link to={`/post/${post._id}`}>
+          <img
+            src={post.coverImage}
+            alt={post.title}
+            className="w-full h-48 object-cover rounded mb-3"
+          />
+        </Link>
+      )}
+
+      {/* Judul blog */}
+      <Link to={`/post/${post._id}`}>
+        <h2 className="text-xl font-semibold">{post.title}</h2>
+      </Link>
+      {/* Info author dan tanggal post dibuat */}
+      <p className="text-sm text-gray-500">
+        oleh {post.author?.username || "Unknown"} —{" "}
+        {new Date(post.createdAt).toLocaleString()}
+      </p>
+      {/* Kutipan singkat isi artikel */}
+      <p className="mt-2">{post.excerpt}...</p>
+      {/* Link menuju detail blog  */}
+      <Link
+        to={`/post/${post._id}`}
+        className="text-blue-600 mt-2 inline-block"
+      >
+        Selengkapnya
+      </Link>
+    </article>
+  )
+}
+
+export default PostCard
