@@ -1,40 +1,50 @@
-import mongoose from "mongoose"
+import { DataTypes, Model } from "sequelize"
+import sequelize from "../config/database.js"
+import User from "./userModel.js"
 
-// Helper untuk membersihkan HTML
+// Utility function untuk menghapus semua tag html dari teks
 const stripHtml = (html = "") => html.replace(/<[^>]+>/g, "").trim()
 
-// Definisi schema Post
-const postSchema = new mongoose.Schema({
-    title: {
-        type: String,
-        required: true,
-    },
-    content: {
-        type: String,
-        required: true,
-    },
-    excerpt: {
-        type: String,
-    },
-    coverImage: {
-        type: String,
-    },
-    author: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true,
-    },
-}, { timestamps: true })
+// Definisi model User
+class Post extends Model {}
 
-// Hook sebelum save/update agar auto generate excerpt
-postSchema.pre("save", function (next) {
-    if (!this.excerpt && this.content) {
-        this.excerpt = stripHtml(this.content).slice(0, 200)
-    } else if (this.excerpt) {
-        this.excerpt = stripHtml(this.excerpt).slice(0, 200)
+// Inisialisasi struktur tabel Post
+Post.init(
+    {
+        title: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        content: {
+            type: DataTypes.TEXT("long"),
+            allowNull: false,
+        },
+        excerpt: {
+            type: DataTypes.STRING(300),
+            allowNull: true,
+        },
+        coverImage: {
+            type: DataTypes.STRING,
+        },
+    },
+    {
+        sequelize,
+        modelName: "Post",
+        // Hook yang berjalan sebelum data disimpan
+        hooks: {
+            beforeSave: (post) => {
+                // Otomatis membuat excerpt dari isi content (200 karakter pertama)
+                if (!post.excerpt && post.content) {
+                    post.excerpt = stripHtml(post.content).slice(0, 200)
+                }
+            },
+        },
     }
+)
 
-    next()
-})
+// Relasi: satu user bisa mempunyai banyak post
+User.hasMany(Post, { foreignKey: "authorId", onDelete: "CASCADE" }) // Post ikut terhapus jika user dihapus
+// Relasi: satu post dimiliki oleh satu user (author)
+Post.belongsTo(User, { foreignKey: "authorId", as: "author" })
 
-export default mongoose.model("Post", postSchema)
+export default Post

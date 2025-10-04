@@ -27,7 +27,7 @@ const Home = () => {
   return (
     <div className="grid md:grid-cols-2 gap-4">
       {list.map((p) => (
-        <PostCard key={p._id} post={p} /> // Tampilkan tiap postingan menggunakan PostCard
+        <PostCard key={p.id} post={p} /> // Tampilkan tiap postingan menggunakan PostCard
       ))}
     </div>
   )

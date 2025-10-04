@@ -9,18 +9,18 @@ const protect = async (req, res, next) => {
 
         // Jika token tidak ada, kembalikan error 401 (unauthorized)
         if (!token) {
-            res.status(401);
-            throw new Error("Not authorized, token missing!")
+            return res.status(401).json({ messsage: "Not authorized, token missing!" })
         }
 
         // Verifikasi token menggunakan secret JWT
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
         
         // Cari user berdasarkan ID dari token, exclude password
-        const user = await User.findById(decoded.id).select("-password")
+        const user = await User.findByPk(decoded.id, {
+            attributes: { exclude: ["password"] },
+        })
         if (!user) {
-            res.status(401);
-            throw new Error("Not authorized, user not found!")
+            return res.status(401).json({message: "Not authorized, user not found!" })
         }
 
         // Simpan data user
@@ -28,8 +28,8 @@ const protect = async (req, res, next) => {
         next()
     } catch (error) {
         // Jika ada error, kembalikan status 401
-        res.status(401)
-        next(error)
+        console.error("Auth Middleware Error: ", error.message)
+        return res.status(401).json({ message: "Invalid or expired token!" })
     }
 }
 

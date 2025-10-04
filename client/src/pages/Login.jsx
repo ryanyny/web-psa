@@ -35,7 +35,7 @@ const Login = () => {
         required />
       {/* Input password */}
       <input
-        type="text"
+        type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         placeholder="Kata Sandi"

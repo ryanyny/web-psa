@@ -3,17 +3,26 @@ import cors from "cors"
 import cookieParser from "cookie-parser"
 import path from "path"
 import config from "./config/config.js"
-import connectDb from "./config/database.js"
+import { connectDb } from "./config/database.js"
+import sequelize from "./config/database.js"
 import errorMiddleware from "./middlewares/errorMiddleware.js"
 import authRoutes from "./routes/authRoutes.js"
 import postRoutes from "./routes/postRoutes.js"
+import "./models/userModel.js"
+import "./models/postModel.js"
 
 // Inisialisasi express
 const app = express()
 const PORT = config.port
 
 // Connect ke database
-connectDb()
+connectDb().then(async () => {
+    console.log("✅ All models synchronized with MySQL!")
+
+    if (!process.env.DB_NAME || !process.env.DB_USER || !process.env.DB_HOST) {
+        throw new Error("❌ Missing required DB environment variables!")
+    }
+})
 
 // Setup CORS
 app.use(

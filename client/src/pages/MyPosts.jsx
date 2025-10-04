@@ -16,7 +16,7 @@ const MyPosts = () => {
 
         // Filter post yang hanya dibuat oleh user yang login
         const mine = res.data.filter(
-          (p) => String(p.author?._id || p.author) === String(user._id)
+          (p) => String(p.author?.id || p.author) === String(user.id)
         )
 
         setList(mine) // Simpan hasil filter ke state
@@ -29,13 +29,13 @@ const MyPosts = () => {
     fetch()
   }, [user])
 
-  if (loading) return <div>Loading...</div>
+  if (loading) return <div>Memuat...</div>
   if (!list.length) return <div>Kamu belum nulis apa-apa nih.</div>
 
   return (
     <div className="grid md:grid-cols-2 gap-4">
       {list.map((p) => (
-        <PostCard key={p._id} post={p} /> // Tampilkan tiap post menggunakan PostCard
+        <PostCard key={p.id} post={p} /> // Tampilkan tiap post menggunakan PostCard
       ))}
     </div>
   )

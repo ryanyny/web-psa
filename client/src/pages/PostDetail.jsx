@@ -41,7 +41,7 @@ const PostDetail = () => {
   if (!post) return <div>Post not found</div>
 
   // Cek apakah user yang login adalah author post
-  const isAuthor = user && user._id === String(post.author?._id || post.author)
+  const isAuthor = user && user.id === Number(post.author?.id || post.author)
 
   return (
     <div className="bg-white p-6 rounded shadow">
@@ -65,7 +65,7 @@ const PostDetail = () => {
       {/* Tampilkan tombol Ubah dan Hapus jika user adalah author */}
       {isAuthor && (
         <div className="mt-4 flex gap-2">
-          <Link to={`/edit/${post._id}`} className="px-3 py-1 border rounded">
+          <Link to={`/edit/${post.id}`} className="px-3 py-1 border rounded">
             Ubah
           </Link>
           <button

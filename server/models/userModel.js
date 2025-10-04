@@ -1,40 +1,47 @@
-import mongoose from "mongoose"
+import { DataTypes, Model } from "sequelize"
 import bcrypt from "bcrypt"
+import sequelize from "../config/database.js"
 
-// Definisi schema User
-const userSchema = new mongoose.Schema({
-    username: {
-        type: String,
-        required: true,
-        unique: true,
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true,
-    },
-    password: {
-        type: String,
-        required: true,
-    },
-}, { timestamps: true })
-
-// Middleware pre save
-userSchema.pre("save", async function (next) {
-    // Jika password tidak diubah, skip proses hashing
-    if (!this.isModified("password")) return next()
-
-    // Generate salt & hash password sebelum disimpan ke database
-    const salt = await bcrypt.genSalt(10)
-    this.password = await bcrypt.hash(this.password, salt)
-
-    next()
-})
-
-// Method untuk mengecek pasword saat login
-userSchema.methods.matchPassword = async function (enteredPassword) {
-    // Bandingkan password yang diinput user dengan hash di database
-    return await bcrypt.compare(enteredPassword, this.password)
+// Definisi model User
+class User extends Model {
+    // Method untuk compare password input dengan hash di database
+    async matchPassword(enteredPassword) {
+        return await bcrypt.compare(enteredPassword, this.password)
+    }
 }
 
-export default mongoose.model("User", userSchema)
+// Inisialisasi struktur tabel User
+User.init(
+    {
+        username: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            unique: true,
+        },
+        email: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            unique: true,
+        },
+        password: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+    },
+    {
+        sequelize,
+        modelName: "User",
+        // Hook yang berjalan sebelum data disimpan
+        hooks: {
+            beforeSave: async (user) => {
+                // Hash ulang jika password diubah
+                if (user.changed("password")) {
+                    const salt = await bcrypt.genSalt(10)
+                    user.password = await bcrypt.hash(user.password, salt)
+                }
+            },
+        },
+    }
+)
+
+export default User

@@ -1,4 +1,5 @@
 import Post from "../models/postModel.js"
+import User from "../models/userModel.js"
 
 // ========================
 // CREATE POST
@@ -9,7 +10,7 @@ export const createPost = async (req, res, next) => {
         // validasi input
         if (!title || !content) {
             res.status(400)
-            throw new Error("Title and content are required!")
+            throw new Error("Please fill in all fields!")
         }
 
         // Buat post baru, author diambil dari req.user (authMiddleware)
@@ -17,10 +18,13 @@ export const createPost = async (req, res, next) => {
             title,
             content,
             coverImage: req.file ? `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}` : null,
-            author: req.user._id,
+            authorId: req.user.id,
         })
 
-        res.status(201).json(post)
+        res.status(201).json({
+            message: "Post created successfully!",
+            post,
+        })
     } catch (error) {
         next(error)
     }
@@ -31,9 +35,14 @@ export const createPost = async (req, res, next) => {
 // ========================
 export const getAllPosts =  async (req, res, next) => {
     try {
-        const posts = await Post.find()
-            .populate("author", "username") // Tampilkan username author
-            .sort({ createdAt: -1 })        // Urutkan dari terbaru
+        const posts = await Post.findAll({
+            include: {
+                model: User,
+                as: "author",
+                attributes: ["id", "username", "email"], // Tampilkan username author
+            },
+            order: [["createdAt", "DESC"]] // Urutkan dari terbaru
+        })   
         
         res.json(posts)
     } catch (error) {
@@ -46,7 +55,13 @@ export const getAllPosts =  async (req, res, next) => {
 // ========================
 export const getPostById = async (req, res, next) => {
     try {
-        const post = await Post.findById(req.params.id).populate("author", "username")
+        const post = await Post.findByPk(req.params.id, {
+            include: {
+                model: User,
+                as: "author",
+                attributes: ["id", "username", "email"],
+            },
+        })
         if (!post) {
             res.status(400)
             throw new Error("Post not found!")
@@ -63,28 +78,31 @@ export const getPostById = async (req, res, next) => {
 // ========================
 export const updatePost = async (req, res, next) => {
     try {
-        const post = await Post.findById(req.params.id)
+        const post = await Post.findByPk(req.params.id)
         if (!post) {
             res.status(404)
             throw new Error("Post not found!")
         }
 
         // Cek apakah user adalah author
-        if (post.author.toString() !== req.user._id.toString()) {
+        if (post.authorId !== req.user.id) {
             res.status(403)
             throw new Error("Not authorized to update this post!")
         }
 
         // Update field post
-        const { title, content, coverImage } = req.body
-        post.title = title || post.title
-        post.content = content || post.content
+        post.title = req.body.title || post.title
+        post.content = req.body.content || post.content
+        post.excerpt = req.body.excerpt || post.excerpt
         if (req.file) {
             post.coverImage = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`
         }
 
-        const updated = await post.save()
-        res.json(updated)
+        await post.save()
+        res.json({
+            message: "Post updated successfully!",
+            post,
+        })
     } catch (error) {
         next(error)
     }
@@ -95,20 +113,20 @@ export const updatePost = async (req, res, next) => {
 // ========================
 export const deletePost = async (req, res, next) => {
     try {
-        const post = await Post.findById(req.params.id)
+        const post = await Post.findByPk(req.params.id)
         if (!post) {
             res.status(400)
             throw new Error("Post not found!")
         }
 
         // Cek apakah user adalah author
-        if (post.author.toString() !== req.user._id.toString()) {
+        if (post.authorId !== req.user.id) {
             res.status(403)
             throw new Error("Not authorized to delete this post")
         }
 
-        await post.deleteOne()
-        res.json({ message: "Post deleted!" })
+        await post.destroy()
+        res.json({ message: "Post deleted successfully!" })
     } catch (error) {
         next(error)
     }

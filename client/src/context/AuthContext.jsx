@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
     // Fungsi login
     const login = async (data) => {
         const res = await auth.login(data)
-        setUser(res.data)
+        setUser(res.data.user)
 
         return res
     }
@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }) => {
     // Fungsi register
     const register = async (data) => {
         const res = await auth.register(data)
-        setUser(res.data)
+        setUser(res.data.user)
 
         return res
     }
