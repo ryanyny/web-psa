@@ -7,9 +7,15 @@ import { connectDb } from "./config/database.js"
 import sequelize from "./config/database.js"
 import errorMiddleware from "./middlewares/errorMiddleware.js"
 import authRoutes from "./routes/authRoutes.js"
-import postRoutes from "./routes/postRoutes.js"
+import postRoutes from "./routes/blog/postRoutes.js"
+import partnerRoutes from "./routes/landing/partnerRoutes.js"
+import participantRoutes from "./routes/landing/participantRoutes.js"
+import programRoutes from "./routes/landing/programRoutes.js"
 import "./models/userModel.js"
 import "./models/postModel.js"
+import "./models/participantModel.js"
+import "./models/partnerModel.js"
+import "./models/programModel.js"
 
 // Inisialisasi express
 const app = express()
@@ -39,7 +45,14 @@ app.use(cookieParser())
 // Serve file statis dari folder "uploads"
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")))
 
-// Route prefix
+// ========================
+// ROUTE PREFIX
+// ========================
+// Landing page & dahboard admin
+app.use("/api/mitra", partnerRoutes)
+app.use("/api/peserta", participantRoutes)
+app.use("/api/program", programRoutes)
+// Blog
 app.use("/api/auth", authRoutes)
 app.use("/api/posts", postRoutes)
 

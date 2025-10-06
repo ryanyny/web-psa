@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from "react"
-import { posts } from "../http/index.js"
-import AuthContext from "../context/AuthContext.jsx"
-import PostCard from "../components/PostCard.jsx"
+import { posts } from "../../http/index.js"
+import AuthContext from "../../context/AuthContext.jsx"
+import PostCard from "../../components/blog/PostCard.jsx"
 
 const MyPosts = () => {
   const { user } = useContext(AuthContext)

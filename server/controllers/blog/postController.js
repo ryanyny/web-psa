@@ -1,5 +1,5 @@
-import Post from "../models/postModel.js"
-import User from "../models/userModel.js"
+import Post from "../../models/postModel.js"
+import User from "../../models/userModel.js"
 
 // ========================
 // CREATE POST
@@ -17,7 +17,7 @@ export const createPost = async (req, res, next) => {
         const post = await Post.create({
             title,
             content,
-            coverImage: req.file ? `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}` : null,
+            image: req.file ? `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}` : null,
             authorId: req.user.id,
         })
 
@@ -39,7 +39,7 @@ export const getAllPosts =  async (req, res, next) => {
             include: {
                 model: User,
                 as: "author",
-                attributes: ["id", "username", "email"], // Tampilkan username author
+                attributes: ["id", "name", "email"], // Tampilkan nama author
             },
             order: [["createdAt", "DESC"]] // Urutkan dari terbaru
         })   
@@ -59,7 +59,7 @@ export const getPostById = async (req, res, next) => {
             include: {
                 model: User,
                 as: "author",
-                attributes: ["id", "username", "email"],
+                attributes: ["id", "name", "email"],
             },
         })
         if (!post) {
@@ -95,7 +95,7 @@ export const updatePost = async (req, res, next) => {
         post.content = req.body.content || post.content
         post.excerpt = req.body.excerpt || post.excerpt
         if (req.file) {
-            post.coverImage = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`
+            post.image = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`
         }
 
         await post.save()

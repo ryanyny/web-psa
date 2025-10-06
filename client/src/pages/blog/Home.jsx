@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
-import { posts } from "../http/index.js"
-import PostCard from "../components/PostCard.jsx"
+import { posts } from "../../http/index.js"
+import PostCard from "../../components/blog/PostCard.jsx"
 
 const Home = () => {
   const [list, setList] = useState([])

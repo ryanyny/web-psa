@@ -13,17 +13,17 @@ const generateToken = (id) => {
 // ========================
 export const register = async (req, res, next) => {
   try {
-    const { username, email, password } = req.body
+    const { name, email, password } = req.body
     // Validasi input
-    if ((!username, !email, !password)) {
+    if ((!name, !email, !password)) {
       res.status(400)
       throw new Error("Please fill in all fields!")
     }
 
-    // Cek apakah user dengan username/email sama sudah ada
+    // Cek apakah user dengan name/email sama sudah ada
     const exists = await User.findOne({
       where: {
-        [Op.or]: [{ email }, { username }],
+        [Op.or]: [{ email }, { name }],
       },
     })
     if (exists) {
@@ -32,7 +32,7 @@ export const register = async (req, res, next) => {
     }
 
     // Buat user baru
-    const user = await User.create({ username, email, password })
+    const user = await User.create({ name, email, password })
 
     // Generate token dan simpan di cookie
     const token = generateToken(user.id)
@@ -48,7 +48,7 @@ export const register = async (req, res, next) => {
       message: "User registered successfully!",
       user: {
         id: user.id,
-        username: user.username,
+        name: user.name,
         email: user.email,
       },
     })
@@ -94,7 +94,7 @@ export const login = async (req, res, next) => {
       message: "Login successful!",
       user: {
         id: user.id,
-        username: user.username,
+        name: user.name,
         email: user.email,
       },
     })

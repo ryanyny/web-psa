@@ -2,13 +2,13 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import ReactQuill from "react-quill-new"
 import "react-quill-new/dist/quill.snow.css"
-import { posts } from "../http/index.js"
+import { posts } from "../../http/index.js"
 
 const CreatePost = () => {
   const nav = useNavigate()
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
-  const [coverImage, setCoverImage] = useState("")
+  const [image, setImage] = useState("")
   const [loading, setLoading] = useState(false)
 
   // Fungsi submit form
@@ -21,7 +21,7 @@ const CreatePost = () => {
       const formData = new FormData()
       formData.append("title", title)
       formData.append("content", content)
-      if (coverImage) formData.append("coverImage", coverImage)
+      if (image) formData.append("image", image)
 
       // Kirim request POST ke backend
       const res = await posts.create(formData)
@@ -49,12 +49,12 @@ const CreatePost = () => {
       {/* Input upload file */}
       <input
         type="file"
-        onChange={(e) => setCoverImage(e.target.files[0])}
+        onChange={(e) => setImage(e.target.files[0])}
         className="w-full p-2 border rounded" />
       {/* Preview gambar jika ada file yang dipilih */}
-      {coverImage instanceof File && (
+      {image instanceof File && (
         <img
-          src={URL.createObjectURL(coverImage)}
+          src={URL.createObjectURL(image)}
           alt="Preview"
           className="w-32 h-32 object-cover" />
       )}

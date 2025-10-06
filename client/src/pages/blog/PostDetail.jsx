@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from "react"
 import { useParams, useNavigate, Link } from "react-router-dom"
-import { posts } from "../http/index.js"
-import AuthContext from "../context/AuthContext.jsx"
+import { posts } from "../../http/index.js"
+import AuthContext from "../../context/AuthContext.jsx"
 
 const PostDetail = () => {
   const { id } = useParams()
@@ -49,12 +49,12 @@ const PostDetail = () => {
       <h1 className="text-2xl font-bold">{post.title}</h1>
       {/* Info author dan tanggal post dibuat */}
       <p className="text-sm text-gray-500">
-        oleh {post.author?.username} — {new Date(post.createdAt).toLocaleString()}
+        oleh {post.author?.name} — {new Date(post.createdAt).toLocaleString()}
       </p>
       {/* Tampilkan cover image jika ada */}
-      {post.coverImage && (
+      {post.image && (
         <img
-          src={post.coverImage}
+          src={post.image}
           alt={post.title}
           className="w-full max-h-[500px] object-cover rounded my-4" />
       )}

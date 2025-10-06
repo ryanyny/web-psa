@@ -1,11 +1,10 @@
 import { useState, useContext } from "react"
 import { useNavigate } from "react-router-dom"
-import AuthContext from "../context/AuthContext.jsx"
+import AuthContext from "../../context/AuthContext.jsx"
 
-const Register = () => {
-  const { register } = useContext(AuthContext)
+const Login = () => {
+  const { login } = useContext(AuthContext)
   const navigate = useNavigate()
-  const [username, setUsername] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
@@ -14,10 +13,10 @@ const Register = () => {
     e.preventDefault()
 
     try {
-      await register({ username, email, password }) // Panggil fungsi register
-      navigate("/");
+      await login({ email, password }) // Panggil fungsi login
+      navigate("/")
     } catch {
-      alert("Gagal daftar")
+      alert("Gagal masuk")
     }
   }
 
@@ -25,14 +24,8 @@ const Register = () => {
     <form
       onSubmit={handleSubmit}
       className="max-w-md mx-auto bg-white p-6 rounded shadow mt-6">
-      <h2 className="text-xl font-semibold mb-4">Daftar</h2>
-      {/* Input username */}
-      <input
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        placeholder="Nama pengguna"
-        className="w-full p-2 border rounded mb-2"
-        required />
+      <h2 className="text-xl font-semibold mb-4">Masuk</h2>
+
       {/* Input email */}
       <input
         value={email}
@@ -50,11 +43,11 @@ const Register = () => {
         required />
 
       {/* Tombol submit */}
-      <button className="px-4 py-2 bg-green-600 text-white rounded">
-        Daftar
+      <button className="px-4 py-2 bg-blue-600 text-white rounded">
+        Masuk
       </button>
     </form>
   )
 }
 
-export default Register
+export default Login

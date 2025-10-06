@@ -4,10 +4,10 @@ const PostCard = ({ post }) => {
   return (
     <article className="bg-white p-4 rounded shadow-sm">
       {/* Tampilkan gambar jika ada */}
-      {post.coverImage && (
+      {post.image && (
         <Link to={`/post/${post.id}`}>
           <img
-            src={post.coverImage}
+            src={post.image}
             alt={post.title}
             className="w-full h-48 object-cover rounded mb-3"
           />
@@ -20,7 +20,7 @@ const PostCard = ({ post }) => {
       </Link>
       {/* Info author dan tanggal post dibuat */}
       <p className="text-sm text-gray-500">
-        oleh {post.author?.username || "Unknown"} —{" "}
+        oleh {post.author?.name || "Unknown"} —{" "}
         {new Date(post.createdAt).toLocaleString()}
       </p>
       {/* Kutipan singkat isi artikel */}

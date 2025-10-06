@@ -1,6 +1,6 @@
 import { useContext } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import AuthContext from "../context/AuthContext.jsx"
+import AuthContext from "../../context/AuthContext.jsx"
 
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext)
@@ -56,9 +56,9 @@ const Navbar = () => {
               </Link>
             </>
           ) : (
-            // Tampilkan juga username & tombol Keluar
+            // Tampilkan juga nama & tombol Keluar
             <>
-              <span className="px-3 py-1">Hai, {user.username}</span>
+              <span className="px-3 py-1">Hai, {user.name}</span>
               <button
                 onClick={handleLogout}
                 className="px-3 py-1 border rounded"

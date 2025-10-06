@@ -13,7 +13,7 @@ class User extends Model {
 // Inisialisasi struktur tabel User
 User.init(
     {
-        username: {
+        name: {
             type: DataTypes.STRING,
             allowNull: false,
             unique: true,
@@ -22,6 +22,13 @@ User.init(
             type: DataTypes.STRING,
             allowNull: false,
             unique: true,
+        },
+        gender: {
+            type: DataTypes.ENUM("laki-laki", "perempuan"),
+        },
+        role: {
+            type: DataTypes.ENUM("user", "admin"),
+            defaultValue: "user"
         },
         password: {
             type: DataTypes.STRING,
@@ -41,7 +48,7 @@ User.init(
                 }
             },
         },
-    }
+    },
 )
 
 export default User

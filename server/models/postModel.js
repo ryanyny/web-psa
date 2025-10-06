@@ -23,7 +23,7 @@ Post.init(
             type: DataTypes.STRING(300),
             allowNull: true,
         },
-        coverImage: {
+        image: {
             type: DataTypes.STRING,
         },
     },
@@ -39,7 +39,7 @@ Post.init(
                 }
             },
         },
-    }
+    },
 )
 
 // Relasi: satu user bisa mempunyai banyak post
