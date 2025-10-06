@@ -31,7 +31,7 @@ const PostDetail = () => {
 
     try {
       await posts.remove(id) // Panggil API delete post
-      nav("/");
+      nav("/blog/");
     } catch {
       alert("Gagal hapus")
     }
@@ -65,7 +65,7 @@ const PostDetail = () => {
       {/* Tampilkan tombol Ubah dan Hapus jika user adalah author */}
       {isAuthor && (
         <div className="mt-4 flex gap-2">
-          <Link to={`/edit/${post.id}`} className="px-3 py-1 border rounded">
+          <Link to={`/blog/edit/${post.id}`} className="px-3 py-1 border rounded">
             Ubah
           </Link>
           <button

@@ -1,4 +1,4 @@
-import Sidebar from "../components/landing/Sidebar";
+import Sidebar from "../components/shared/Sidebar";
 
 export default function AdminLayout({ children }) {
   return (

@@ -25,7 +25,7 @@ const CreatePost = () => {
 
       // Kirim request POST ke backend
       const res = await posts.create(formData)
-      nav(`/post/${res.data.post.id}`)
+      nav(`/blog/post/${res.data.post.id}`)
     } catch {
       alert("Gagal buat post")
     } finally {

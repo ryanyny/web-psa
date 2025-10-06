@@ -1,22 +1,17 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
+import AuthContext from "../../context/AuthContext";
 import logo from "../../assets/images/img-logo-PSA.png";
-import { useEffect } from "react";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [user, setUser] = useState(null);
-  const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { user, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
 
-  //cek localstorage
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-
     const handleClickOutside = (e) => {
       if (!e.target.closest(".profile-dropdown")) {
         setIsDropdownOpen(false);
@@ -27,32 +22,29 @@ export default function Navbar() {
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
-  //logout function
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    setUser(null);
-    navigate("/");
+  const handleLogout = async () => {
+    await logout();
+    navigate("/login");
   };
+
   return (
     <nav className="fixed top-0 left-0 w-full bg-white shadow-lg z-50 backdrop-blur-sm bg-white/95">
       <div className="w-full flex justify-between items-center px-6 py-2">
         {/* Logo */}
-        {/* <div className="w-32 h-24 flex items-center space-x-3">
-          <img
-            src={logo}
-            alt="logo"
-            // className="w-32 h-24 object-contain transform scale-110"
-          />
-        </div> */}
         <div className="max-w-[220px] max-h-[80px] flex items-center">
-          <img src={logo} alt="logo" className="w-full h-full object-contain" />
+          <Link to={user ? "/dashboard-user" : "/"}>
+            <img
+              src={logo}
+              alt="logo"
+              className="w-full h-full object-contain"
+            />
+          </Link>
         </div>
 
         {/* Desktop Menu */}
         <ul className="hidden lg:flex space-x-8 font-medium text-gray-700">
           <li>
             <Link
-              // to="/"
               to={user ? "/dashboard-user" : "/"}
               className="hover:text-blue-600 transition-colors duration-200 relative group"
             >
@@ -105,14 +97,32 @@ export default function Navbar() {
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
             </Link>
           </li>
-          <li>
+          <li className="relative group">
             <Link
               to="/blog"
-              className="hover:text-blue-600 transition-colors duration-200 relative group"
+              className="hover:text-blue-600 transition-colors duration-200 relative"
             >
               Blog
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
             </Link>
+
+            {/* Dropdown Blog - muncul kalau login */}
+            {user && (
+              <div className="absolute left-0 mt-2 hidden group-hover:block bg-white shadow-md rounded-lg py-2 border border-gray-100 w-44">
+                <Link
+                  to="/blog/create"
+                  className="block px-4 py-2 hover:bg-gray-100"
+                >
+                  Tambah
+                </Link>
+                <Link
+                  to="/blog/my-posts"
+                  className="block px-4 py-2 hover:bg-gray-100"
+                >
+                  Postinganku
+                </Link>
+              </div>
+            )}
           </li>
         </ul>
 
@@ -138,7 +148,13 @@ export default function Navbar() {
               </div>
 
               {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-xl shadow-lg z-50">
+                <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-lg z-50">
+                  <Link
+                    to="/dashboard-user"
+                    className="block px-4 py-2 text-sm hover:bg-gray-100"
+                  >
+                    Dashboard
+                  </Link>
                   <button
                     onClick={handleLogout}
                     className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-100 rounded-b-xl"
@@ -183,42 +199,92 @@ export default function Navbar() {
         }`}
       >
         <div className="px-6 py-4 space-y-4">
-          <a
-            href="/"
+          <Link
+            to={user ? "/dashboard-user" : "/"}
             className="block py-2 text-gray-700 hover:text-blue-600 transition-colors"
+            onClick={() => setIsMenuOpen(false)}
           >
             Beranda
-          </a>
-          <a
-            href="#program"
+          </Link>
+          <Link
+            to="/program"
             className="block py-2 text-gray-700 hover:text-blue-600 transition-colors"
+            onClick={() => setIsMenuOpen(false)}
           >
             Program
-          </a>
-          <a
-            href="/tentangkami"
+          </Link>
+          <Link
+            to="/tentangkami"
             className="block py-2 text-gray-700 hover:text-blue-600 transition-colors"
+            onClick={() => setIsMenuOpen(false)}
           >
             Tentang Kami
-          </a>
-          <a
-            href="/mitra"
+          </Link>
+          <Link
+            to="/mitra"
             className="block py-2 text-gray-700 hover:text-blue-600 transition-colors"
+            onClick={() => setIsMenuOpen(false)}
           >
             Mitra
-          </a>
-          <a
-            href="/contact"
+          </Link>
+          <Link
+            to="/contact"
             className="block py-2 text-gray-700 hover:text-blue-600 transition-colors"
+            onClick={() => setIsMenuOpen(false)}
           >
             Kontak
-          </a>
-          <a
-            href="#daftar"
-            className="block text-center bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-200 font-semibold mt-4"
+          </Link>
+          <Link
+            to="/testimoni"
+            className="block py-2 text-gray-700 hover:text-blue-600 transition-colors"
+            onClick={() => setIsMenuOpen(false)}
           >
-            Daftar Sekarang
-          </a>
+            Testimoni
+          </Link>
+          <Link
+            to="/blog"
+            className="block py-2 text-gray-700 hover:text-blue-600 transition-colors"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            Blog
+          </Link>
+
+          {/* Blog submenu di mobile */}
+          {user && (
+            <div className="pl-4">
+              <Link
+                to="/blog/create"
+                className="block py-2 text-gray-600 hover:text-blue-500"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Tambah
+              </Link>
+              <Link
+                to="/blog/my-posts"
+                className="block py-2 text-gray-600 hover:text-blue-500"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Postinganku
+              </Link>
+            </div>
+          )}
+
+          {!user ? (
+            <Link
+              to="/login"
+              className="block text-center bg-gradient-to-r from-teal-500 to-blue-500 text-white px-6 py-3 rounded-xl hover:from-blue-600 hover:to-teal-600 transition-all duration-200 font-semibold mt-4"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Daftar / Masuk
+            </Link>
+          ) : (
+            <button
+              onClick={handleLogout}
+              className="block w-full text-center bg-red-500 text-white px-6 py-3 rounded-xl hover:bg-red-600 transition-all duration-200 font-semibold mt-4"
+            >
+              Logout
+            </button>
+          )}
         </div>
       </div>
     </nav>

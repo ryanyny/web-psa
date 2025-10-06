@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import { useState, useContext } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import AuthContext from "../../context/AuthContext";
 import ImgPro from "../../assets/images/imgproo.png";
-import { Link } from "react-router-dom";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 export default function Register() {
+  const { register } = useContext(AuthContext);
   const navigate = useNavigate();
+  
   const [formData, setFormData] = useState({
     name: "",
-    jenis_kelamin: "",
+    gender: "",
     email: "",
     password: "",
   });
@@ -29,26 +30,16 @@ export default function Register() {
     setIsSubmitting(true);
 
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/auth/register",
-        formData
-      );
-      console.log("✅ Berhasil daftar:", response.data);
-
+      await register(formData);
+      
       setSubmitStatus("success");
-      setFormData({ name: "", jenis_kelamin:"", email: "", password: "" });
+      setFormData({ name: "", gender: "", email: "", password: "" });
 
-       //Simpan data user ke localStorage
-    // localStorage.setItem("user", JSON.stringify(response.data.user));
-
-      setTimeout(()=> {
-        // navigate("/dashboard-user");
-        navigate("/login");
-      },1200);
-
-      setTimeout(() => setSubmitStatus(""), 3000);
+      setTimeout(() => {
+        navigate("/dashboard-user");
+      }, 1200);
     } catch (error) {
-      console.error("❌ Gagal daftar:", error.response?.data || error.message);
+      console.error("Register error:", error);
       setSubmitStatus("error");
       setTimeout(() => setSubmitStatus(""), 3000);
     } finally {
@@ -81,7 +72,7 @@ export default function Register() {
                       Ayo Registrasi!
                     </h2>
                     <p className="text-black text-sm lg:text-base">
-                      Silahkan buat Akun Anda terlebih dahulu..
+                      Silahkan buat Akun Anda terlebih dahulu
                     </p>
                   </div>
 
@@ -106,17 +97,19 @@ export default function Register() {
                         required
                       />
                     </div>
+                    
+                    {/* Jenis Kelamin */}
                     <div className="space-y-2">
                       <label
-                        htmlFor="jenis_kelamin"
+                        htmlFor="gender"
                         className="block text-black font-medium text-sm lg:text-base"
                       >
                         Jenis Kelamin
                       </label>
                       <select
-                        id="jenis_kelamin"
-                        name="jenis_kelamin"
-                        value={formData.jenis_kelamin}
+                        id="gender"
+                        name="gender"
+                        value={formData.gender}
                         onChange={handleInputChange}
                         className="w-full px-4 py-4 bg-white/90 backdrop-blur-sm rounded-xl border-0 text-gray-900 focus:ring-4 focus:ring-teal-400/50 focus:outline-none transition-all duration-300 text-sm lg:text-base"
                         required
@@ -179,12 +172,12 @@ export default function Register() {
                     {/* Status */}
                     {submitStatus === "success" && (
                       <div className="text-green-600 text-center text-sm">
-                        ✅ Register berhasil!
+                        Register berhasil!
                       </div>
                     )}
                     {submitStatus === "error" && (
                       <div className="text-red-600 text-center text-sm">
-                        ❌ Terjadi kesalahan. Coba lagi.
+                        Terjadi kesalahan. Coba lagi.
                       </div>
                     )}
 

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import axios from "axios";
-import Testimoni from "../Testimoni";
+import Testimoni from "../landing/Testimoni";
 
 export default function TestimoniAdmin() {
   const [Testimonis, setTestimoni] = useState([]);

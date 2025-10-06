@@ -43,7 +43,7 @@ const EditPost = () => {
 
       // Kirim request POST ke backend
       await posts.update(id, formData)
-      nav(`/post/${id}`)
+      nav(`/blog/post/${id}`)
     } catch {
       alert("Gagal update")
     }

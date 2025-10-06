@@ -4,8 +4,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Home from "./pages/landing/Home"
 import Tentangkami from "./pages/landing/Tentangkami"
 import Contact from "./pages/landing/Contact"
-import Login from "./pages/landing/Login"
-import Register from "./pages/landing/Register"
+import Login from "./pages/auth/Login"
+import Register from "./pages/auth/Register"
 import Program from "./pages/landing/Program"
 import DetailProgram from "./pages/landing/Detail-program"
 import Mitra from "./pages/landing/Mitra"
@@ -13,11 +13,11 @@ import DetailMitra from "./pages/landing/Detail-mitra"
 import DashboardUser from "./pages/landing/DashboardUser"
 import DaftarProgram from "./pages/landing/Daftar-program"
 import Testimoni from "./pages/landing/Testimoni"
-import DashboardAdmin from "./pages/landing/Admin/DashboardAdmin"
-import ProgramAdmin from "./pages/landing/Admin/ProgramAdmin"
-import MitraAdmin from "./pages/landing/Admin/MitraAdmin"
-import PesertaAdmin from "./pages/landing/Admin/PesertaAdmin"
-import TestimoniAdmin from "./pages/landing/Admin/TestimoniAdmin"
+import DashboardAdmin from "./pages/admin/DashboardAdmin"
+import ProgramAdmin from "./pages/admin/ProgramAdmin"
+import MitraAdmin from "./pages/admin/MitraAdmin"
+import PesertaAdmin from "./pages/admin/PesertaAdmin"
+import TestimoniAdmin from "./pages/admin/TestimoniAdmin"
 
 // Layout
 import UserLayout from "./layouts/UserLayout"
@@ -28,11 +28,8 @@ import BlogHome from "./pages/blog/Home"
 import PostDetail from "./pages/blog/PostDetail"
 import CreatePost from "./pages/blog/CreatePost"
 import EditPost from "./pages/blog/EditPost"
-import BlogLogin from "./pages/blog/Login"
-import BlogRegister from "./pages/blog/Register"
 import MyPosts from "./pages/blog/MyPosts"
 import NotFound from "./pages/NotFound"
-import BlogLayout from "./components/blog/Layout"
 import ProtectedRoute from "./components/blog/ProtectedRoute"
 
 function App() {
@@ -179,37 +176,53 @@ function App() {
           }
         />
 
-        {/* ====== BLOG ROUTES (nested) ====== */}
-        <Route path="/blog" element={<BlogLayout />}>
-          <Route index element={<BlogHome />} />
-          <Route path="post/:id" element={<PostDetail />} />
-          <Route path="login" element={<BlogLogin />} />
-          <Route path="register" element={<BlogRegister />} />
-          <Route
-            path="create"
-            element={
+        {/* ====== BLOG ROUTES (dengan UserLayout yang sama) ====== */}
+        <Route
+          path="/blog"
+          element={
+            <UserLayout>
+              <BlogHome />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/blog/post/:id"
+          element={
+            <UserLayout>
+              <PostDetail />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/blog/create"
+          element={
+            <UserLayout>
               <ProtectedRoute>
                 <CreatePost />
               </ProtectedRoute>
-            }
-          />
-          <Route
-            path="edit/:id"
-            element={
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/blog/edit/:id"
+          element={
+            <UserLayout>
               <ProtectedRoute>
                 <EditPost />
               </ProtectedRoute>
-            }
-          />
-          <Route
-            path="my-posts"
-            element={
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/blog/my-posts"
+          element={
+            <UserLayout>
               <ProtectedRoute>
                 <MyPosts />
               </ProtectedRoute>
-            }
-          />
-        </Route>
+            </UserLayout>
+          }
+        />
 
         {/* ====== NOT FOUND ====== */}
         <Route path="*" element={<NotFound />} />

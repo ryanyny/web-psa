@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import { useState, useContext } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import AuthContext from "../../context/AuthContext";
 import ImgPro from "../../assets/images/imgproo.png";
-import { Link } from "react-router-dom";
 
 export default function Login() {
+  const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
+  
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -24,34 +28,22 @@ export default function Login() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("http://localhost:5000/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Login gagal");
-      }
-
-      // Simpan user ke localStorage
-      localStorage.setItem("user", JSON.stringify(data.user));
-
+      const response = await login(formData);
+      
       setSubmitStatus("success");
-      setFormData({ email: "", password: "" });
-
-      if (data.user.role === "admin") {
-        window.location.href = "/dashboard-admin";
+      
+      // Redirect berdasarkan role
+      if (response.data.user.role === "admin") {
+        navigate("/dashboard-admin");
       } else {
-        window.location.href = "/dashboard-user";
+        navigate("/dashboard-user");
       }
     } catch (error) {
+      console.error("Login error:", error);
       setSubmitStatus("error");
+      setTimeout(() => setSubmitStatus(""), 3000);
     } finally {
       setIsSubmitting(false);
-      setTimeout(() => setSubmitStatus(""), 3000);
     }
   };
 
@@ -80,7 +72,7 @@ export default function Login() {
                       Ayo Login!
                     </h2>
                     <p className="text-black text-sm lg:text-base">
-                      Silahkan masuk ke akun Anda terlebih dahulu..
+                      Silahkan masuk ke akun Anda terlebih dahulu
                     </p>
                   </div>
 
@@ -138,12 +130,12 @@ export default function Login() {
                     {/* Status */}
                     {submitStatus === "success" && (
                       <div className="text-green-600 text-center text-sm">
-                        ✅ Login berhasil!
+                        Login berhasil!
                       </div>
                     )}
                     {submitStatus === "error" && (
                       <div className="text-red-600 text-center text-sm">
-                        ❌ Terjadi kesalahan. Coba lagi.
+                        Email atau password salah. Coba lagi.
                       </div>
                     )}
 

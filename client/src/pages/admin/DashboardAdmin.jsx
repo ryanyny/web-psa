@@ -304,7 +304,7 @@ export default function DashboardAdmin() {
                           {user.name}
                         </h4>
                         <p className="text-slate-500 text-sm font-medium truncate max-w-md">
-                          {user.jenis_kelamin}
+                          {user.gender}
                         </p>
                         <p className="text-slate-500 text-sm font-medium truncate max-w-md">
                           {user.created_at}
@@ -515,7 +515,7 @@ export default function DashboardAdmin() {
                             Jenis Kelamin
                           </p>
                           <p className="text-slate-900 leading-relaxed">
-                            {selectedUser.jenis_kelamin}
+                            {selectedUser.gender}
                           </p>
                         </div>
                       </div>

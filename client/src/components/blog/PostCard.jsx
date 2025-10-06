@@ -5,7 +5,7 @@ const PostCard = ({ post }) => {
     <article className="bg-white p-4 rounded shadow-sm">
       {/* Tampilkan gambar jika ada */}
       {post.image && (
-        <Link to={`/post/${post.id}`}>
+        <Link to={`/blog/post/${post.id}`}>
           <img
             src={post.image}
             alt={post.title}
@@ -15,7 +15,7 @@ const PostCard = ({ post }) => {
       )}
 
       {/* Judul blog */}
-      <Link to={`/post/${post.id}`}>
+      <Link to={`/blog/post/${post.id}`}>
         <h2 className="text-xl font-semibold">{post.title}</h2>
       </Link>
       {/* Info author dan tanggal post dibuat */}
@@ -27,7 +27,7 @@ const PostCard = ({ post }) => {
       <p className="mt-2">{post.excerpt}...</p>
       {/* Link menuju detail blog  */}
       <Link
-        to={`/post/${post.id}`}
+        to={`/blog/post/${post.id}`}
         className="text-blue-600 mt-2 inline-block"
       >
         Selengkapnya
