@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
 import { posts } from "../../http/index.js";
+import { toast } from "react-toastify";
 
 const EditPost = () => {
   const { id } = useParams();
@@ -41,9 +42,10 @@ const EditPost = () => {
       if (image instanceof File) formData.append("image", image);
 
       await posts.update(id, formData);
+      toast.success("Blog berhasil diubah!")
       nav(`/blog/post/${id}`);
     } catch {
-      alert("Gagal update post");
+      toast.error("Blog gagal diubah!")
     } finally {
       setLoading(false);
     }

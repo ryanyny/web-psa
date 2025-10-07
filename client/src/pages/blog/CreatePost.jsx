@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
+import { toast } from "react-toastify";
 import { posts } from "../../http/index.js";
 
 const CreatePost = () => {
@@ -22,9 +23,10 @@ const CreatePost = () => {
       if (image) formData.append("image", image);
 
       const res = await posts.create(formData);
+      toast.success("Blog berhasil diunggah!")
       nav(`/blog/post/${res.data.post.id}`);
     } catch {
-      alert("Gagal buat post");
+      toast.error("Blog gagal diunggah!")
     } finally {
       setLoading(false);
     }
