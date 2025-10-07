@@ -1,92 +1,109 @@
-import { useEffect, useState } from "react"
-import { useNavigate, useParams } from "react-router-dom"
-import ReactQuill from "react-quill-new"
-import "react-quill-new/dist/quill.snow.css"
-import { posts } from "../../http/index.js"
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import ReactQuill from "react-quill-new";
+import "react-quill-new/dist/quill.snow.css";
+import { posts } from "../../http/index.js";
 
 const EditPost = () => {
-  const { id } = useParams()
-  const nav = useNavigate()
-  const [title, setTitle] = useState("")
-  const [content, setContent] = useState("")
-  const [image, setImage] = useState("")
-  const [loading, setLoading] = useState(true)
+  const { id } = useParams();
+  const nav = useNavigate();
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [image, setImage] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Ambil data blog lama
+  // Ambil data post lama
   useEffect(() => {
-    const fetch = async () => {
+    const fetchPost = async () => {
       try {
-        const res = await posts.getById(id)
-
-        setTitle(res.data.title)
-        setContent(res.data.content)
-        setImage(res.data.image || "")
+        const res = await posts.getById(id);
+        setTitle(res.data.title);
+        setContent(res.data.content);
+        setImage(res.data.image || null);
       } catch (err) {
-        console.error(err)
+        console.error(err);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
-    fetch()
-  }, [id])
+    };
+    fetchPost();
+  }, [id]);
 
   // Handle submit form
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
+    setLoading(true);
 
     try {
-      // Buat objek FormData untuk kirim text dan file
-      const formData = new FormData()
-      formData.append("title", title)
-      formData.append("content", content)
-      if (image) formData.append("image", image)
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("content", content);
+      if (image instanceof File) formData.append("image", image);
 
-      // Kirim request POST ke backend
-      await posts.update(id, formData)
-      nav(`/blog/post/${id}`)
+      await posts.update(id, formData);
+      nav(`/blog/post/${id}`);
     } catch {
-      alert("Gagal update")
+      alert("Gagal update post");
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
-  if (loading) return <div>Memuat...</div>
+  if (loading)
+    return (
+      <div className="flex justify-center items-center h-[50vh] text-gray-500 text-lg">
+        Memuat...
+      </div>
+    );
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="space-y-4 bg-white p-6 rounded shadow">
-      {/* Input judul */}
-      <input
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        placeholder="Judul"
-        className="w-full p-2 border rounded"
-        required />
-      {/* Input upload file */}
-      <input
-        type="file"
-        onChange={(e) => setImage(e.target.files[0])}
-        className="w-full p-2 border rounded" />
-      {/* Preview gambar jika ada file yang dipilih */}
-      {image instanceof File && (
-        <img
-          src={URL.createObjectURL(image)}
-          alt="Preview"
-          className="w-32 h-32 object-cover" />
-      )}
-      {/* Editor rich text untuk isi blog */}
-      <ReactQuill value={content} onChange={setContent} />
+    <div className="min-h-[calc(100vh-80px-200px)] flex flex-col justify-start py-12">
+      <form
+        onSubmit={handleSubmit}
+        className="max-w-3xl mx-auto bg-white p-6 md:p-8 rounded-xl shadow-lg space-y-6"
+      >
+        {/* Input Judul */}
+        <input
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Judul"
+          className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+          required
+        />
 
-      {/* Tombol submit */}
-      <div>
+        {/* Upload Gambar */}
+        <div className="flex flex-col md:flex-row md:items-center gap-4">
+          <input
+            type="file"
+            onChange={(e) => setImage(e.target.files[0])}
+            className="w-full md:w-auto p-2 border border-gray-300 rounded-lg cursor-pointer"
+          />
+          {/* Preview Gambar */}
+          {image && (
+            <img
+              src={image instanceof File ? URL.createObjectURL(image) : image}
+              alt="Preview"
+              className="w-32 h-32 object-cover rounded-lg shadow-sm"
+            />
+          )}
+        </div>
+
+        {/* Editor Rich Text */}
+        <div className="bg-gray-50 border border-gray-300 rounded-lg">
+          <ReactQuill value={content} onChange={setContent} />
+        </div>
+
+        {/* Tombol Submit */}
         <button
           type="submit"
-          className="px-4 py-2 bg-blue-600 text-white rounded" >
-          Simpan
+          disabled={loading}
+          className="w-full md:w-auto px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition"
+        >
+          {loading ? "Menyimpan..." : "Simpan"}
         </button>
-      </div>
-    </form>
-  )
-}
+      </form>
+    </div>
+  );
+};
 
-export default EditPost
+export default EditPost;

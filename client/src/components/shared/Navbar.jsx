@@ -5,16 +5,28 @@ import logo from "../../assets/images/img-logo-PSA.png";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const [isBlogDropdownOpen, setIsBlogDropdownOpen] = useState(false);
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
+  // Blog dropdown hover delay
+  let blogTimeout;
+  const handleBlogMouseEnter = () => {
+    clearTimeout(blogTimeout);
+    setIsBlogDropdownOpen(true);
+  };
+  const handleBlogMouseLeave = () => {
+    blogTimeout = setTimeout(() => setIsBlogDropdownOpen(false), 200); // delay 200ms
+  };
+
+  const toggleProfileDropdown = () =>
+    setIsProfileDropdownOpen(!isProfileDropdownOpen);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (!e.target.closest(".profile-dropdown")) {
-        setIsDropdownOpen(false);
+        setIsProfileDropdownOpen(false);
       }
     };
 
@@ -24,7 +36,7 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     await logout();
-    navigate("/login");
+    navigate("/");
   };
 
   return (
@@ -97,7 +109,13 @@ export default function Navbar() {
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
             </Link>
           </li>
-          <li className="relative group">
+
+          {/* Blog dropdown */}
+          <li
+            className="relative"
+            onMouseEnter={handleBlogMouseEnter}
+            onMouseLeave={handleBlogMouseLeave}
+          >
             <Link
               to="/blog"
               className="hover:text-blue-600 transition-colors duration-200 relative"
@@ -105,10 +123,8 @@ export default function Navbar() {
               Blog
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
             </Link>
-
-            {/* Dropdown Blog - muncul kalau login */}
-            {user && (
-              <div className="absolute left-0 mt-2 hidden group-hover:block bg-white shadow-md rounded-lg py-2 border border-gray-100 w-44">
+            {user && isBlogDropdownOpen && (
+              <div className="absolute left-0 mt-2 bg-white shadow-md rounded-lg py-2 border border-gray-100 w-44">
                 <Link
                   to="/blog/create"
                   className="block px-4 py-2 hover:bg-gray-100"
@@ -126,7 +142,7 @@ export default function Navbar() {
           </li>
         </ul>
 
-        {/* CTA Buttons atau User Profile */}
+        {/* CTA Buttons / Profile */}
         <div className="hidden lg:flex items-center space-x-4">
           {!user ? (
             <Link
@@ -139,7 +155,7 @@ export default function Navbar() {
             <div className="relative profile-dropdown">
               <div
                 className="flex items-center space-x-2 cursor-pointer"
-                onClick={toggleDropdown}
+                onClick={toggleProfileDropdown}
               >
                 <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold uppercase">
                   {user.name[0]}
@@ -147,7 +163,7 @@ export default function Navbar() {
                 <span className="text-gray-700 font-semibold">{user.name}</span>
               </div>
 
-              {isDropdownOpen && (
+              {isProfileDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-lg z-50">
                   <Link
                     to="/dashboard-user"
@@ -193,9 +209,7 @@ export default function Navbar() {
       {/* Mobile Menu */}
       <div
         className={`lg:hidden bg-white border-t border-gray-100 transition-all duration-300 ${
-          isMenuOpen
-            ? "max-h-screen opacity-100"
-            : "max-h-0 opacity-0 overflow-hidden"
+          isMenuOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0 overflow-hidden"
         }`}
       >
         <div className="px-6 py-4 space-y-4">
@@ -249,7 +263,7 @@ export default function Navbar() {
             Blog
           </Link>
 
-          {/* Blog submenu di mobile */}
+          {/* Blog submenu mobile */}
           {user && (
             <div className="pl-4">
               <Link

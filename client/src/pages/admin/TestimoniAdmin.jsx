@@ -456,7 +456,7 @@ export default function TestimoniAdmin() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   {/* Role */}
                   <div className="lg:col-span-2">
-                    <label className="block text-sm font-bold text-slate-700 mb-3 flex items-center">
+                    <label className="block text-sm font-bold text-slate-700 mb-3 items-center">
                       <svg
                         className="w-4 h-4 mr-2 text-emerald-600"
                         fill="none"
