@@ -1,14 +1,9 @@
 import { Model, DataTypes } from 'sequelize';
-import { sequelize } from '../config/db.js';
+import sequelize from "../config/database.js"
+import Applicant from './applicantModel.js';
 
-class Educations extends Model {
-  static associate(models) {
-    // Setiap baris Education adalah milik satu Applicant
-    this.belongsTo(models.Applicant, {
-      foreignKey: 'applicantId'
-    });
-  }
-}
+
+class Educations extends Model {}
 
 Educations.init({
   educationLevel: {
@@ -27,12 +22,14 @@ Educations.init({
     type: DataTypes.STRING,
     allowNull: false
   }
-  // Kolom 'applicantId' akan otomatis dikelola oleh Sequelize karena ada foreignKey
 }, {
   sequelize,
   modelName: 'Educations',
   tableName: 'educations',
   timestamps: true
 });
+
+// Setiap Education merujuk ke satu applicant
+Educations.belongsTo(Applicant, {foreignKey: 'applicantId'});
 
 export default Educations;

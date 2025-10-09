@@ -1,15 +1,10 @@
 import { Model, DataTypes } from 'sequelize';
 import sequelize from "../config/database.js"
+import Education from './applicantEducationModel.js';
+import WorkExperience from './applicantWorkExperienceModel.js';
+import ApplicantScore from './applicantSkillScoreModel.js';
 
-class Applicant extends Model {
-  static associate(models) {
-    // Definisikan hubungan di sini
-    this.hasMany(models.ApplicantScore, { 
-      foreignKey: 'applicantId',
-      onDelete: 'CASCADE' 
-    });
-  }
-}
+class Applicant extends Model {}
 
 Applicant.init({
   id: {
@@ -80,5 +75,9 @@ Applicant.init({
   tableName: 'applicants',
   timestamps: true
 });
+
+Applicant.hasMany(Education, { foreignKey: 'applicantId', onDelete: 'CASCADE' });
+Applicant.hasMany(WorkExperience, { foreignKey: 'applicantId', onDelete: 'CASCADE' });
+Applicant.hasMany(ApplicantScore, { foreignKey: 'applicantId', onDelete: 'CASCADE' });
 
 export default Applicant;

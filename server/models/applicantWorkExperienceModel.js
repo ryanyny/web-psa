@@ -1,14 +1,8 @@
 import { Model, DataTypes } from "sequelize";
-import { sequelize } from "../config/database.js";
+import sequelize from "../config/database.js";
+import Applicant from "./applicantModel.js";
 
-class WorkExperience extends Model {
-  static associate(models) {
-    // Setiap pengalaman kerja adalah milik satu Applicant
-    this.belongsTo(models.Applicant, {
-      foreignKey: "applicantId",
-    });
-  }
-}
+class WorkExperience extends Model {}
 
 WorkExperience.init(
   {
@@ -30,5 +24,7 @@ WorkExperience.init(
     timestamps: true,
   }
 );
+
+WorkExperience.belongsTo(Applicant, {foreignKey: 'applicantId'});
 
 export default WorkExperience;
