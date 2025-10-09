@@ -1,10 +1,13 @@
 import { Model, DataTypes } from 'sequelize';
 import sequelize from "../config/database.js";
-import ApplicantSkillScore from './applicantSkillScoreModel.js';
 
-class Skills extends Model {}
+class Skill extends Model { 
+  static associate(models) {
+    this.hasMany(models.ApplicantScore, { foreignKey: 'skillId' });
+  }
+}
 
-Skills.init({
+Skill.init({
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -21,10 +24,9 @@ Skills.init({
   }
 }, {
   sequelize,
-  modelName: 'Skills',
+  modelName: 'Skill',
+  tableName: 'skills',
   timestamps: false
 });
 
-Skills.hasMany(ApplicantSkillScore, {foreignKey: 'skillId'});
-
-export default Skills;
+export default Skill;

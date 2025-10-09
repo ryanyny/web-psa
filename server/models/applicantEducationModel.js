@@ -1,11 +1,13 @@
 import { Model, DataTypes } from 'sequelize';
-import sequelize from "../config/database.js"
-import Applicant from './applicantModel.js';
+import sequelize from "../config/database.js";
 
+class Education extends Model {
+  static associate(models) {
+    this.belongsTo(models.Applicant, { foreignKey: 'applicantId' });
+  }
+}
 
-class Educations extends Model {}
-
-Educations.init({
+Education.init({
   educationLevel: {
     type: DataTypes.ENUM('SMK/SMA/MA/Setara', 'Diploma', 'Sarjana', 'Magister'),
     allowNull: false
@@ -24,12 +26,8 @@ Educations.init({
   }
 }, {
   sequelize,
-  modelName: 'Educations',
+  modelName: 'Education',
   tableName: 'educations',
-  timestamps: true
 });
 
-// Setiap Education merujuk ke satu applicant
-Educations.belongsTo(Applicant, {foreignKey: 'applicantId'});
-
-export default Educations;
+export default Education;

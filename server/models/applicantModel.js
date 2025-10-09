@@ -1,10 +1,14 @@
 import { Model, DataTypes } from 'sequelize';
-import sequelize from "../config/database.js"
-import Education from './applicantEducationModel.js';
-import WorkExperience from './applicantWorkExperienceModel.js';
-import ApplicantScore from './applicantSkillScoreModel.js';
+import sequelize from '../config/database.js';
 
-class Applicant extends Model {}
+class Applicant extends Model {
+  static associate(models) {
+    // Satu Applicant bisa punya banyak data di bawah ini
+    this.hasMany(models.Education, { foreignKey: 'applicantId', onDelete: 'CASCADE' });
+    this.hasMany(models.WorkExperience, { foreignKey: 'applicantId', onDelete: 'CASCADE' });
+    this.hasMany(models.ApplicantScore, { foreignKey: 'applicantId', onDelete: 'CASCADE' });
+  }
+}
 
 Applicant.init({
   id: {
@@ -28,9 +32,7 @@ Applicant.init({
     type: DataTypes.STRING,
     allowNull: false,
     unique: true,
-    validate: {
-      isEmail: true
-    }
+    validate: { isEmail: true }
   },
   gender: {
     type: DataTypes.ENUM('Laki-laki', 'Perempuan'),
@@ -73,11 +75,6 @@ Applicant.init({
   sequelize,
   modelName: 'Applicant',
   tableName: 'applicants',
-  timestamps: true
 });
-
-Applicant.hasMany(Education, { foreignKey: 'applicantId', onDelete: 'CASCADE' });
-Applicant.hasMany(WorkExperience, { foreignKey: 'applicantId', onDelete: 'CASCADE' });
-Applicant.hasMany(ApplicantScore, { foreignKey: 'applicantId', onDelete: 'CASCADE' });
 
 export default Applicant;
