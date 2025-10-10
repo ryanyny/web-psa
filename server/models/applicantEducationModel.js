@@ -21,7 +21,7 @@ Education.init({
     allowNull: false
   },
   certificate: {
-    type: DataTypes.STRING,
+    type: DataTypes.JSON,
     allowNull: false
   }
 }, {

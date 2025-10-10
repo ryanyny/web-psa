@@ -8,23 +8,45 @@ class WorkExperience extends Model {
 }
 
 WorkExperience.init({
-  jobTitle: {
+  currentStatus: {
+    type: DataTypes.JSON,
+    allowNull: false,
+  },
+  experiences: {
+    type: DataTypes.TEXT,
+    allowNull: false
+  },
+  cv: {
+    type: DataTypes.STRING,
+    allowNull: false 
+  },
+  portofolio :{
     type: DataTypes.STRING,
     allowNull: false
   },
-  companyName: {
+  jobType: {
+    type: DataTypes.JSON,
+    allowNull: false
+  },
+  jobField: {
+    type: DataTypes.JSON,
+    allowNull: false
+  },
+  preferredWorkLocations: {
+    type: DataTypes.JSON,
+    allowNull: false
+  },
+  workReadiness: {
+    type: DataTypes.ENUM('Segera', 'Dalam 1 Bulan', 'Dalam 3 Bulan'),
+    allowNull: false
+  },
+  willingToRelocate: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false
+  },
+  identity:{
     type: DataTypes.STRING,
     allowNull: false
-  },
-  startDate: {
-    type: DataTypes.DATEONLY,
-    allowNull: false
-  },
-  endDate: {
-    type: DataTypes.DATEONLY
-  },
-  description: {
-    type: DataTypes.TEXT
   }
 }, {
   sequelize,

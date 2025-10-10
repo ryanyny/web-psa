@@ -20,6 +20,9 @@ Applicant.init({
     type: DataTypes.STRING,
     allowNull: false
   },
+  alumni: {
+    type: DataTypes.ENUM('Community Growth Accelerator', 'Project Based Learning')
+  },
   fullName: {
     type: DataTypes.STRING,
     allowNull: false
