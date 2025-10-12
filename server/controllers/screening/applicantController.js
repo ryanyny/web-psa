@@ -65,16 +65,19 @@ export const store = async (req, res) => {
 
   try {
     const {
-      fullName, nickName, email, gender, birthDate, socialMedia, linkedin, phone, province, city, addressByKtp, currentAddress, currentStatus,
+      alumni, fullName, nickName, email, gender, birthDate, socialMedia, linkedin, phone, province, city, addressByKtp, currentAddress, currentStatus,
       educations,
       workExperiences,
       scores
     } = req.body;
 
     const photoPath = req.file ? `/uploads/photos/${req.file.filename}` : null;
+    const cvPath = req.file ? `/uploads/cvs/${req.file.filename}` : null;
+    const portfolioPath = req.file ? `/uploads/portfolios/${req.file.filename}` : null;
+    const identityPath = req.file ? `/uploads/identities/${req.file.filename}` : null;
 
     const newApplicant = await Applicant.create({
-      fullName, nickName, email, gender, birthDate, socialMedia, linkedin, phone, province, city, addressByKtp, currentAddress, currentStatus, photo: photoPath
+      alumni, fullName, nickName, email, gender, birthDate, socialMedia, linkedin, phone, province, city, addressByKtp, currentAddress, currentStatus, photo: photoPath, cv: cvPath, portfolio: portfolioPath, identity: identityPath
     }, { transaction: t });
 
     const applicantId = newApplicant.id;
