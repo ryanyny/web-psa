@@ -1,6 +1,6 @@
 // import React, { useState } from 'react';
 
-const Step1PersonalInfo = ({ nextStep, handleValueChange, values }) => {
+const Step1Alumni = ({ nextStep, handleValueChange, values }) => {
 
   const continueStep = (e) => {
     e.preventDefault();
@@ -52,4 +52,4 @@ const Step1PersonalInfo = ({ nextStep, handleValueChange, values }) => {
   );
 };
 
-export default Step1PersonalInfo;
+export default Step1Alumni;
