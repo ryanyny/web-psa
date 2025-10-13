@@ -28,6 +28,10 @@ const Step4SkillRating = ({ prevStep, nextStep, handleChange, values, }) => {
 
   return (
     <form onSubmit={continueStep} className="space-y-6">
+      <div>
+        <label htmlFor="hardskill" className="block text-sm font-medium mb-2">Hard Skills (Technical)</label>
+        <input type="text" id="hardskill" value={values.hardskill} onChange={handleChange('hardskill')} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Masukkan hard skills" />
+      </div>
       <div className="border-t pt-6">
         <h3 className="text-lg font-semibold mb-4">Soft Skill (Behavioral)</h3> 
         <LevelIndicator />
