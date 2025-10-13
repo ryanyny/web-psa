@@ -2,7 +2,7 @@ import React from 'react';
 import SkillRatingInput from './SkillRatingInput';
 import LevelIndicator from './LevelIndicator';
 
-const Step2SkillRating = ({ prevStep, nextStep, handleChange, values, }) => {
+const Step4SkillRating = ({ prevStep, nextStep, handleChange, values, }) => {
 
   const continueStep = (e) => {
   e.preventDefault();
@@ -77,4 +77,4 @@ const Step2SkillRating = ({ prevStep, nextStep, handleChange, values, }) => {
   );
 };
 
-export default Step2SkillRating;
+export default Step4SkillRating;
