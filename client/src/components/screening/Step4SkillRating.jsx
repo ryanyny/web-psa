@@ -2,19 +2,32 @@ import React from 'react';
 import SkillRatingInput from './SkillRatingInput';
 import LevelIndicator from './LevelIndicator';
 
-const Step2SkillRating = ({ prevStep, handleChange, handleSubmit, values, loading }) => {
+const Step2SkillRating = ({ prevStep, nextStep, handleChange, values, }) => {
 
-  const submitForm = (e) => {
-    e.preventDefault();
-    if (!values.communicationSkill || !values.publicSpeakingSkill || !values.teamworkSkill || !values.leadershipSkill) {
-      alert('Harap isi semua penilaian skill.');
-      return;
-    }
-    handleSubmit();
-  };
+  const continueStep = (e) => {
+  e.preventDefault();
+  // Daftar semua skill yang wajib diisi
+  const requiredSkills = [
+    'communicationSkill', 'publicSpeakingSkill', 'criticalThinkingSkill', 'teamworkSkill',
+    'emotionalIntelligenceSkill', 'adaptabilitySkill', 'creativitySkill', 'timeManagementSkill',
+    'negotiationSkills', 'MicrosoftOffice', 'GoogleWorkspace', 'LearningManagementSystem',
+    'SocialMediaManagement', 'AIProductivityTools', 'CybersecurityAwareness', 'CloudCollaboration',
+    'ProjectManagement', 'PeopleManagement', 'StrategicThinking', 'BusinessDevelopment',
+    'ConflictResolution', 'DecisionMaking'
+  ];
+  // Cek apakah ada skill yang belum diisi
+  const isAnySkillMissing = requiredSkills.some(skill => !values[skill]);
+
+  if (isAnySkillMissing) {
+    alert('Harap isi semua penilaian skill.');
+    return;
+  }
+
+  nextStep();
+};
 
   return (
-    <form onSubmit={submitForm} className="space-y-6">
+    <form onSubmit={continueStep} className="space-y-6">
       <div className="border-t pt-6">
         <h3 className="text-lg font-semibold mb-4">Soft Skill (Behavioral)</h3> 
         <LevelIndicator />
@@ -55,8 +68,8 @@ const Step2SkillRating = ({ prevStep, handleChange, handleSubmit, values, loadin
         <button type="button" onClick={prevStep} className="px-8 py-3 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition">
           &larr; Kembali
         </button>
-        <button type="submit" disabled={loading} className="px-8 py-3 bg-blue-600 text-white rounded-md font-semibold hover:bg-blue-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed">
-          {loading ? 'Mengirim...' : 'Kirim Pendaftaran'}
+        <button type="submit" className="px-8 py-3 bg-blue-600 text-white rounded-md font-semibold hover:bg-blue-700 transition">
+          Berikutnya &rarr;
         </button>
       </div>
       <style>{`.skill-rating-option:hover { transform: scale(1.05); } .skill-rating-option.selected { background: #3b82f6; color: white; border-color: #3b82f6; }`}</style>
