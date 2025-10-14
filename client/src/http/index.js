@@ -17,4 +17,12 @@ export const posts = {
     remove: (id) => axiosWrapper.delete(`/api/posts/${id}`),
 }
 
+// API applicants
+export const applicants = {
+    getAll: () => axiosWrapper.get("/api/applicants"),
+    getById: (id) => axiosWrapper.get(`/api/applicants/${id}`),
+    create: (payload) => axiosWrapper.post("/api/applicants", payload),
+    // update: (id, payload) => axiosWrapper.put(`/api/applicants/${id}`, payload), // Uncomment jika endpoint update ada
+    remove: (id) => axiosWrapper.delete(`/api/applicants/${id}`),
+}
 export default { auth, posts }
