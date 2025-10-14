@@ -35,6 +35,9 @@ import NotFound from "./pages/NotFound"
 import BlogLayout from "./components/blog/Layout"
 import ProtectedRoute from "./components/blog/ProtectedRoute"
 
+import WelcomeFormPage from "./pages/screening/WelcomeFormPage"
+import ApplicantFormPage from "./pages/screening/ApplicantFormPage"
+
 function App() {
   return (
     <BrowserRouter>
@@ -210,7 +213,9 @@ function App() {
             }
           />
         </Route>
-
+        {/* ====== Punya Skill Connect ====== */}
+        <Route path="/skill-connect" element={<WelcomeFormPage />} />
+        <Route path="/skill-connect/form" element={<ApplicantFormPage />} />
         {/* ====== NOT FOUND ====== */}
         <Route path="*" element={<NotFound />} />
       </Routes>
