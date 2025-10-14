@@ -1,6 +1,6 @@
 // import React, { useState } from 'react';
 
-const Step2PersonalInfo = ({ prevStep, nextStep, handleChange, values }) => {
+const Step2PersonalInfo = ({ prevStep, nextStep, handleChange, handleValueChange, values }) => {
 
   const continueStep = (e) => {
     e.preventDefault();
@@ -53,13 +53,30 @@ const Step2PersonalInfo = ({ prevStep, nextStep, handleChange, values }) => {
       <div>
         <label htmlFor="gender" className="block text-sm font-medium mb-2">Jenis Kelamin *</label>
         <div className="flex flex-col">
-            <div>
-                <input type="radio" id="genderMale" name="gender" value="Laki-Laki" onChange={handleChange('gender')} required className="" />
-                <label htmlFor="genderMale" className="ml-2">Laki-laki</label>
+            <div className="flex items-center mb-2">
+                <input
+                    type="radio"
+                    id="genderMale"
+                    name="gender"
+                    value="Laki-Laki"
+                    checked={values.gender === 'Laki-Laki'}
+                    onChange={() => handleValueChange('gender')('Laki-Laki')}
+                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                />
+                <label htmlFor="genderMale" className="ml-2 block text-sm text-gray-700">Laki-Laki</label>
             </div>
-            <div> 
-                <input type="radio" id="genderFemale" name="gender" value="Perempuan" onChange={handleChange('gender')} required className="" />
-                <label htmlFor="genderFemale" className="ml-2">Perempuan</label>
+            <div className="flex items-center">
+                <input
+                    type="radio"
+                    id="genderFemale"
+                    name="gender"
+                    value="Perempuan"
+                    checked={values.gender === 'Perempuan'}
+                    onChange={() => handleValueChange('gender')('Perempuan')}
+                    required
+                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                />
+                <label htmlFor="genderFemale" className="ml-2 block text-sm text-gray-700">Perempuan</label>
             </div>
         </div>
       </div>

@@ -167,6 +167,7 @@ const ApplicantFormPage = () => {
             prevStep={prevStep}
             nextStep={nextStep}
             handleChange={handleChange}
+            handleValueChange={handleValueChange}
             values={formData}
             loading={loading}
           />
