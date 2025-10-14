@@ -5,8 +5,288 @@
 @tailwind components;
 @tailwind utilities;
 
-
 :root {
-    --font-mont: 'Montserrat', sans-serif;
-    --font-hk: 'Hanken Grotesk', sans-serif;
+  --font-heading: 'Montserrat', sans-serif;
+  --font-body: 'Hanken Grotesk', sans-serif;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: #003049;
+}
+
+/* ==============================================
+    DEFAULT / GLOBAL
+   ============================================== */
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+/* ==============================================
+   REACT QUILL / RICH TEXT EDITOR
+   ============================================== */
+
+/* Biar semua gambar di editor auto-scale */
+.ql-editor img {
+  max-width: 100%;
+  height: auto;
+  margin: 10px auto;
+  display: block;
+}
+
+/* Editor container */
+.ql-container {
+  border-radius: 0 0 8px 8px;
+  min-height: 300px;
+}
+
+.ql-toolbar.ql-snow {
+  border-radius: 8px 8px 0 0;
+  padding: 12px;
+}
+
+/* Fix list rendering di dalam editor */
+.ql-editor ul {
+  list-style-type: disc;
+  padding-left: 1.5em;
+  margin: 0.8em 0;
+}
+
+.ql-editor ol {
+  list-style-type: decimal;
+  padding-left: 1.5em;
+  margin: 0.8em 0;
+}
+
+.ql-editor li {
+  margin-bottom: 0.3em;
+}
+
+/* Medium-like spacing */
+.ql-editor p {
+  margin: 0.8em 0;
+  line-height: 1.7;
+}
+
+/* ==============================================
+   MEDIUM-STYLE DISPLAY (untuk tampilan blog)
+   ============================================== */
+
+.prose.quill-content {
+  max-width: 720px;
+  margin: 0 auto;
+  line-height: 1.85;
+  font-family: var(--font-body);
+  color: #003049;
+  font-size: 1.1rem;
+  word-wrap: break-word;
+}
+
+/* --- Headings --- */
+.prose.quill-content h1,
+.prose.quill-content h2,
+.prose.quill-content h3,
+.prose.quill-content h4 {
+  font-size: var(--font-heading);
+  line-height: 1.35;
+  font-weight: 700;
+  color: #003049;
+  margin: 1.6em 0 0.8em;
+}
+
+.prose.quill-content h1 {
+  font-size: 2.3rem;
+  margin-top: 2em;
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 0.4em;
+}
+
+.prose.quill-content h2 {
+  font-size: 1.8rem;
+}
+
+.prose.quill-content h3 {
+  font-size: 1.4rem;
+  color: #222;
+}
+
+/* --- Paragraphs --- */
+.prose.quill-content p {
+  margin: 1.2em 0;
+  color: #003049;
+}
+
+/* --- LIST FIX (bullet vs number) --- */
+.prose.quill-content ul,
+.prose.quill-content ol {
+  margin: 1.3em 0;
+  padding-left: 1.5em;
+}
+
+.prose.quill-content li {
+  margin: 0.4em 0;
+}
+
+.prose.quill-content ul li {
+  list-style: disc;
+}
+
+.prose.quill-content ol li {
+  list-style: decimal;
+}
+
+/* === FIX BUG: Quill render pakai data-list === */
+/* Target list BULLET di dalam editor (ql-editor) */
+.ql-editor ul[data-list="bullet"],
+.ql-editor ol[data-list="bullet"] {
+    list-style-type: disc !important;
+}
+
+/* Target list BULLET di tampilan blog (prose.quill-content) */
+.prose.quill-content ul[data-list="bullet"],
+.prose.quill-content ol[data-list="bullet"] {
+    list-style-type: disc !important;
+}
+
+/* Target list NUMBERED di editor dan tampilan */
+.ql-editor ul[data-list="ordered"],
+.ql-editor ol[data-list="ordered"],
+.prose.quill-content ul[data-list="ordered"],
+.prose.quill-content ol[data-list="ordered"] {
+    list-style-type: decimal !important;
+}
+
+/* === Nested list spacing === */
+.prose.quill-content ul ul,
+.prose.quill-content ol ol,
+.prose.quill-content ul ol,
+.prose.quill-content ol ul {
+  margin-top: 0.4em;
+  margin-bottom: 0.4em;
+  padding-left: 1.3em;
+}
+
+/* --- Images --- */
+.prose.quill-content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 2em auto;
+  border-radius: 10px;
+  box-shadow: 0 3px 25px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease;
+}
+.prose.quill-content img:hover {
+  transform: scale(1.01);
+}
+
+/* --- Blockquote --- */
+.prose.quill-content blockquote {
+  font-family: "Georgia", serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  border-left: 4px solid #3b82f6;
+  margin: 2em 0;
+  padding-left: 1.5em;
+  color: #444;
+}
+
+/* --- Alignment --- */
+.prose.quill-content .ql-align-center {
+  text-align: center;
+}
+.prose.quill-content .ql-align-right {
+  text-align: right;
+}
+.prose.quill-content .ql-align-justify {
+  text-align: justify;
+}
+
+/* --- Links --- */
+.prose.quill-content a {
+  color: #3b82f6;
+  text-decoration: none;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(59, 130, 246, 0.4);
+  transition: all 0.2s ease;
+}
+.prose.quill-content a:hover {
+  border-bottom-color: #3b82f6;
+}
+
+/* --- Code block --- */
+.prose.quill-content pre {
+  background: #f6f8fa;
+  border-radius: 8px;
+  padding: 1.2em;
+  font-size: 0.9rem;
+  overflow-x: auto;
+  margin: 1.8em 0;
+}
+
+.prose.quill-content code {
+  background: #f4f4f4;
+  padding: 0.25em 0.4em;
+  border-radius: 4px;
+  font-family: "Fira Code", monospace;
+  font-size: 0.95rem;
+}
+
+/* --- Horizontal rule --- */
+.prose.quill-content hr {
+  border: none;
+  border-top: 1px solid #e0e0e0;
+  margin: 2.5em 0;
+}
+
+/* --- Video / iframe --- */
+.prose.quill-content iframe {
+  width: 100%;
+  border-radius: 10px;
+  margin: 1.5em 0;
+}
+
+/* --- Text size overrides from Quill --- */
+.prose.quill-content .ql-size-small {
+  font-size: 0.9rem;
+}
+.prose.quill-content .ql-size-large {
+  font-size: 1.25rem;
+}
+.prose.quill-content .ql-size-huge {
+  font-size: 1.6rem;
 }

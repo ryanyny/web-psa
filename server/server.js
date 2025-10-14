@@ -3,11 +3,13 @@ import cors from "cors"
 import cookieParser from "cookie-parser"
 import path from "path"
 import config from "./config/config.js"
-import { connectDb } from "./config/database.js"
-import sequelize from "./config/database.js"
+import sequelize, { connectDb } from "./config/database.js"
 import errorMiddleware from "./middlewares/errorMiddleware.js"
 import authRoutes from "./routes/authRoutes.js"
 import postRoutes from "./routes/blog/postRoutes.js"
+import uploadRoutes from "./routes/blog/uploadRoutes.js"
+import categoryRoutes from "./routes/blog/categoryRoutes.js"
+import commentRoutes from "./routes/blog/commentRoutes.js"
 import partnerRoutes from "./routes/landing/partnerRoutes.js"
 import participantRoutes from "./routes/landing/participantRoutes.js"
 import programRoutes from "./routes/landing/programRoutes.js"
@@ -16,6 +18,8 @@ import "./models/postModel.js"
 import "./models/participantModel.js"
 import "./models/partnerModel.js"
 import "./models/programModel.js"
+import "./models/categoryModel.js"
+import "./models/commentModel.js"
 
 // Inisialisasi express
 const app = express()
@@ -23,8 +27,8 @@ const PORT = config.port
 
 // Connect ke database
 connectDb().then(async () => {
+    // sequelize.sync({ force: false})
     console.log("✅ All models synchronized with MySQL!")
-
     if (!process.env.DB_NAME || !process.env.DB_USER || !process.env.DB_HOST) {
         throw new Error("❌ Missing required DB environment variables!")
     }
@@ -55,6 +59,10 @@ app.use("/api/program", programRoutes)
 // Blog
 app.use("/api/auth", authRoutes)
 app.use("/api/posts", postRoutes)
+app.use("/upload", uploadRoutes)
+app.use("/uploads", express.static("uploads"))
+app.use("/api/categories", categoryRoutes)
+app.use("/api/comments", commentRoutes)
 
 // Route testing
 app.get("/", (req, res) => {

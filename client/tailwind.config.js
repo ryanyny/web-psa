@@ -6,16 +6,20 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        mont: ['Montserrat', 'sans-serif'],
-        hk: ['Hanken Grotesk', 'sans-serif'],
+        heading: ['Montserrat', 'sans-serif'],
+        body: ['Hanken Grotesk', 'sans-serif'],
       },
       colors: {
         primary: {
           teal: '#14b8a6',
           blue: '#3b82f6',
-        }
+        },
+        'brand-navy': '#003049',
+        'brand-blue': '#3b82f6',
+        'brand-pink': '#ef476f',
+        'brand-light-gray': '#f8f9fa',
       }
     },
   },
-  plugins: [],
+  plugins: [import("@tailwindcss/typography")],
 }

@@ -15,11 +15,14 @@ import DetailMitra from "./pages/landing/Detail-mitra"
 import DashboardUser from "./pages/landing/DashboardUser"
 import DaftarProgram from "./pages/landing/Daftar-program"
 import Testimoni from "./pages/landing/Testimoni"
+
+// ===== Admin Pages =====
 import DashboardAdmin from "./pages/admin/DashboardAdmin"
 import ProgramAdmin from "./pages/admin/ProgramAdmin"
 import MitraAdmin from "./pages/admin/MitraAdmin"
 import PesertaAdmin from "./pages/admin/PesertaAdmin"
 import TestimoniAdmin from "./pages/admin/TestimoniAdmin"
+import KategoriAdmin from "./pages/admin/KategoriAdmin"
 
 // Layout
 import UserLayout from "./layouts/UserLayout"
@@ -183,6 +186,14 @@ function App() {
           element={
             <AdminLayout>
               <TestimoniAdmin />
+            </AdminLayout>
+          }
+        />
+        <Route
+          path="/kategori-admin"
+          element={
+            <AdminLayout>
+              <KategoriAdmin />
             </AdminLayout>
           }
         />

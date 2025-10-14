@@ -10,10 +10,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tailwindcss/typography": "^0.5.19",
     "axios": "^1.12.2",
     "lucide-react": "^0.544.0",
+    "quill-blot-formatter": "^1.0.5",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "react-icons": "^5.5.0",
     "react-quill-new": "^3.6.0",
     "react-router-dom": "^7.9.3",
     "react-toastify": "^11.0.5"
