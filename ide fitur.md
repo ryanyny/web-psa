@@ -1,6 +1,6 @@
 ### BLOG
-1. Komentar (edit, balas komentar, & pagination)
-2. Like
+2. Like & dislike (postingan)
+1. Komentar (balas komentar, like & dislike)
 3. Share
 4. Bookmark
 

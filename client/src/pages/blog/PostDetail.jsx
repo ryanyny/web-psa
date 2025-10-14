@@ -38,6 +38,18 @@ const PostDetail = () => {
     }
   }, [id]);
 
+  // 💡 FUNGSI MENGEDIT KOMENTAR
+const handleEditComment = useCallback(async (commentId, newContent) => {
+  try {
+    await comments.update(commentId, { content: newContent });
+    toast.success("Komentar berhasil diperbarui!");
+    fetchComments(); // refresh daftar komentar
+  } catch (error) {
+    console.error("Gagal mengedit komentar:", error);
+    toast.error("Gagal memperbarui komentar.");
+  }
+}, [fetchComments]);
+
   // 💡 FUNGSI INI HANYA MEMICU MODAL (TIDAK MENGHAPUS LANGSUNG)
   const handleOpenDeleteCommentModal = useCallback((commentId) => {
     setCommentToDeleteId(commentId);
@@ -126,7 +138,8 @@ const PostDetail = () => {
     );
 
   const isAuthor = user && user.id === Number(post.author?.id || post.author);
-  const isAuthenticated = !!user; // Cek apakah user login
+  const isAuthenticated = !!user;
+  const postAuthorId = post.author?.id || post.author
 
   return (
     <div className="container mx-auto px-4 py-5 md:py-5">
@@ -248,8 +261,10 @@ const PostDetail = () => {
             ) : (
               <CommentList 
                   comments={commentsList} 
-                  currentUser={user} // Pass user saat ini untuk cek kepemilikan
-                  onDelete={handleOpenDeleteCommentModal} 
+                  currentUser={user}
+                  postAuthorId={postAuthorId}
+                  onEdit={handleEditComment}
+                  onDelete={handleOpenDeleteCommentModal}
               />
             )}
           </div>

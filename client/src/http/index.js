@@ -34,6 +34,7 @@ export const categories = {
 export const comments = {
     getCommentsByPost: (postId) => axiosWrapper.get(`/api/comments/${postId}/comments`),
     create: (postId, content) => axiosWrapper.post(`/api/comments/${postId}/comments`, { content }),
+    update: (id, data) => axiosWrapper.put(`/api/comments/${id}`, data),
     remove: (id) => axiosWrapper.delete(`/api/comments/${id}`),
 }
 
