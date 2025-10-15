@@ -11,6 +11,10 @@ Comment.init(
             type: DataTypes.TEXT,
             allowNull: false,
         },
+        parentId: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+        }
     },
     {
         sequelize,
@@ -23,5 +27,8 @@ Comment.belongsTo(Post, { foreignKey: "postId" })
 
 User.hasMany(Comment, { foreignKey: "authorId", as: "author", onDelete: "SET NULL" })
 Comment.belongsTo(User, { foreignKey: "authorId", as: "author" })
+
+Comment.hasMany(Comment, { foreignKey: "parentId", as: "replies", onDelete: "CASCADE" })
+Comment.belongsTo(Comment, { foreignKey: "parentId", as: "parent" })
 
 export default Comment

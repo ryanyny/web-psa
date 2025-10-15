@@ -31,9 +31,14 @@ export const categories = {
     getPosts: (id) => axiosWrapper.get(`/api/categories/${id}/posts`), 
 }
 
+// API Komentar (Revisi di sini)
 export const comments = {
     getCommentsByPost: (postId) => axiosWrapper.get(`/api/comments/${postId}/comments`),
-    create: (postId, content) => axiosWrapper.post(`/api/comments/${postId}/comments`, { content }),
+    
+    // Fungsi CREATE yang Fleksibel: payload = { content, parentId? }
+    // Memungkinkan untuk komentar utama atau balasan
+    create: (postId, payload) => axiosWrapper.post(`/api/comments/${postId}/comments`, payload),
+    
     update: (id, data) => axiosWrapper.put(`/api/comments/${id}`, data),
     remove: (id) => axiosWrapper.delete(`/api/comments/${id}`),
 }

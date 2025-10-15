@@ -27,7 +27,7 @@ const PORT = config.port
 
 // Connect ke database
 connectDb().then(async () => {
-    // sequelize.sync({ force: false})
+    // sequelize.sync({ alter: true })
     console.log("✅ All models synchronized with MySQL!")
     if (!process.env.DB_NAME || !process.env.DB_USER || !process.env.DB_HOST) {
         throw new Error("❌ Missing required DB environment variables!")
