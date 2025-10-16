@@ -22,23 +22,25 @@ const Step1Alumni = ({ nextStep, handleValueChange, values }) => {
                 <input
                     type="radio"
                     name="alumni"
+                    id="CGA"
                     value="Community Growth Accelerator"
                     checked={values.alumni === 'Community Growth Accelerator'}
                     onChange={() => handleValueChange('alumni')('Community Growth Accelerator')}
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                 />
-                <label className="ml-2 block text-sm text-gray-700">Community Growth Accelerator</label>
+                <label htmlFor="CGA" className="ml-2 block text-sm text-gray-700">Community Growth Accelerator</label>
             </div>
             <div className="flex items-center">
                 <input
                     type="radio"
                     name="alumni"
+                    id="PBL"
                     value="Project Based Learning"
                     checked={values.alumni === 'Project Based Learning'}
                     onChange={() => handleValueChange('alumni')('Project Based Learning')}
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                 />
-                <label className="ml-2 block text-sm text-gray-700">Project Based Learning</label>
+                <label htmlFor="PBL" className="ml-2 block text-sm text-gray-700">Project Based Learning</label>
             </div>
         </div>
       </div>

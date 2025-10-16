@@ -23,34 +23,37 @@ const Step7JobReadiness = ({ prevStep, nextStep, handleValueChange, handleFileCh
                 <input
                     type="radio"
                     name="workReadiness"
+                    id="workReadiness1"
                     value="Segera"
                     checked={values.workReadiness === 'Segera'}
                     onChange={() => handleValueChange('workReadiness')('Segera')}
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                 />
-                <label className="ml-2 block text-sm text-gray-700">Segera</label>
+                <label htmlFor="workReadiness1" className="ml-2 block text-sm text-gray-700">Segera</label>
             </div>
             <div className="flex items-center">
                 <input
                     type="radio"
                     name="workReadiness"
+                    id="workReadiness2"
                     value="Dalam 1 Bulan"
                     checked={values.workReadiness === 'Dalam 1 Bulan'}
                     onChange={() => handleValueChange('workReadiness')('Dalam 1 Bulan')}
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                 />
-                <label className="ml-2 block text-sm text-gray-700">Dalam 1 Bulan</label>
+                <label htmlFor="workReadiness2" className="ml-2 block text-sm text-gray-700">Dalam 1 Bulan</label>
             </div>
             <div className="flex items-center">
                 <input
                     type="radio"
                     name="workReadiness"
+                    id="workReadiness3"
                     value="Dalam 3 Bulan"
                     checked={values.workReadiness === 'Dalam 3 Bulan'}
                     onChange={() => handleValueChange('workReadiness')('Dalam 3 Bulan')}
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                 />
-                <label className="ml-2 block text-sm text-gray-700">Dalam 3 Bulan</label>
+                <label htmlFor="workReadiness3" className="ml-2 block text-sm text-gray-700">Dalam 3 Bulan</label>
             </div>
         </div>
       </div>
@@ -61,23 +64,25 @@ const Step7JobReadiness = ({ prevStep, nextStep, handleValueChange, handleFileCh
                 <input
                     type="radio"
                     name="willingToRelocate"
+                    id="willingToRelocate1"
                     value="Ya"
                     checked={values.willingToRelocate === 'Ya'}
                     onChange={() => handleValueChange('willingToRelocate')('Ya')}
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                 />
-                <label className="ml-2 block text-sm text-gray-700">Ya</label>
+                <label htmlFor="willingToRelocate1" className="ml-2 block text-sm text-gray-700">Ya</label>
             </div>
             <div className="flex items-center">
                 <input
                     type="radio"
                     name="willingToRelocate"
+                    id="willingToRelocate2"
                     value="Tidak"
                     checked={values.willingToRelocate === 'Tidak'}
                     onChange={() => handleValueChange('willingToRelocate')('Tidak')}
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                 />
-                <label className="ml-2 block text-sm text-gray-700">Tidak</label>
+                <label htmlFor="willingToRelocate2" className="ml-2 block text-sm text-gray-700">Tidak</label>
             </div>
         </div>
       </div>
