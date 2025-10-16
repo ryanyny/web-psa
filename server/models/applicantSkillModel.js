@@ -13,10 +13,6 @@ Skill.init({
     autoIncrement: true,
     primaryKey: true
   },
-  hardskill: {
-    type: DataTypes.TEXT,
-    allowNull: false
-  },
   name: {
     type: DataTypes.STRING,
     allowNull: false,

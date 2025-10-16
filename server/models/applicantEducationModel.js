@@ -23,7 +23,11 @@ Education.init({
   certificate: {
     type: DataTypes.JSON,
     allowNull: false
-  }
+  },
+    hardskill: {
+    type: DataTypes.TEXT,
+    allowNull: false
+  },
 }, {
   sequelize,
   modelName: 'Education',
