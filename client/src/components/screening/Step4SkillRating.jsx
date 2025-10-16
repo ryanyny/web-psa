@@ -10,7 +10,7 @@ const Step4SkillRating = ({ prevStep, nextStep, handleChange, values, }) => {
   const requiredSkills = [
     'communicationSkill', 'publicSpeakingSkill', 'criticalThinkingSkill', 'teamworkSkill',
     'emotionalIntelligenceSkill', 'adaptabilitySkill', 'creativitySkill', 'timeManagementSkill',
-    'negotiationSkills', 'MicrosoftOffice', 'GoogleWorkspace', 'LearningManagementSystem',
+    'negotiationSkill', 'MicrosoftOffice', 'GoogleWorkspace', 'LearningManagementSystem',
     'SocialMediaManagement', 'AIProductivityTools', 'CybersecurityAwareness', 'CloudCollaboration',
     'ProjectManagement', 'PeopleManagement', 'StrategicThinking', 'BusinessDevelopment',
     'ConflictResolution', 'DecisionMaking'
@@ -43,7 +43,7 @@ const Step4SkillRating = ({ prevStep, nextStep, handleChange, values, }) => {
         <SkillRatingInput name="adaptabilitySkill" label="Adaptability" value={values.adaptabilitySkill} onChange={handleChange} />
         <SkillRatingInput name="creativitySkill" label="Creativity & Innovation" value={values.creativitySkill} onChange={handleChange} />
         <SkillRatingInput name="timeManagementSkill" label="Time Management" value={values.timeManagementSkill} onChange={handleChange} />
-        <SkillRatingInput name="negotiationSkills" label="Negotiation Skills" value={values.negotiationSkills} onChange={handleChange} />
+        <SkillRatingInput name="negotiationSkill" label="Negotiation Skill" value={values.negotiationSkill} onChange={handleChange} />
       </div>
 
       <div className="border-t pt-6">
