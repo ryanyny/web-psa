@@ -1,6 +1,8 @@
 // import React, { useState } from 'react';
+import FileInputDisplay from './FileInputDisplay';
 
-const Step7JobReadiness = ({ prevStep, nextStep, handleValueChange, handleChange, values }) => {
+
+const Step7JobReadiness = ({ prevStep, nextStep, handleValueChange, handleFileChange, handleFileRemove, values }) => {
 
   const continueStep = (e) => {
     e.preventDefault();
@@ -79,10 +81,14 @@ const Step7JobReadiness = ({ prevStep, nextStep, handleValueChange, handleChange
             </div>
         </div>
       </div>
-      <div>
-          <label htmlFor="identity" className="block text-sm font-medium mb-2">Identitas Kamu Dalam Satu File Format .pdf *</label>
-          <input type="file" id="identity" onChange={handleChange('identity')} required className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
-      </div>
+       <FileInputDisplay
+        name="identity"
+        label="Kartu Identitas (KTP/SIM)"
+        value={values.identity}
+        handleFileChange={handleFileChange}
+        handleFileRemove={handleFileRemove}
+        required={true}
+      />
       <div className="flex justify-between pt-4">
         <button type="button" onClick={prevStep} className="px-8 py-3 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition">
           &larr; Kembali
