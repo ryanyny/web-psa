@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import applicants from "../../http/index.js";
+import { applicants } from "../../http/index.js";
 import Step1Alumni from "../../components/screening/Step1Alumni.jsx";
 import Step2PersonalInfo from "../../components/screening/Step2PersonalInfo.jsx";
 import Step3Education from "../../components/screening/Step3Education.jsx";
@@ -96,6 +96,18 @@ const ApplicantFormPage = () => {
     setFormData({ ...formData, photo: file });
   };
 
+   // Handler generik untuk mengubah file di state
+  const handleFileChange = (inputName, file) => {
+    if (file) {
+      setFormData({ ...formData, [inputName]: file });
+    }
+  };
+
+  // Handler generik untuk menghapus file dari state
+  const handleFileRemove = (inputName) => {
+    setFormData({ ...formData, [inputName]: null });
+  };
+
     const handleCheckboxChange = (input) => (e) => {
     const { value, checked } = e.target;
 
@@ -117,39 +129,50 @@ const ApplicantFormPage = () => {
     }
     };
 
-  const handleSubmit = async () => {
+  // Di dalam ApplicantFormPage.jsx
+
+const handleSubmit = async () => {
     setLoading(true);
     setMessage({ type: "", text: "" });
 
     const data = new FormData();
+
     for (const key in formData) {
-      // ✅ PERBAIKAN: Kondisi diubah untuk mengizinkan nilai 0
       if (formData[key] !== null && formData[key] !== undefined) {
-        // Khusus untuk array 'certificate', kita perlu menanganinya secara berbeda
-        // jika backend tidak bisa langsung menerima array di FormData.
-        if (key === 'certificate' && Array.isArray(formData[key])) {
-          formData[key].forEach(certValue => {
-            data.append('certificate[]', certValue); // Kirim sebagai array
-          });
+        const value = formData[key];
+
+        if (Array.isArray(value)) {
+          // Kirim semua array (termasuk checkbox) sebagai string JSON
+          data.append(key, JSON.stringify(value));
+        } else if (key === 'willingToRelocate') {
+          // Konversi nilai 'Ya'/'Tidak' menjadi boolean string 'true'/'false'
+          data.append(key, value === 'Ya' ? 'true' : 'false');
         } else {
-          data.append(key, formData[key]);
+          // Untuk string, number, dan file
+          data.append(key, value);
         }
       }
     }
 
-    try {
-      const response = await applicants.create(data);
-      setMessage({ type: "success", text: response.message });
-      setStep(9); // Pindah ke halaman sukses
-    } catch (error) {
-      const errorMsg =
-        error.response?.data?.error ||
-        "Gagal mengirim data. Pastikan semua field terisi.";
-      setMessage({ type: "error", text: errorMsg });
-    } finally {
-      setLoading(false);
-    }
-  };
+  // (Optional) Lakukan console.log lagi untuk melihat data yang sudah diperbaiki
+  for (let [key, value] of data.entries()) {
+    console.log(`${key}:`, value);
+  }
+
+  try {
+    const response = await applicants.create(data);
+    setMessage({ type: "success", text: response.message });
+    setStep(9);
+  } catch (error) {
+    console.error("AXIOS ERROR:", error.response || error);
+    const errorMsg =
+      error.response?.data?.error ||
+      "Gagal mengirim data. Pastikan semua field terisi.";
+    setMessage({ type: "error", text: errorMsg });
+  } finally {
+    setLoading(false);
+  }
+};
 
   const renderStep = () => {
     switch (step) {
@@ -202,7 +225,8 @@ const ApplicantFormPage = () => {
             handleChange={handleChange}
             handlePhotoChange={handlePhotoChange}
             handleCheckboxChange={handleCheckboxChange}
-            handleSubmit={handleSubmit}
+            handleFileChange={handleFileChange}
+            handleFileRemove={handleFileRemove}
             values={formData}
             loading={loading}
           />
@@ -226,6 +250,8 @@ const ApplicantFormPage = () => {
             handleChange={handleChange}
             handleValueChange={handleValueChange}
             handleCheckboxChange={handleCheckboxChange}
+            handleFileChange={handleFileChange}
+            handleFileRemove={handleFileRemove}
             values={formData}
             loading={loading}
           />
@@ -274,7 +300,7 @@ const ApplicantFormPage = () => {
           Punya Skill Connect
         </h1>
         <div className="bg-white rounded-lg shadow-xl p-6 md:p-8">
-          {message.text && step !== 3 && (
+          {message.text && (
             <div
               className={`mb-4 text-center p-2 rounded ${
                 message.type === "error" ? "bg-red-100 text-red-700" : ""
