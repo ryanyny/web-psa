@@ -43,4 +43,9 @@ export const comments = {
     remove: (id) => axiosWrapper.delete(`/api/comments/${id}`),
 }
 
-export default { auth, posts, upload, categories, comments }
+export const likes = {
+    get: (postId) => axiosWrapper.get(`/api/posts/${postId}/likes`),
+    toggle: (postId) => axiosWrapper.post(`/api/posts/${postId}/likes/toggle`),
+}
+
+export default { auth, posts, upload, categories, comments, likes }

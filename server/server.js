@@ -10,6 +10,7 @@ import postRoutes from "./routes/blog/postRoutes.js"
 import uploadRoutes from "./routes/blog/uploadRoutes.js"
 import categoryRoutes from "./routes/blog/categoryRoutes.js"
 import commentRoutes from "./routes/blog/commentRoutes.js"
+import likeRoutes from "./routes/blog/likeRoutes.js"
 import partnerRoutes from "./routes/landing/partnerRoutes.js"
 import participantRoutes from "./routes/landing/participantRoutes.js"
 import programRoutes from "./routes/landing/programRoutes.js"
@@ -20,6 +21,7 @@ import "./models/partnerModel.js"
 import "./models/programModel.js"
 import "./models/categoryModel.js"
 import "./models/commentModel.js"
+import "./models/likeModel.js"
 
 // Inisialisasi express
 const app = express()
@@ -63,6 +65,7 @@ app.use("/upload", uploadRoutes)
 app.use("/uploads", express.static("uploads"))
 app.use("/api/categories", categoryRoutes)
 app.use("/api/comments", commentRoutes)
+app.use("/api/posts", likeRoutes)
 
 // Route testing
 app.get("/", (req, res) => {
