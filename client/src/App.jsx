@@ -214,8 +214,8 @@ function App() {
           />
         </Route>
         {/* ====== Punya Skill Connect ====== */}
-        <Route path="/skill-connect" element={<WelcomeFormPage />} />
-        <Route path="/skill-connect/form" element={<ApplicantFormPage />} />
+        <Route path="/punya-skill-connect" element={<WelcomeFormPage />} />
+        <Route path="/punya-skill-connect/form" element={<ApplicantFormPage />} />
         {/* ====== NOT FOUND ====== */}
         <Route path="*" element={<NotFound />} />
       </Routes>
