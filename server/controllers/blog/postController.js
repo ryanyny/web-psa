@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import sequelize from "../../config/database.js";
 import Post from "../../models/postModel.js";
 import User from "../../models/userModel.js";
 import Category from "../../models/categoryModel.js";
@@ -39,12 +40,12 @@ export const createPost = async (req, res, next) => {
 
       if (Array.isArray(categories)) {
         categoryIds = categories.map((id) => parseInt(id));
-    } else {
+      } else {
         categoryIds = categories.split(",").map((id) => parseInt(id));
-    }
+      }
 
-    // Gunakan post.setCategories() untuk Many-to-Many
-    await post.setCategories(categoryIds);
+      // Gunakan post.setCategories() untuk Many-to-Many
+      await post.setCategories(categoryIds);
     }
 
     res.status(201).json({
@@ -62,20 +63,36 @@ export const createPost = async (req, res, next) => {
 export const getAllPosts = async (req, res, next) => {
   try {
     const posts = await Post.findAll({
+      attributes: {
+        include: [
+          [
+            sequelize.fn("COUNT", sequelize.col("likedBy.id")),
+            "totalLikes",
+          ],
+        ],
+      },
       include: [
         {
-            model: User,
-            as: "author",
-            attributes: ["id", "name", "email"], // Tampilkan nama author
+          model: User,
+          as: "author",
+          attributes: ["id", "name", "email"],
         },
         {
-            model: Category,
-            as: "categories",
-            attributes: ["id", "name"],
-            through: { attributes: [] },
+          model: Category,
+          as: "categories",
+          attributes: ["id", "name"],
+          through: { attributes: [] },
+        },
+        {
+          model: User,
+          as: "likedBy",
+          attributes: [],
+          through: { attributes: [] },
+          required: false,
         },
       ],
-      order: [["createdAt", "DESC"]], // Urutkan dari terbaru
+      group: ["Post.id", "author.id", "categories.id"],
+      order: [["createdAt", "DESC"]],
     });
 
     res.json(posts);
@@ -92,17 +109,17 @@ export const getPostById = async (req, res, next) => {
     const post = await Post.findByPk(req.params.id, {
       include: [
         {
-            model: User,
-            as: "author",
-            attributes: ["id", "name", "email"],
+          model: User,
+          as: "author",
+          attributes: ["id", "name", "email"],
         },
         {
-            model: Category,
-            as: "categories",
-            attributes: ["id", "name"],
-            through: { attributes: [] },
+          model: Category,
+          as: "categories",
+          attributes: ["id", "name"],
+          through: { attributes: [] },
         },
-    ],
+      ],
     });
     if (!post) {
       res.status(400);
@@ -156,18 +173,18 @@ export const updatePost = async (req, res, next) => {
     await post.save();
 
     // Update kategori jika dikirim
-const { categories } = req.body
-if (categories) {
-    let categoryIds = []
+    const { categories } = req.body;
+    if (categories) {
+      let categoryIds = [];
 
-    if (Array.isArray(categories)) {
-        categoryIds = categories.map((id) => parseInt(id))
-    } else {
-        categoryIds = categories.split(",").map((id) => parseInt(id))
+      if (Array.isArray(categories)) {
+        categoryIds = categories.map((id) => parseInt(id));
+      } else {
+        categoryIds = categories.split(",").map((id) => parseInt(id));
+      }
+
+      await post.setCategories(categoryIds);
     }
-
-    await post.setCategories(categoryIds)
-}
     res.json({
       message: "Post updated successfully!",
       post,

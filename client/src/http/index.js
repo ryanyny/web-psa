@@ -48,4 +48,10 @@ export const likes = {
     toggle: (postId) => axiosWrapper.post(`/api/posts/${postId}/likes/toggle`),
 }
 
-export default { auth, posts, upload, categories, comments, likes }
+export const bookmarks = {
+    getSummary: (postId) => axiosWrapper.get(`/api/posts/${postId}/bookmarks`),
+    toggle: (postId) => axiosWrapper.post(`/api/posts/${postId}/bookmarks/toggle`),
+    getUserBookmarks: () => axiosWrapper.get(`/api/posts/user/bookmarks`),
+}
+
+export default { auth, posts, upload, categories, comments, likes, bookmarks }

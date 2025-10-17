@@ -1,9 +1,10 @@
 import { useEffect, useState, useContext, useCallback } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { posts, categories, comments, likes } from "../../http/index.js";
+import { posts, categories, comments, likes, bookmarks } from "../../http/index.js";
 import AuthContext from "../../context/AuthContext.jsx";
 import { toast } from "react-toastify";
 import { Heart } from "lucide-react";
+import { Bookmark } from "lucide-react";
 import PostCard from "../../components/blog/PostCard.jsx";
 import ReadingProgress from "../../components/blog/ReadingProgress.jsx";
 import CommentForm from "../../components/blog/CommentForm.jsx";
@@ -24,6 +25,8 @@ const PostDetail = () => {
   const [commentToDeleteId, setCommentToDeleteId] = useState(null);
   const [likeCount, setLikeCount] = useState(0);
   const [userLiked, setUserLiked] = useState(false);
+  const [bookmarkCount, setBookmarkCount] = useState(0)
+  const [userBookmarked, setUserBookmarked] = useState(false)
 
   // === FETCH KOMENTAR ===
   const fetchComments = useCallback(async () => {
@@ -51,6 +54,18 @@ const PostDetail = () => {
     }
   }, [id]);
 
+  const fetchBookmarks = useCallback(async () => {
+    if (!id) return
+
+    try {
+      const res = await bookmarks.getSummary(id)
+      setBookmarkCount(res.data.totalBookmarks ?? 0)
+      setUserBookmarked(res.data.userBookmarked ?? false)
+    } catch (error) {
+      console.error("Failed to load bookmarks", error)
+    }
+  }, [id])
+
   // === FETCH POST + RELATED ===
   const fetchPostData = useCallback(async () => {
     setLoading(true);
@@ -77,7 +92,8 @@ const PostDetail = () => {
     fetchPostData();
     fetchComments();
     fetchLikes();
-  }, [id, fetchPostData, fetchComments, fetchLikes]);
+    fetchBookmarks()
+  }, [id, fetchPostData, fetchComments, fetchLikes, fetchBookmarks]);
 
   // === COMMENT HANDLERS ===
   const handleCommentAdded = (newComment) => {
@@ -178,6 +194,26 @@ const PostDetail = () => {
       console.error("Gagal toggle like:", error);
     }
   };
+
+  const handleToggleBookmark = async () => {
+    if (!user) return toast.error("Login untuk menyimpan postingan!")
+
+    try {
+      const res = await bookmarks.toggle(id)
+      if (res.data.bookmarked) {
+        setBookmarkCount(prev => prev + 1)
+        setUserBookmarked(true)
+        toast.success("Bookmark disimpan!")
+      } else {
+        setBookmarkCount(prev => Math.max(prev - 1, 0))
+        setUserBookmarked(false)
+        toast.success("Bookmark dihapus!")
+      }
+    } catch (error) {
+      console.error("Gagal toggle bookmark: ", error)
+      toast.error("Gagal menyimpan bookmark!")
+    }
+  }
 
   // === UI ===
   if (loading)
@@ -285,6 +321,19 @@ const PostDetail = () => {
               className={`${userLiked ? "fill-current text-white" : ""}`}
             />
             <span>{likeCount}</span>
+          </button>
+
+          <button 
+            onClick={handleToggleBookmark}
+            className={`flex items-center gap-2 px-4 py-2 rounded-full border transition ${
+              userBookmarked
+                ? "bg-yellow-500 text-white border-yellow-500"
+                : "border-x-gray-300 text-gray-600 hover:bg-gray-100"
+            }`} >
+              <Bookmark 
+                size={18}
+                className={`${userBookmarked ? "fill-current text-white" : ""}`} />
+              <span>{bookmarkCount}</span>
           </button>
         </div>
 

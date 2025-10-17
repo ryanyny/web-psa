@@ -1,3 +1,4 @@
+import { Heart } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const PostCard = ({ post }) => {
@@ -36,6 +37,13 @@ const PostCard = ({ post }) => {
             ))}
           </div>
         )}
+
+        <div className="flex items-center gap-2 mt-3 text-sm text-gray-500">
+          <Heart
+            size={16}
+            className="text-brand-pink fill-brand-pink" />
+            <span className="font-medium">{post.totalLikes || 0} Suka</span>
+        </div>
 
         <p className="text-sm text-gray-500 mt-3 mb-4">
           oleh <span className="font-semibold">{post.author?.name || "Penulis Tak Dikenal"}</span> —{" "}

@@ -36,6 +36,7 @@ import EditPost from "./pages/blog/EditPost"
 import MyPosts from "./pages/blog/MyPosts"
 import NotFound from "./pages/NotFound"
 import ProtectedRoute from "./components/blog/ProtectedRoute"
+import SavedPosts from "./pages/blog/SavedPosts"
 
 function App() {
   return (
@@ -241,6 +242,16 @@ function App() {
             <UserLayout>
               <ProtectedRoute>
                 <MyPosts />
+              </ProtectedRoute>
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/blog/saved"
+          element={
+            <UserLayout>
+              <ProtectedRoute>
+                <SavedPosts />
               </ProtectedRoute>
             </UserLayout>
           }
