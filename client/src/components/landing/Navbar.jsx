@@ -116,7 +116,7 @@ export default function Navbar() {
           </li>
           <li>
             <Link
-              to="/skill-connect"
+              to="/punya-skill-connect"
               className="hover:text-blue-600 transition-colors duration-200 relative group"
               target="_blank"
               rel="noopener noreferrer"
