@@ -2,83 +2,80 @@ import express from "express"
 import cors from "cors"
 import cookieParser from "cookie-parser"
 import path from "path"
+import morgan from "morgan"
+
 import config from "./config/config.js"
-import sequelize, { connectDb } from "./config/database.js"
+import { connectDb } from "./config/database.js"
 import errorMiddleware from "./middlewares/errorMiddleware.js"
-import authRoutes from "./routes/authRoutes.js"
-import postRoutes from "./routes/blog/postRoutes.js"
-import uploadRoutes from "./routes/blog/uploadRoutes.js"
-import categoryRoutes from "./routes/blog/categoryRoutes.js"
-import commentRoutes from "./routes/blog/commentRoutes.js"
-import likeRoutes from "./routes/blog/likeRoutes.js"
-import bookmarkRoutes from "./routes/blog/bookmarkRoutes.js"
+import routes from "./routes/index.js"
 import partnerRoutes from "./routes/landing/partnerRoutes.js"
 import participantRoutes from "./routes/landing/participantRoutes.js"
 import programRoutes from "./routes/landing/programRoutes.js"
+
 import "./models/userModel.js"
 import "./models/postModel.js"
-import "./models/participantModel.js"
-import "./models/partnerModel.js"
-import "./models/programModel.js"
 import "./models/categoryModel.js"
 import "./models/commentModel.js"
 import "./models/likeModel.js"
 import "./models/bookmarkModel.js"
+import "./models/participantModel.js"
+import "./models/partnerModel.js"
+import "./models/programModel.js"
 
-// Inisialisasi express
+// Inisialisasi aplikasi express
 const app = express()
 const PORT = config.port
 
-// Connect ke database
+// --- Koneksi database dan sinkronisasi model ---
 connectDb().then(async () => {
-    // sequelize.sync({ alter: true })
+    // sequelize.sync({ alter: true }) // Hanya diaktifkan untuk sinkronisasi model ke DB saat pertama kali. Nonaktifkan di production
     console.log("✅ All models synchronized with MySQL!")
+    
     if (!process.env.DB_NAME || !process.env.DB_USER || !process.env.DB_HOST) {
         throw new Error("❌ Missing required DB environment variables!")
     }
 })
 
-// Setup CORS
+if (!process.env.JWT_SECRET) {
+    throw new Error("❌ JWT_SECRET is missing in environment variables")
+}
+
+if (config.isDev) app.use(morgan("dev"))
+
+// Konfigurasi CORS (Cross-Origin Resource Sharing)
 app.use(
     cors({
         credentials: true,
-        origin: ["http://localhost:5173"],
+        origin: [process.env.CLIENT_URL || "http://localhost:5173"],
     })
 )
 
-// Middleware
+// Middleware untuk parsing JSON body dari request
 app.use(express.json())
+// Middleware untuk parsing cookies dari request
 app.use(cookieParser())
 
-// Serve file statis dari folder "uploads"
-app.use("/uploads", express.static(path.join(process.cwd(), "uploads")))
+// --- Definisi routes ---
+// Routes API utama
+app.use("/api", routes)
 
-// ========================
-// ROUTE PREFIX
-// ========================
-// Landing page & dahboard admin
+// Routes untuk landing page
 app.use("/api/mitra", partnerRoutes)
 app.use("/api/peserta", participantRoutes)
 app.use("/api/program", programRoutes)
-// Blog
-app.use("/api/auth", authRoutes)
-app.use("/api/posts", postRoutes)
-app.use("/upload", uploadRoutes)
-app.use("/uploads", express.static("uploads"))
-app.use("/api/categories", categoryRoutes)
-app.use("/api/comments", commentRoutes)
-app.use("/api/posts", likeRoutes)
-app.use("/api/posts", bookmarkRoutes)
 
-// Route testing
+// Melayani file statis dari folder 'uploads' di URL '/uploads'
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")))
+
+// Routes test server (health check)
 app.get("/", (req, res) => {
     res.json({ message: "🚀 Hello from server!" })
 })
 
-// Middleware untuk handle semua error di server
+// Middleware penanganan error global. Wajib diletakkan paling akhir sebelum app.listen
 app.use(errorMiddleware)
 
-// Jalankan server
+// Menjalankan server
 app.listen(PORT, () => {
     console.log(`✅ Server is listening on port ${PORT}`)
 })

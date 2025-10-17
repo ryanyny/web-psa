@@ -5,16 +5,12 @@ import Post from "../../models/postModel.js";
 import User from "../../models/userModel.js";
 import Category from "../../models/categoryModel.js";
 
-// Helper untuk hapus file
 const deleteFileIfExists = (filePath) => {
   if (fs.existsSync(filePath)) {
     fs.unlinkSync(filePath);
   }
 };
 
-// ========================
-// CREATE POST
-// ========================
 export const createPost = async (req, res, next) => {
   try {
     const { title, content, categories } = req.body;
@@ -24,7 +20,6 @@ export const createPost = async (req, res, next) => {
       throw new Error("Please fill in all fields!");
     }
 
-    // Buat post baru, author diambil dari req.user (authMiddleware)
     const post = await Post.create({
       title,
       content,
@@ -34,7 +29,6 @@ export const createPost = async (req, res, next) => {
       authorId: req.user.id,
     });
 
-    // Assign kategori jika ada
     if (categories) {
       let categoryIds = [];
 
@@ -44,7 +38,6 @@ export const createPost = async (req, res, next) => {
         categoryIds = categories.split(",").map((id) => parseInt(id));
       }
 
-      // Gunakan post.setCategories() untuk Many-to-Many
       await post.setCategories(categoryIds);
     }
 
@@ -57,9 +50,6 @@ export const createPost = async (req, res, next) => {
   }
 };
 
-// ========================
-// GET ALL POSTS
-// ========================
 export const getAllPosts = async (req, res, next) => {
   try {
     const posts = await Post.findAll({
@@ -101,9 +91,6 @@ export const getAllPosts = async (req, res, next) => {
   }
 };
 
-// ========================
-// GET POST BY ID
-// ========================
 export const getPostById = async (req, res, next) => {
   try {
     const post = await Post.findByPk(req.params.id, {
@@ -132,9 +119,6 @@ export const getPostById = async (req, res, next) => {
   }
 };
 
-// ========================
-// UPDATE POST
-// ========================
 export const updatePost = async (req, res, next) => {
   try {
     const post = await Post.findByPk(req.params.id);
@@ -143,13 +127,11 @@ export const updatePost = async (req, res, next) => {
       throw new Error("Post not found!");
     }
 
-    // Cek apakah user adalah author
     if (post.authorId !== req.user.id) {
       res.status(403);
       throw new Error("Not authorized to update this post!");
     }
 
-    // Hapus cover image lama jika diganti
     if (req.file && post.image) {
       const oldImagePath = path.join(
         process.cwd(),
@@ -160,7 +142,6 @@ export const updatePost = async (req, res, next) => {
       deleteFileIfExists(oldImagePath);
     }
 
-    // Update field post
     post.title = req.body.title || post.title;
     post.content = req.body.content || post.content;
     post.excerpt = req.body.excerpt || post.excerpt;
@@ -172,7 +153,6 @@ export const updatePost = async (req, res, next) => {
 
     await post.save();
 
-    // Update kategori jika dikirim
     const { categories } = req.body;
     if (categories) {
       let categoryIds = [];
@@ -194,9 +174,6 @@ export const updatePost = async (req, res, next) => {
   }
 };
 
-// ========================
-// DELETE POST
-// ========================
 export const deletePost = async (req, res, next) => {
   try {
     const post = await Post.findByPk(req.params.id);
@@ -205,13 +182,11 @@ export const deletePost = async (req, res, next) => {
       throw new Error("Post not found!");
     }
 
-    // Cek apakah user adalah author
     if (post.authorId !== req.user.id) {
       res.status(403);
       throw new Error("Not authorized to delete this post");
     }
 
-    // Hapus cover image jika ada
     if (post.image) {
       const imagePath = path.join(
         process.cwd(),
@@ -222,7 +197,6 @@ export const deletePost = async (req, res, next) => {
       deleteFileIfExists(imagePath);
     }
 
-    // Cari semua gambar dari konten HTML
     const imgRegex = /\/uploads\/([^)>'"\s]+)/g;
     const matches = [...post.content.matchAll(imgRegex)];
 

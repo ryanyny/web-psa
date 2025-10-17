@@ -2,13 +2,10 @@ import { DataTypes, Model } from "sequelize"
 import sequelize from "../config/database.js"
 import User from "./userModel.js"
 
-// Utility function untuk menghapus semua tag html dari teks
 const stripHtml = (html = "") => html.replace(/<[^>]+>/g, "").trim()
 
-// Definisi model User
 class Post extends Model {}
 
-// Inisialisasi struktur tabel Post
 Post.init(
     {
         title: {
@@ -30,10 +27,8 @@ Post.init(
     {
         sequelize,
         modelName: "Post",
-        // Hook yang berjalan sebelum data disimpan
         hooks: {
             beforeSave: (post) => {
-                // Otomatis membuat excerpt dari isi content (200 karakter pertama)
                 if (!post.excerpt && post.content) {
                     post.excerpt = stripHtml(post.content).slice(0, 200)
                 }
@@ -42,9 +37,7 @@ Post.init(
     },
 )
 
-// Relasi: satu user bisa mempunyai banyak post
-User.hasMany(Post, { foreignKey: "authorId", onDelete: "CASCADE" }) // Post ikut terhapus jika user dihapus
-// Relasi: satu post dimiliki oleh satu user (author)
+User.hasMany(Post, { foreignKey: "authorId", onDelete: "CASCADE" })
 Post.belongsTo(User, { foreignKey: "authorId", as: "author" })
 
 export default Post
