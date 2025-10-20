@@ -27,7 +27,8 @@ User.init(
             type: DataTypes.ENUM("laki-laki", "perempuan"),
         },
         role: {
-            type: DataTypes.ENUM("user", "admin"),
+            // Tambahkan opsi 'recruiter' agar bisa membedakan akses
+            type: DataTypes.ENUM("user", "admin", "recruiter"),
             defaultValue: "user"
         },
         password: {

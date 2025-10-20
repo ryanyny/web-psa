@@ -76,7 +76,7 @@ const createApplicant = async (req, res) => {
     // Konversi string 'true'/'false' menjadi nilai boolean.
     const isWillingToRelocate = willingToRelocate === 'true';
 
-    const getPublicPath = (file) => file ? `uploads/${file[0].filename}` : null;
+    const getPublicPath = (file) => file ? `uploads/applicants/${file[0].filename}` : null;
 
     const photoPath = getPublicPath(req.files.photo);
     const cvPath = getPublicPath(req.files.cv);
@@ -210,13 +210,20 @@ const getAllApplicants = async (req, res) => {
  * @route   GET /api/applicants/:id
  * @access  Public
  */
+
 const getApplicantById = async (req, res) => {
     try {
         const applicant = await Applicant.findByPk(req.params.id, {
-            // Sertakan juga semua data relasinya
-             include: [
-                { model: Education },
-                { model: WorkExperience },
+            // ✅ INI BAGIAN PALING PENTING
+            // Memastikan Sequelize mengambil data dari tabel lain yang terhubung.
+            include: [
+                { 
+                    model: Education,
+                    // Tidak perlu 'as' jika asosiasi standar
+                },
+                { 
+                    model: WorkExperience 
+                },
                 { 
                     model: ApplicantScore,
                     include: [{ model: Skill, attributes: ['name', 'category'] }]
@@ -228,6 +235,7 @@ const getApplicantById = async (req, res) => {
             return res.status(404).json({ error: 'Data pelamar tidak ditemukan.' });
         }
 
+        // Respons JSON sekarang akan berisi array "Educations" dan "WorkExperiences"
         res.status(200).json(applicant);
     } catch (error) {
         console.error(`Error saat mengambil data pelamar ID ${req.params.id}:`, error);
