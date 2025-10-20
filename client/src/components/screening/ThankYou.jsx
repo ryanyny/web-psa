@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const ThankYou = ({ message }) => {
     return ( 
         <div className="text-center p-10">
