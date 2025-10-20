@@ -125,7 +125,7 @@ export const getAllPosts = async (req, res, next) => {
   }
 }
 
-// --- Controller: GET POST BY ID/SLUG ---
+// --- Controller: GET POST BY ID / SLUG ---
 export const getPostById = async (req, res, next) => {
   try {
     const { id } = req.params
