@@ -20,7 +20,7 @@ Category.init(
 )
 
 // --- Definisi relasi Many-To-Many (Post <-> Category)
-Post.belongsToMany(Category, { through: "PostCategories", as: "categories" })
-Category.belongsToMany(Post, { through: "PostCategories", as: "posts" })
+Post.belongsToMany(Category, { through: "PostCategories", as: "categories", })
+Category.belongsToMany(Post, { through: "PostCategories", as: "posts", })
 
 export default Category

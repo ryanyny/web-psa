@@ -59,7 +59,7 @@ Post.init(
 )
 
 // --- Definisi relasi (Associations) ---
-User.hasMany(Post, { foreignKey: "authorId", onDelete: "CASCADE" })
-Post.belongsTo(User, { foreignKey: "authorId", as: "author" })
+User.hasMany(Post, { foreignKey: "authorId", onDelete: "CASCADE", })
+Post.belongsTo(User, { foreignKey: "authorId", as: "author", })
 
 export default Post
