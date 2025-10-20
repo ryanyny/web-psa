@@ -37,6 +37,10 @@ import ProtectedRoute from "./components/blog/ProtectedRoute"
 
 import WelcomeFormPage from "./pages/screening/WelcomeFormPage"
 import ApplicantFormPage from "./pages/screening/ApplicantFormPage"
+import ApplicantListPage from "./pages/screening/ApplicantListPage"
+import ApplicantDetailPage  from "./pages/screening/ApplicantDetailPage"
+import LoginRecruiter from "./pages/screening/Login"
+import ScreeningProtectedRoute from "./components/screening/ProtectedRoute"
 
 function App() {
   return (
@@ -213,9 +217,47 @@ function App() {
             }
           />
         </Route>
+
+
         {/* ====== Punya Skill Connect ====== */}
-        <Route path="/punya-skill-connect" element={<WelcomeFormPage />} />
-        <Route path="/punya-skill-connect/form" element={<ApplicantFormPage />} />
+        <Route 
+          path="/punya-skill-connect" 
+          element={
+            <WelcomeFormPage />
+          } 
+        />
+
+        <Route 
+          path="/punya-skill-connect/form" 
+          element={
+            <ApplicantFormPage />
+          } 
+        />
+
+        <Route 
+          path="/punya-skill-connect/applicants" 
+          element={
+            <ScreeningProtectedRoute>
+              <ApplicantListPage />
+            </ScreeningProtectedRoute>
+          } 
+        />
+        
+        <Route 
+          path="/punya-skill-connect/applicants/:id" 
+          element={
+            <ScreeningProtectedRoute>
+              <ApplicantDetailPage />
+            </ScreeningProtectedRoute>
+          } 
+        />
+
+        <Route 
+          path="/punya-skill-connect/login" 
+          element={
+            <LoginRecruiter />
+          } 
+        />
         {/* ====== NOT FOUND ====== */}
         <Route path="*" element={<NotFound />} />
       </Routes>
