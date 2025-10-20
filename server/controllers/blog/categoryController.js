@@ -7,11 +7,13 @@ export const createCategory = async (req, res, next) => {
     try {
         const { name } = req.body
 
+        // Validasi: Semua field wajib diisi
         if (!name) {
             res.status(400)
             throw new Error("Please fill in all fields!")
         }
 
+        // Cek: Nama kategori harus unik
         const existing = await Category.findOne({ where: { name } })
         if (existing) {
             res.status(400)

@@ -2,75 +2,99 @@ import Bookmark from "../../models/bookmarkModel.js"
 import Post from "../../models/postModel.js"
 import User from "../../models/userModel.js"
 
+// --- Controller: TOGGLE BOOKMARK (ADD / DELETE) --- 
 export const toggleBookmark = async (req, res, next) => {
     try {
         const postId = parseInt(req.params.postId)
         const userId = req.user?.id
 
+        // Cek autentikasi: Hanya user yang sudah login yang bisa membuat atau menghapus bookmark
         if (!userId) {
-            return res.status(401).json({ message: "Not authorized!" })
+            res.status(401)
+            throw new Error("Not authorized to bookmark this post!")
         }
 
+        // Cek: Pastikan post yang dibookmark ada
         const post = await Post.findByPk(postId)
         if (!post) {
-            return res.status(404).json({ message: "Post not found!" })
+            res.status(404)
+            throw new Error("Post not found!")
         }
 
+        // Cek: Apakah bookmark sudah ada untuk user dan post ini
         const existing = await Bookmark.findOne({ where: { userId, postId } })
         if (existing) {
+            // Jika sudah ada: Hapus
             await existing.destroy()
-            return res.status(200).json({ bookmarked: false, message: "Bookmark removed! "})
+            return res
+                .status(200)
+                .json({ bookmarked: false, message: "Bookmark removed! " })
         } else {
+            // Jika belum ada: Buat
             await Bookmark.create({ userId, postId })
-            return res.status(201).json({ bookmarked: true, message: "Bookmarked" })
+            return res
+                .status(201)
+                .json({ bookmarked: true, message: "Bookmarked" })
         }
     } catch (error) {
         next(error)
     }
 }
 
+// --- Controller: GET BOOKMARKS FOR POST ---
 export const getBookmarksForPost = async (req, res, next) => {
     try {
         const postId = parseInt(req.params.postId)
         const userId = req.user?.id || null
 
-        const total = await Bookmark.count({ where: { postId } })
+        // Hitung total bookmark untuk post ini
+        const totalBookmarks = await Bookmark.count({ where: { postId } })
 
-        let userBookmarked = false
-        if (userId) {
-            const b = await Bookmark.findOne({ where: { postId, userId } })
-            userBookmarked = !!b
-        }
+        // Cek apakah user sudah me-bookmark post ini
+        const userBookmarked = userId
+            ? !!(await Bookmark.findOne({ where: { postId, userId } }))
+            : false
 
-        res.json({ totalBookmarks: total, userBookmarked })
+        res.json({ totalBookmarks, userBookmarked })
     } catch (error) {
         next(error)
     }
 }
 
+// --- Controller: GET ALL BOOKMARKED POSTS BY USER ---
 export const getUserBookmarks = async (req, res, next) => {
     try {
         const userId = req.user?.id
-        if (!userId) return res.status(401).json({ message: "Not authorized!" })
+        if (!userId) {
+            res.status(401)
+            throw new Error("Not authorized to get bookmarked post!")
+        }
 
-        const bookmarks = await Bookmark.findAll({
-            where: { userId },
-            include: [
+        // Cari user dan sekaligus ambil semua post yang di-bookmark
+        const user = await User.findByPk(userId, {
+            include: {
+                model: Post,
+                as: "bookmarks",
+                include: [
+                    {
+                        model: User,
+                        as: "author",
+                        attributes: ["id", "name"],
+                    },
+                ],
+            },
+            order: [[
                 {
                     model: Post,
-                    include: [
-                        {
-                            model: User,
-                            as: "author",
-                            attributes: ["id", "name"]
-                        },
-                    ],
+                    as: "bookmarks",
                 },
-            ],
-            order: [["createdAt", "DESC"]]
+                "createdAt", "DESC",
+            ]],
         })
 
-        const posts = bookmarks.map((b) => b.Post)
+        // Ambil Array post, atau Array kosong jika user tidak ditemukan / belum ada bookmark
+        const posts = user?.bookmarks || []
+
         res.json(posts)
     } catch (error) {
         next(error)

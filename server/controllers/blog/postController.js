@@ -17,6 +17,7 @@ export const createPost = async (req, res, next) => {
   try {
     const { title, content, categories } = req.body
 
+    // Validasi: Semua field wajib diisi
     if (!title || !content) {
       res.status(400)
       throw new Error("Please fill in all fields!")
@@ -169,6 +170,7 @@ export const updatePost = async (req, res, next) => {
       throw new Error("Post not found!")
     }
 
+    // Cek otorisasi: Hanya penulis post yang boleh mengedit
     if (post.authorId !== req.user.id) {
       res.status(403)
       throw new Error("Not authorized to update this post!")
@@ -235,6 +237,7 @@ export const deletePost = async (req, res, next) => {
       return next(new Error("Post not found!"))
     }
 
+    // Cek otorisasi: Hanya penulis post yang boleh menghapus
     if (post.authorId !== req.user.id) {
       res.status(403)
       return next(new Error("Not authorized to delete this post"))
