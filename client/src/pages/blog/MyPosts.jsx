@@ -89,7 +89,7 @@ const MyPosts = () => {
             </p>
             {/* Anda bisa menambahkan tombol untuk mengarahkan ke halaman buat post baru */}
             <a
-              href="/create" // Ganti dengan path create post Anda
+              href="/blog/create" // Ganti dengan path create post Anda
               className="px-6 py-3 bg-brand-blue hover:bg-brand-blue/90 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
             >
               Mulai Tulis Sekarang

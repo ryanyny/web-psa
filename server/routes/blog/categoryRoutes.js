@@ -4,7 +4,7 @@ import authMiddleware from "../../middlewares/authMiddleware.js"
 
 const router = express.Router()
 
-// -- Routes public / guests ---
+// --- Routes public / guests ---
 router.get("/", getAllCategories)
 router.get("/:id/posts", getPostByCategory)
 

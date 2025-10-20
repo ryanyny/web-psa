@@ -5,7 +5,7 @@ import path from "path"
 import morgan from "morgan"
 
 import config from "./config/config.js"
-import { connectDb } from "./config/database.js"
+import sequelize, { connectDb } from "./config/database.js"
 import errorMiddleware from "./middlewares/errorMiddleware.js"
 import routes from "./routes/index.js"
 import partnerRoutes from "./routes/landing/partnerRoutes.js"
