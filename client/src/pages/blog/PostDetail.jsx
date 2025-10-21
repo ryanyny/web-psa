@@ -296,7 +296,7 @@ const PostDetail = () => {
             <img
               src={post.image}
               alt={post.title}
-              className="max-w-4xl w-full aspect-video rounded-xl shadow-xl object-cover"
+              className="max-w-4xl w-full aspect-[4/3] sm:aspect-video rounded-xl shadow-xl object-cover"
             />
           </div>
         )}
@@ -343,7 +343,7 @@ const PostDetail = () => {
             <h2 className="text-3xl font-bold text-gray-800 mb-5 tracking-tight text-center">
               Postingan Terkait Lainnya
             </h2>
-            <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {relatedPosts.map((p) => (
                 <PostCard key={p.id} post={p} />
               ))}
@@ -360,8 +360,8 @@ const PostDetail = () => {
         )}
 
         {/* KOMENTAR */}
-        <div className="mt-16 pt-8 max-w-3xl mx-auto border-t border-gray-200">
-          <h2 className="text-3xl font-bold text-brand-navy mb-8 tracking-tight">
+        <div className="mt-16 pt-8 max-w-full md:wax-w-3xl mx-auto border-t border-gray-200">
+          <h2 className="text-2xl md:text-3xl font-bold text-brand-navy mb-8 tracking-tight">
             Komentar ({totalCommentsCount})
           </h2>
 

@@ -128,11 +128,11 @@ const Home = () => {
           </div>
 
           {/* Dropdown Kategori */}
-          <div className="relative w-full md:w-auto">
+          <div className="relative w-full md:w-auto md:min-w-[200px]">
             <select
               value={selectedCategory}
               onChange={handleCategoryChange}
-              className="appearance-none pl-4 pr-12 py-3 border-2 border-gray-300 rounded-full bg-white text-gray-700 font-medium shadow-sm hover:border-brand-blue focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue transition duration-200 cursor-pointer w-full"
+              className="appearance-none pl-4 pr-12 py-3 border-2 border-gray-300 rounded-full bg-white text-gray-700 font-medium shadow-sm hover:border-brand-blue focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue transition duration-200 cursor-pointer w-full md:w-auto"
             >
               <option value="">Semua Blog</option>
               {categoryList.map((cat) => (
@@ -161,7 +161,7 @@ const Home = () => {
         {/* KONDISI TAMPILAN KONTEN (GRID atau EMPTY STATE) */}
         {currentPosts.length > 0 ? (
             // Jika ada postingan: Tampilkan Grid
-            <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {currentPosts.map((p) => (
                 <PostCard key={p.id} post={p} />
               ))}

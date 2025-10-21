@@ -67,7 +67,7 @@ const MyPosts = () => {
         {list.length > 0 ? (
           <>
             {/* Grid posts - hanya tampilkan currentPosts */}
-            <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {currentPosts.map((p) => (
                 <PostCard key={p.id} post={p} />
               ))}

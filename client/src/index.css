@@ -60,6 +60,26 @@ body {
    REACT QUILL / RICH TEXT EDITOR
    ============================================== */
 
+@media (max-width: 639px) {
+  .ql-toolbar.ql-snow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 8px !important;
+  }
+
+  .ql-toolbar.ql-snow .ql-formats {
+    margin-right: 0px;
+    margin-bottom: 4px;
+  }
+
+  .ql-toolbar.ql-snow button {
+    padding: 4px;
+    width: 30px;
+    height: 30px;
+  }
+}
+
 /* Biar semua gambar di editor auto-scale */
 .ql-editor img {
   max-width: 100%;
@@ -105,6 +125,35 @@ body {
 /* ==============================================
    MEDIUM-STYLE DISPLAY (untuk tampilan blog)
    ============================================== */
+
+@media (max-width: 767px) {
+  .prose.quill-content {
+    font-size: 1rem;
+    padding: 0 16px;
+  }
+
+  .prose.quill-content h1 {
+    font-size: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .prose.quill-content h2 {
+    font-size: 1.5rem;
+  }
+
+  .prose.quill-content h3 {
+    font-size: 1.2rem;
+  }
+
+  .prose.quill-content img {
+    margin: 1.5em auto;
+  }
+
+  .prose.quill-content blockquote {
+    margin: 1.5em 0;
+    padding-left: 1em;
+  }
+}
 
 .prose.quill-content {
   max-width: 720px;

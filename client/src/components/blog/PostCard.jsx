@@ -19,7 +19,7 @@ const PostCard = ({ post }) => {
 
       <div className="p-6 flex flex-col flex-grow">
         <Link to={`/blog/post/${post.id}`}>
-          <h2 className="text-xl font-bold text-brand-navy group-hover:text-brand-blue transition-colors duration-300 line-clamp-2">
+          <h2 className="text-lg sm:text-xl font-bold text-brand-navy group-hover:text-brand-blue transition-colors duration-300 line-clamp-2">
             {post.title}
           </h2>
         </Link>
@@ -38,14 +38,14 @@ const PostCard = ({ post }) => {
           </div>
         )}
 
-        <div className="flex items-center gap-2 mt-3 text-sm text-gray-500">
+        <div className="flex items-center gap-2 mt-3 text-xs md:text-sm text-gray-500">
           <Heart
-            size={16}
+            size={14}
             className="text-brand-pink fill-brand-pink" />
             <span className="font-medium">{post.totalLikes || 0} Suka</span>
         </div>
 
-        <p className="text-sm text-gray-500 mt-3 mb-4">
+        <p className="mt-2 text-sm text-gray-600 line-clamp-3 flex-grow">
           oleh <span className="font-semibold">{post.author?.name || "Penulis Tak Dikenal"}</span> —{" "}
           {new Date(post.createdAt).toLocaleDateString("id-ID", { month: 'short', day: 'numeric', year: 'numeric' })}
         </p>

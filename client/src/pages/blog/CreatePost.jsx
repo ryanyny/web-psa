@@ -64,10 +64,10 @@ const CreatePost = () => {
       <h1 className="text-3xl font-bold text-brand-navy mb-4">Tulis Postingan Baru</h1>
       {/* Input Judul */}
       <input
-        value={title}
+        value={title} 
         onChange={(e) => setTitle(e.target.value)}
-        placeholder="Masukkan judul postingan di sini..."
-        className="w-full text-2xl font-semibold p-4 border-b-2 border-gray-300 focus:outline-none focus:border-brand-blue transition duration-200"
+        placeholder="Masukkan judul postingan..."
+        className="w-full text-xl md:text-2xl font-semibold p-4 border-b-2 border-gray-300 focus:outline-none focus:border-brand-blue transition duration-200"
         required
       />
 

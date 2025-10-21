@@ -67,9 +67,9 @@ const CommentList = ({
             comment.authorId === postAuthorId ? " (Penulis)" : isCommentAuthor ? " (Anda)" : "";
 
         return (
-            <div className={`transition-all duration-300 ${isReply ? "ml-8 md:ml-12 border-l-2 border-sky-100 pl-4 md:pl-6" : ""}`}>
-                <div className="flex space-x-4 py-5 border-b border-gray-100 last:border-b-0">
-                    <img src={avatar} alt={authorName} className="w-10 h-10 rounded-full object-cover flex-shrink-0" />
+            <div className={`transition-all duration-300 ${isReply ? "ml-4 md:ml-8 border-l-2 border-sky-100 pl-4" : ""}`}>
+                <div className="flex space-x-3 md:space-x-4 py-5 border-b border-gray-100 last:border-b-0">
+                    <img src={avatar} alt={authorName} className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover flex-shrink-0" />
                     <div className="flex-1">
                         <div className="flex justify-between items-start">
                             <div>
