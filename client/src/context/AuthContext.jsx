@@ -1,16 +1,15 @@
 import { createContext, useState, useEffect } from "react"
 import { auth } from "../http"
 
-// Buat Context Auth, default value: user null (belum login), loading true (mengecek login)
 const AuthContext = createContext({ user: null, loading: true })
 
-// Provider untuk supply state auth ke seluruh app
+// --- Component provider autentikasi ---
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
 
-    // Mengecek apakah user mempunyai session/token valid
     useEffect(() => {
+        // Fungsi untuk mengambil data user saat ini
         const fetchMe = async () => {
             try {
                 const res = await auth.me()
@@ -25,7 +24,7 @@ export const AuthProvider = ({ children }) => {
         fetchMe()
     }, [])
 
-    // Fungsi login
+    // Fungsi untuk proses login
     const login = async (data) => {
         const res = await auth.login(data)
         setUser(res.data.user)
@@ -33,7 +32,7 @@ export const AuthProvider = ({ children }) => {
         return res
     }
 
-    // Fungsi register
+    // Fungsi untuk proses registrasi
     const register = async (data) => {
         const res = await auth.register(data)
         setUser(res.data.user)
@@ -41,14 +40,17 @@ export const AuthProvider = ({ children }) => {
         return res
     }
 
-    // Fungsi logout
+    // Fungsi untuk proses logout
     const logout = async () => {
         await auth.logout()
         setUser(null)
     }
 
+    // Menampilkan loading screen / spinner selama proses autentikasi awal
+    if (loading) return <div className="flex justify-center p-10">Loading...</div>
+    
+    // Menyediakan nilai context (state & fungsi) ke seluruh children
     return (
-        // Kirim semua data dan fungsi ke seluruh anak komponen
         <AuthContext.Provider value={{ user, loading, login, register, logout }}>
             {children}
         </AuthContext.Provider>
