@@ -29,8 +29,25 @@ const protect = async (req, res, next) => {
         next()
     } catch (error) {
         console.error("Auth Middleware Error: ", error.message)
-        return res.status(401).json({ message: "Invalid or expired token!" })
+        
+        if (error.name === "TokenExpiredError") {
+            return res.status(401).json({ message: "Token has expired!" })
+        }
+
+        if (error.name === "JsonWebTokenError") {
+            return res.status(401).json({ message: "Invalid token!" })
+        }
+        
+        return res.status(500).json({ message: "Authentication error!" })
     }
 }
 
-export default protect
+const adminOnly = (req, res, next) => {
+    if (req.user && req.user.role === "admin") {
+        next()
+    } else {
+        res.status(403).json({ message: "Access denied! Admins only." })
+    }
+}
+
+export { protect, adminOnly }

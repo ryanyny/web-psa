@@ -8,7 +8,7 @@ const stripHtml = (html = "") => html.replace(/<[^>]+>/g, "").trim()
 
 // Mendefinisikan class Post yang mewarisi Model sequelize
 class Post extends Model {
-    // Metode instance khusus untuk mengontrol output JSON
+    // Metode instance: Mengontrol output data User saat dikonversi ke JSON
     toJSON() {
         const values = { ...this.get() }
         delete values.authorId
