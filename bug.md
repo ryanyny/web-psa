@@ -1,5 +1,9 @@
 ### BLOG
-3. Navigasi belum mulus
-4. Styling kanan kiri
-1. Bullet list (rich text editor)
-2. Clear cookie harus di refresh
+- Update cover image tidak berjalan
+- Image content tidak terbaca jika belum login
+- Jumlah like tidak terbaca di postingan disimpan
+- Navigasi tidak smooth
+- Pagination tidak smooth
+- Styling kanan kiri
+- Bullet list (rich text editor)
+- Clear cookie harus di refresh

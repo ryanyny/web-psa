@@ -66,10 +66,7 @@ export const getPostByCategory = async (req, res, next) => {
             throw new Error("Category not found!")
         }
 
-        res.json({
-            category: category.name,
-            posts: category.posts,
-        })
+        res.json(category.posts || [])
     } catch (error) {
         next(error)
     }

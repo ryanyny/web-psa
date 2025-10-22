@@ -6,6 +6,7 @@ import ImgPro from "../../assets/images/imgproo.png"
 
 export default function Register() {
   const navigate = useNavigate()
+  const { register } = useContext(AuthContext)
   const [submitStatus, setSubmitStatus] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [formData, setFormData] = useState({
@@ -15,7 +16,6 @@ export default function Register() {
     password: "",
   })
   
-  const { register } = useContext(AuthContext)
 
   // Handler untuk memperbarui state form saat input berubah
   const handleInputChange = (e) => {
