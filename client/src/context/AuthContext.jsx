@@ -1,5 +1,6 @@
-import { createContext, useState, useEffect } from "react"
-import { auth } from "../http"
+import { createContext, useState, useEffect, useCallback } from "react"
+import { toast } from "react-toastify"
+import { auth } from "../http/index.js"
 
 const AuthContext = createContext({ user: null, loading: true })
 
@@ -8,48 +9,68 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
 
-    useEffect(() => {
-        // Fungsi untuk mengambil data user saat ini
-        const fetchMe = async () => {
-            try {
-                const res = await auth.me()
-                setUser(res.data)
-            } catch {
-                setUser(null)
-            } finally {
-                setLoading(false)
-            }
+    const fetchMe = useCallback(async () => {
+        try {
+            const res = await auth.me()
+            setUser(res.data)
+        } catch (error) {
+            console.error("Error fetching user data: ", error)
+            setUser(null)
+        } finally {
+            setLoading(false)
         }
-
-        fetchMe()
     }, [])
+
+    useEffect(() => {
+        fetchMe()
+    }, [fetchMe])
 
     // Fungsi untuk proses login
     const login = async (data) => {
-        const res = await auth.login(data)
-        setUser(res.data.user)
+        try {
+            const res = await auth.login(data)
+            const userData = res.data.user
+            setUser(userData)
+            toast.success("Login berhasil!")
 
-        return res
+            return userData
+        } catch (error) {
+            const message = error.response?.data?.message || "Login gagal!"
+            toast.error(message)
+            throw new Error(message)
+        }
     }
 
     // Fungsi untuk proses registrasi
     const register = async (data) => {
-        const res = await auth.register(data)
-        setUser(res.data.user)
+        try {
+            const res = await auth.register(data)
+            const userData = res.data.user
+            setUser(userData)
+            toast.success("Registrasi berhasil!")
 
-        return res
+            return userData
+        } catch (error) {
+            const message = error.response?.data?.message || "Registrasi gagal!"
+            toast.error(message)
+            throw new Error(message)
+        }
     }
 
     // Fungsi untuk proses logout
     const logout = async () => {
-        await auth.logout()
-        setUser(null)
+        try {
+            await auth.logout()
+            setUser(null)
+            toast.success("Logout berhasil!")
+        } catch (error) {
+            console.error("Error during logout: ", error)
+            toast.error("Logout gagal!")
+            throw error
+        }
     }
 
-    // Menampilkan loading screen / spinner selama proses autentikasi awal
-    if (loading) return <div className="flex justify-center p-10">Loading...</div>
-    
-    // Menyediakan nilai context (state & fungsi) ke seluruh children
+    // Menyediakan nilai context (state dan fungsi) ke seluruh children
     return (
         <AuthContext.Provider value={{ user, loading, login, register, logout }}>
             {children}

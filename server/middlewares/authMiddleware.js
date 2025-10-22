@@ -3,6 +3,15 @@ import User from "../models/userModel.js"
 
 // Middleware untuk memverifikasi JWT dan melindungi routes
 const protect = async (req, res, next) => {
+    // Definisi cookieOptions untuk menghapus cookie secara konsisten
+    const cookieOptionsClear = {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        path: "/",
+        expires: new Date(0),
+    }
+
     try {
         // Ambil token JWT dari cookie request
         const token = req.cookies.token
@@ -20,15 +29,19 @@ const protect = async (req, res, next) => {
             attributes: { exclude: ["password"] },
         })
         if (!user) {
+            res.clearCookie("token", cookieOptionsClear)
             return res
                 .status(401)
                 .json({ message: "Not authorized, user not found!" })
             }
 
-        req.user = user
+        req.user = user.toJSON()
+
         next()
     } catch (error) {
         console.error("Auth Middleware Error: ", error.message)
+
+        res.clearCookie("token", cookieOptionsClear)
         
         if (error.name === "TokenExpiredError") {
             return res.status(401).json({ message: "Token has expired!" })

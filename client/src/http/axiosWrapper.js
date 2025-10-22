@@ -24,18 +24,3 @@ axiosWrapper.interceptors.request.use((config) => {
     
     return config
 })
-
-// Interceptor ini dijalankan setelah setiap respons diterima
-axiosWrapper.interceptors.response.use(
-    // Handler sukses: Cukup kembalikan respons
-    (res) => res,
-    (err) => {
-        // Logika re-autentikasi otomatis (handling 401 unauthorized)
-        if (err.response?.status === 401) {
-            // Jika server merespons 401 (unauthorized / token kedaluwarsa) arahkan pengguna ke halaman login
-            window.location.href = "/login"
-        }
-
-        return Promise.reject(err)
-    }
-)
