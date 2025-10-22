@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import SkillRatingInput from './SkillRatingInput';
 import LevelIndicator from './LevelIndicator';
 
-const Step4SkillRating = ({ prevStep, nextStep, handleChange, values, }) => {
+const Step4SkillRating = ({ prevStep, nextStep, handleChange, values }) => {
   const [missingSkills, setMissingSkills] = useState([]);
   const [showAlert, setShowAlert] = useState(false);
 
@@ -32,7 +32,7 @@ const Step4SkillRating = ({ prevStep, nextStep, handleChange, values, }) => {
     DecisionMaking: 'Decision Making'
   };
 
-  /// Check for missing skills whenever values change
+  // Check for missing skills whenever values change
   useEffect(() => {
     const requiredSkills = Object.keys(skillMap);
     const missing = requiredSkills.filter(k => {
@@ -75,9 +75,9 @@ const Step4SkillRating = ({ prevStep, nextStep, handleChange, values, }) => {
     nextStep();
   };
 
-  const closeAlert = () => {
-    setShowAlert(false);
-  };
+  // const closeAlert = () => {
+  //   setShowAlert(false);
+  // };
 
   return (
     <form onSubmit={continueStep} className="space-y-6">
@@ -102,7 +102,7 @@ const Step4SkillRating = ({ prevStep, nextStep, handleChange, values, }) => {
                 ))}
               </div>
             </div>
-            <button 
+            {/* <button 
               type="button" 
               onClick={closeAlert}
               className="ml-4 text-red-600 hover:text-red-800 transition-colors p-1 rounded-full hover:bg-red-100"
@@ -110,7 +110,7 @@ const Step4SkillRating = ({ prevStep, nextStep, handleChange, values, }) => {
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
-            </button>
+            </button> */}
           </div>
         </div>
       )}
