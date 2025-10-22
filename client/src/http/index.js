@@ -1,14 +1,13 @@
 import { axiosWrapper } from "./axiosWrapper.js"
 
-// API upload gambar (konten blog)
+// --- Service: Upload file ---
 export const upload = {
-    image: (formData) =>
-        axiosWrapper.post("/upload", formData, {
-            headers: { "Content-Type": "multipart/form-data" },
-        })
+    image: (formData) => axiosWrapper.post("/upload", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+    }),
 }
 
-// API otentikasi user
+// --- Service: Autentikasi ---
 export const auth = {
     register: (payload) => axiosWrapper.post("/api/auth/register", payload),
     login: (payload) => axiosWrapper.post("/api/auth/login", payload),
@@ -16,7 +15,7 @@ export const auth = {
     me: () => axiosWrapper.get("/api/auth/me"),
 }
 
-// API blog
+// --- Service: Post ---
 export const posts = {
     getAll: () => axiosWrapper.get("/api/posts"),
     getById: (id) => axiosWrapper.get(`/api/posts/${id}`),
@@ -25,17 +24,31 @@ export const posts = {
     remove: (id) => axiosWrapper.delete(`/api/posts/${id}`),
 }
 
-// API kategori
+// --- Service: Kategori ---
 export const categories = {
     getAll: () => axiosWrapper.get("/api/categories"),
-    getPosts: (id) => axiosWrapper.get(`/api/categories/${id}/posts`), 
+    getPosts: (id) => axiosWrapper.get(`/api/categories/${id}/posts`),
 }
 
+// --- Service: Komentar ---
 export const comments = {
     getCommentsByPost: (postId) => axiosWrapper.get(`/api/comments/${postId}/comments`),
-    create: (postId, content) => axiosWrapper.post(`/api/comments/${postId}/comments`, { content }),
+    create: (postId, payload) => axiosWrapper.post(`/api/comments/${postId}/comments`, payload),
     update: (id, data) => axiosWrapper.put(`/api/comments/${id}`, data),
     remove: (id) => axiosWrapper.delete(`/api/comments/${id}`),
 }
 
-export default { auth, posts, upload, categories, comments }
+// --- Service: Like ---
+export const likes = {
+    get: (postId) => axiosWrapper.get(`/api/posts/${postId}/likes`),
+    toggle: (postId) => axiosWrapper.post(`/api/posts/${postId}/likes/toggle`),
+}
+
+// --- Service: Bookmark ---
+export const bookmarks = {
+    getSummary: (postId) => axiosWrapper.get(`/api/posts/${postId}/bookmarks`),
+    toggle: (postId) => axiosWrapper.post(`/api/posts/${postId}/bookmarks/toggle`),
+    getUserBookmarks: () => axiosWrapper.get(`/api/posts/user/bookmarks`),
+}
+
+export default { auth, posts, upload, categories, comments, likes, bookmarks }

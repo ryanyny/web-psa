@@ -1,12 +1,15 @@
 import express from "express"
-import authMiddleware from "../../middlewares/authMiddleware.js"
-import { getCommentsByPost, createComment, deleteComment, updateComment } from "../../controllers/blog/commentController.js"
+import { createComment, deleteComment, getCommentsByPost, updateComment, } from "../../controllers/blog/commentController.js"
+import { protect } from "../../middlewares/authMiddleware.js"
 
 const router = express.Router()
 
+// -- Routes public / guests ---
 router.get("/:postId/comments", getCommentsByPost)
-router.post("/:postId/comments", authMiddleware, createComment)
-router.put("/:id", authMiddleware, updateComment)
-router.delete("/:id", authMiddleware, deleteComment)
+
+// --- Routes administrasi (memerlukan autentikasi) ---
+router.post("/:postId/comments", protect, createComment)
+router.put("/:id", protect, updateComment)
+router.delete("/:id", protect, deleteComment)
 
 export default router

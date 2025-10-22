@@ -2,33 +2,27 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"
 import { ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 
-// ===== Landing Pages =====
-import Home from "./pages/landing/Home"
-import Tentangkami from "./pages/landing/Tentangkami"
-import Contact from "./pages/landing/Contact"
-import Login from "./pages/auth/Login"
-import Register from "./pages/auth/Register"
-import Program from "./pages/landing/Program"
-import DetailProgram from "./pages/landing/Detail-program"
-import Mitra from "./pages/landing/Mitra"
-import DetailMitra from "./pages/landing/Detail-mitra"
-import DashboardUser from "./pages/landing/DashboardUser"
-import DaftarProgram from "./pages/landing/Daftar-program"
-import Testimoni from "./pages/landing/Testimoni"
-
-// ===== Admin Pages =====
-import DashboardAdmin from "./pages/admin/DashboardAdmin"
-import ProgramAdmin from "./pages/admin/ProgramAdmin"
-import MitraAdmin from "./pages/admin/MitraAdmin"
-import PesertaAdmin from "./pages/admin/PesertaAdmin"
-import TestimoniAdmin from "./pages/admin/TestimoniAdmin"
-import KategoriAdmin from "./pages/admin/KategoriAdmin"
-
 // Layout
 import UserLayout from "./layouts/UserLayout"
 import AdminLayout from "./layouts/AdminLayout"
 
-// ===== Blog Pages =====
+// Halaman autentikasi
+import Login from "./pages/auth/Login"
+import Register from "./pages/auth/Register"
+
+// Halaman landing page / pengguna umum
+import Home from "./pages/landing/Home"
+import Tentangkami from "./pages/landing/Tentangkami"
+import Contact from "./pages/landing/Contact"
+import Program from "./pages/landing/Program"
+import DetailProgram from "./pages/landing/Detail-program"
+import Mitra from "./pages/landing/Mitra"
+import DetailMitra from "./pages/landing/Detail-mitra"
+import DaftarProgram from "./pages/landing/Daftar-program"
+import Testimoni from "./pages/landing/Testimoni"
+import DashboardUser from "./pages/landing/DashboardUser"
+
+// Halaman blog
 import BlogHome from "./pages/blog/Home"
 import PostDetail from "./pages/blog/PostDetail"
 import CreatePost from "./pages/blog/CreatePost"
@@ -36,21 +30,35 @@ import EditPost from "./pages/blog/EditPost"
 import MyPosts from "./pages/blog/MyPosts"
 import NotFound from "./pages/NotFound"
 import ProtectedRoute from "./components/blog/ProtectedRoute"
+import SavedPosts from "./pages/blog/SavedPosts"
+
+// Halaman admin
+import DashboardAdmin from "./pages/admin/DashboardAdmin"
+import ProgramAdmin from "./pages/admin/ProgramAdmin"
+import MitraAdmin from "./pages/admin/MitraAdmin"
+import PesertaAdmin from "./pages/admin/PesertaAdmin"
+import TestimoniAdmin from "./pages/admin/TestimoniAdmin"
+import KategoriAdmin from "./pages/admin/KategoriAdmin"
 
 function App() {
   return (
     <BrowserRouter>
-            <ToastContainer
-          position="top-right"
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          pauseOnHover
-          draggable
-          theme="colored" />
+      {/* Konfigurasi global toast notifications (untuk pesan sukses / error API) */}
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        pauseOnHover
+        draggable
+        theme="colored"
+      />
+
       <Routes>
-        {/* ====== LANDING ROUTES ====== */}
+        {/* ==========================
+            Rute landing page
+            ========================== */}
         <Route
           path="/"
           element={
@@ -59,22 +67,10 @@ function App() {
             </UserLayout>
           }
         />
-        <Route
-          path="/tentangkami"
-          element={
-            <UserLayout>
-              <Tentangkami />
-            </UserLayout>
-          }
-        />
-        <Route
-          path="/contact"
-          element={
-            <UserLayout>
-              <Contact />
-            </UserLayout>
-          }
-        />
+
+        {/* ==========================
+            Rute autentikasi
+            ========================== */}
         <Route
           path="/login"
           element={
@@ -88,6 +84,26 @@ function App() {
           element={
             <UserLayout>
               <Register />
+            </UserLayout>
+          }
+        />
+
+        {/* ==========================
+            Rute pengguna umum
+            ========================== */}
+        <Route
+          path="/tentangkami"
+          element={
+            <UserLayout>
+              <Tentangkami />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/contact"
+          element={
+            <UserLayout>
+              <Contact />
             </UserLayout>
           }
         />
@@ -148,7 +164,69 @@ function App() {
           }
         />
 
-        {/* ====== ADMIN ROUTES ====== */}
+        {/* ==========================
+            Rute blog
+            ========================== */}
+        <Route
+          path="/blog"
+          element={
+            <UserLayout>
+              <BlogHome />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/blog/post/:id"
+          element={
+            <UserLayout>
+              <PostDetail />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/blog/create"
+          element={
+            <UserLayout>
+              <ProtectedRoute>
+                <CreatePost />
+              </ProtectedRoute>
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/blog/edit/:id"
+          element={
+            <UserLayout>
+              <ProtectedRoute>
+                <EditPost />
+              </ProtectedRoute>
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/blog/my-posts"
+          element={
+            <UserLayout>
+              <ProtectedRoute>
+                <MyPosts />
+              </ProtectedRoute>
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/blog/saved"
+          element={
+            <UserLayout>
+              <ProtectedRoute>
+                <SavedPosts />
+              </ProtectedRoute>
+            </UserLayout>
+          }
+        />
+
+        {/* ==========================
+            Rute admin
+            ========================== */}
         <Route
           path="/dashboard-admin"
           element={
@@ -197,56 +275,8 @@ function App() {
             </AdminLayout>
           }
         />
-
-        {/* ====== BLOG ROUTES (dengan UserLayout yang sama) ====== */}
-        <Route
-          path="/blog"
-          element={
-            <UserLayout>
-              <BlogHome />
-            </UserLayout>
-          }
-        />
-        <Route
-          path="/blog/post/:id"
-          element={
-            <UserLayout>
-              <PostDetail />
-            </UserLayout>
-          }
-        />
-        <Route
-          path="/blog/create"
-          element={
-            <UserLayout>
-              <ProtectedRoute>
-                <CreatePost />
-              </ProtectedRoute>
-            </UserLayout>
-          }
-        />
-        <Route
-          path="/blog/edit/:id"
-          element={
-            <UserLayout>
-              <ProtectedRoute>
-                <EditPost />
-              </ProtectedRoute>
-            </UserLayout>
-          }
-        />
-        <Route
-          path="/blog/my-posts"
-          element={
-            <UserLayout>
-              <ProtectedRoute>
-                <MyPosts />
-              </ProtectedRoute>
-            </UserLayout>
-          }
-        />
-
-        {/* ====== NOT FOUND ====== */}
+        
+        {/* Catch-all route untuk penanganan error 404 */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

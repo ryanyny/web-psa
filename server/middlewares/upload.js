@@ -1,35 +1,39 @@
 import multer from "multer"
 import path from "path"
 
-// Ekstensi yang valid
+// Daftar ekstensi file gambar yang diizinkan untuk diunggah
 const allowedExtensions = [".png", ".jpg", ".jpeg", ".webp"]
 
-// Konfigurasi tempat penyimpanan file upload
+// --- Konfigurasi penyimpanan ---
 const storage = multer.diskStorage({
+    // Menentukan folder tujuan penyimpanan file yang diunggah
     destination: (req, file, cb) => {
-        cb(null, "uploads/") // Semua file disimpan di folder "uploads"
+        cb(null, "uploads/")
     },
+    // Menentukan nama file setelah diunggah
     filename: (req, file, cb) => {
-        // Rename file menggunakan timestamp dan ambil ekstensi aslinya
         cb(null, Date.now() + path.extname(file.originalname))
     },
 })
 
-// Filter tipe file
+// --- Fungsi filter file ---
 const fileFilter = (req, file, cb) => {
     const ext = path.extname(file.originalname).toLowerCase()
+
     if (!allowedExtensions.includes(ext)) {
-        return cb(new Error("Only image files are allowed (.png, .jpg, .jpeg, .webp"))
+        return cb(
+            new Error("Only image files are allowed (.png, .jpg, .jpeg, .webp")
+        )
     }
 
     cb(null, true)
 }
 
-// Multer config
+// --- Inisialisasi middleware multer ---
 const upload = multer({
     storage,
     fileFilter,
-    limits: { fileSize: 5 * 1024 * 1024 }
+    limits: { fileSize: 5 * 1024 * 1024 },
 })
 
 export default upload

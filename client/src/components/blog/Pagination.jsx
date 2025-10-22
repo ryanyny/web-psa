@@ -39,7 +39,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
       </div>
 
       {/* Pagination Controls */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1 md:gap-2">
         {/* First Page Button */}
         <button
           onClick={() => onPageChange(1)}
@@ -61,7 +61,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         </button>
 
         {/* Page Numbers */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-0.5 md:gap-1">
           {getPageNumbers().map((page, index) => {
             if (page === 'ellipsis') {
               return (

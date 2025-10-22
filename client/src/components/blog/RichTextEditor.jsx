@@ -92,7 +92,7 @@ const RichTextEditor = ({ value, onChange }) => {
   }, [])
 
   return (
-    <div>
+    <div className="w-full">
       <ReactQuill
         ref={quillRef}
         theme="snow"
