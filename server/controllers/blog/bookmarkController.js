@@ -72,11 +72,13 @@ export const getUserBookmarks = async (req, res, next) => {
             throw new Error("Not authorized to get bookmarked post!")
         }
 
+        // Cari user dan sekaligus ambil semua post yang di-bookmark
         const user = await User.findByPk(userId, {
             include: {
                 model: Post,
                 as: "bookmarks",
                 attributes: {
+                    // Menambahkan kolom virtual "totalLikes" ke hasil query
                     include: [
                         [ 
                             sequelize.fn(
@@ -125,6 +127,7 @@ export const getUserBookmarks = async (req, res, next) => {
             ]],
         })
 
+        // Ambil Array post, atau Array kosong jika user tidak ditemukan / belum ada bookmark
         const posts = user?.bookmarks || []
 
         res.json(posts)

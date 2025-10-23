@@ -68,7 +68,11 @@ const Home = () => {
 
   // --- Handle interaksi pengguna ---
 
-  const handlePageChange = (pageNumber) => setCurrentPage(pageNumber)
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber)
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }
+
 
   const handleCategoryChange = useCallback((e) => {
     setSelectedCategory(e.target.value)
