@@ -27,8 +27,8 @@ const Home = () => {
         // Ambil semua kategori
         const categoryRes = await categories.getAll()
         setCategoryList(categoryRes.data)
-      } catch (err) {
-        console.error("Failed to fetch data:", err)
+      } catch (error) {
+        console.error("Failed to fetch data:", error)
       } finally {
         setLoading(false)
       }

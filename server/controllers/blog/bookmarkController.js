@@ -1,4 +1,6 @@
+import sequelize from "../../config/database.js"
 import Bookmark from "../../models/bookmarkModel.js"
+import Category from "../../models/categoryModel.js"
 import Post from "../../models/postModel.js"
 import User from "../../models/userModel.js"
 
@@ -70,19 +72,50 @@ export const getUserBookmarks = async (req, res, next) => {
             throw new Error("Not authorized to get bookmarked post!")
         }
 
-        // Cari user dan sekaligus ambil semua post yang di-bookmark
         const user = await User.findByPk(userId, {
             include: {
                 model: Post,
                 as: "bookmarks",
+                attributes: {
+                    include: [
+                        [ 
+                            sequelize.fn(
+                                "COUNT",
+                                sequelize.fn("DISTINCT", sequelize.col("bookmarks->likedBy.id"))
+                            ),
+                            "totalLikes",
+                        ],
+                    ],
+                },
                 include: [
                     {
                         model: User,
                         as: "author",
                         attributes: ["id", "name"],
                     },
+                    {
+                        model: User,
+                        as: "likedBy",
+                        attributes: [],
+                        through: { attributes: [] },
+                        required: false,
+                    },
+                    {
+                        model: Category,
+                        as: "categories",
+                        attributes: ["id", "name"],
+                        through: { attributes: [] },
+                    },
                 ],
+                through: { attributes: [] },
             },
+            group: [
+                "User.id",
+                "bookmarks.id",
+                "bookmarks->author.id",
+                "bookmarks->likedBy.id",
+                "bookmarks->categories.id",
+            ],
             order: [[
                 {
                     model: Post,
@@ -92,7 +125,6 @@ export const getUserBookmarks = async (req, res, next) => {
             ]],
         })
 
-        // Ambil Array post, atau Array kosong jika user tidak ditemukan / belum ada bookmark
         const posts = user?.bookmarks || []
 
         res.json(posts)

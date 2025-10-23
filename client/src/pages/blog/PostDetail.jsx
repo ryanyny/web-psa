@@ -49,8 +49,8 @@ const PostDetail = () => {
           .slice(0, 3) // Ambil maksimal 3 post
         setRelatedPosts(filteredRelated)
       }
-    } catch (err) {
-      console.error(err)
+    } catch (error) {
+      console.error(error)
     } finally {
       setLoading(false)
     }

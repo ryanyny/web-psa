@@ -28,8 +28,8 @@ const MyPosts = () => {
         )
 
         setList(mine) // Perbarui daftar postingan milik user
-      } catch (err) {
-        console.error(err)
+      } catch (error) {
+        console.error(error)
       } finally {
         setLoading(false)
       }

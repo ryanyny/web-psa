@@ -1,7 +1,6 @@
 ### BLOG
-- Update cover image tidak berjalan
-- Image content tidak terbaca jika belum login
-- Jumlah like tidak terbaca di postingan disimpan
+- Update cover image tidak berjalan ✅
+- Jumlah like & kategori tidak terbaca di postingan disimpan ✅
 - Navigasi tidak smooth
 - Pagination tidak smooth
 - Styling kanan kiri

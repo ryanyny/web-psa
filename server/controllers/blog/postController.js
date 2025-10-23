@@ -187,7 +187,7 @@ export const updatePost = async (req, res, next) => {
       deleteFileIfExists(oldImagePath)
 
       // Update URL gambar di database dengan file yang baru 
-      post.image = `${req.protocol}://${req.get("host")}//uploads/${
+      post.image = `${req.protocol}://${req.get("host")}/uploads/${
         req.file.filename
       }`
     }
