@@ -12,6 +12,7 @@ import partnerRoutes from "./routes/landing/partnerRoutes.js"
 import participantRoutes from "./routes/landing/participantRoutes.js"
 import programRoutes from "./routes/landing/programRoutes.js"
 import applicantRoutes from "./routes/screening/applicantRoutes.js"
+import emailRoutes from "./routes/screening/emailRoutes.js"
 import "./models/userModel.js"
 import "./models/postModel.js"
 import "./models/participantModel.js"
@@ -63,6 +64,8 @@ app.use("/api/auth", authRoutes)
 app.use("/api/posts", postRoutes)
 // Screening
 app.use("/api/applicants", applicantRoutes)
+
+app.use("/api", emailRoutes)
 // Route testing
 app.get("/", (req, res) => {
     res.json({ message: "🚀 Hello from server!" })
