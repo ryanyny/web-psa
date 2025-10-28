@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import { ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
+import ScrollToTop from "./components/shared/ScrollToTop"
 
 // Layout
 import UserLayout from "./layouts/UserLayout"
@@ -43,10 +44,12 @@ import KategoriAdmin from "./pages/admin/KategoriAdmin"
 function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
+
       {/* Konfigurasi global toast notifications (untuk pesan sukses / error API) */}
       <ToastContainer
         position="top-right"
-        autoClose={3000}
+        autoClose={2000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick

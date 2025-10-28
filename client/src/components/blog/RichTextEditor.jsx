@@ -5,17 +5,11 @@ import "react-quill-new/dist/quill.snow.css"
 import { toast } from "react-toastify"
 import { upload } from "../../http/index.js"
 
-// Daftarin plugin BlotFormatter
 Quill.register("modules/blotFormatter", BlotFormatter)
-// 💡 PERBAIKAN: Register List blot secara eksplisit
-// Ini adalah solusi paling umum untuk bug konversi list Quill
-const List = Quill.import('formats/list');
-List.tagName = 'LI'; // Pastikan list item adalah LI
-Quill.register(List, true);
 
-// Pastikan Quill mengetahui format mana yang harus digunakan
-const Delta = Quill.import('delta');
-Quill.register(List, true); 
+const List = Quill.import("formats/list")
+List.tagName = "LI"
+Quill.register(List, true)
 
 const modules = {
   blotFormatter: {},
@@ -39,21 +33,28 @@ const modules = {
         } else {
           quill.format("list", false, Quill.sources.USER)
         }
-      }
+      },
     },
   },
   clipboard: {
-    matchVisual: false, // ⚡ ini penting biar list <ul>/<ol> ke-render bener
+    matchVisual: false,
   },
 }
 
 const formats = [
   "header",
-  "bold", "italic", "underline", "strike",
-  "list", "ordered", "bullet",
+  "bold",
+  "italic",
+  "underline",
+  "strike",
+  "list",
+  "ordered",
+  "bullet",
   "align",
-  "blockquote", "code-block",
-  "link", "image",
+  "blockquote",
+  "code-block",
+  "link",
+  "image",
 ]
 
 const RichTextEditor = ({ value, onChange }) => {
@@ -77,14 +78,14 @@ const RichTextEditor = ({ value, onChange }) => {
         formData.append("image", file)
 
         try {
-          const res = await upload.image(formData)
-          const imageUrl = `${import.meta.env.VITE_BACKEND_URL}/${res.data.url}`
+          const res = await upload.image(formData);
+          const imageUrl = `${import.meta.env.VITE_BACKEND_URL}/${ res.data.url }`
 
           const range = editor.getSelection()
           editor.insertEmbed(range.index, "image", imageUrl)
           toast.success("📸 Gambar berhasil diunggah!")
-        } catch (err) {
-          console.error("Upload gagal:", err)
+        } catch (error) {
+          console.error("Upload gagal:", error)
           toast.error("❌ Gagal upload gambar!")
         }
       }

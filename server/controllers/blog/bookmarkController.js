@@ -1,4 +1,6 @@
+import sequelize from "../../config/database.js"
 import Bookmark from "../../models/bookmarkModel.js"
+import Category from "../../models/categoryModel.js"
 import Post from "../../models/postModel.js"
 import User from "../../models/userModel.js"
 
@@ -75,14 +77,47 @@ export const getUserBookmarks = async (req, res, next) => {
             include: {
                 model: Post,
                 as: "bookmarks",
+                attributes: {
+                    // Menambahkan kolom virtual "totalLikes" ke hasil query
+                    include: [
+                        [ 
+                            sequelize.fn(
+                                "COUNT",
+                                sequelize.fn("DISTINCT", sequelize.col("bookmarks->likedBy.id"))
+                            ),
+                            "totalLikes",
+                        ],
+                    ],
+                },
                 include: [
                     {
                         model: User,
                         as: "author",
                         attributes: ["id", "name"],
                     },
+                    {
+                        model: User,
+                        as: "likedBy",
+                        attributes: [],
+                        through: { attributes: [] },
+                        required: false,
+                    },
+                    {
+                        model: Category,
+                        as: "categories",
+                        attributes: ["id", "name"],
+                        through: { attributes: [] },
+                    },
                 ],
+                through: { attributes: [] },
             },
+            group: [
+                "User.id",
+                "bookmarks.id",
+                "bookmarks->author.id",
+                "bookmarks->likedBy.id",
+                "bookmarks->categories.id",
+            ],
             order: [[
                 {
                     model: Post,

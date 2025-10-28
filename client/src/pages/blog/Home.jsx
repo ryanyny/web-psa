@@ -27,8 +27,8 @@ const Home = () => {
         // Ambil semua kategori
         const categoryRes = await categories.getAll()
         setCategoryList(categoryRes.data)
-      } catch (err) {
-        console.error("Failed to fetch data:", err)
+      } catch (error) {
+        console.error("Failed to fetch data:", error)
       } finally {
         setLoading(false)
       }
@@ -68,7 +68,11 @@ const Home = () => {
 
   // --- Handle interaksi pengguna ---
 
-  const handlePageChange = (pageNumber) => setCurrentPage(pageNumber)
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber)
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }
+
 
   const handleCategoryChange = useCallback((e) => {
     setSelectedCategory(e.target.value)

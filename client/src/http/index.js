@@ -2,7 +2,7 @@ import { axiosWrapper } from "./axiosWrapper.js"
 
 // --- Service: Upload file ---
 export const upload = {
-    image: (formData) => axiosWrapper.post("/upload", formData, {
+    image: (formData) => axiosWrapper.post("api/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
     }),
 }

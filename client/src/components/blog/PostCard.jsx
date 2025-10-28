@@ -1,10 +1,11 @@
-import { Heart } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Heart } from "lucide-react"
+import { Link } from "react-router-dom"
 
 const PostCard = ({ post }) => {
   return (
-    <article className="bg-white rounded-xl overflow-hidden flex flex-col justify-between 
-                        group shadow-lg hover:shadow-2xl hover:scale-[1.01] transition-all duration-500">
+    <article
+      className="bg-white rounded-xl overflow-hidden flex flex-col justify-between group shadow-lg hover:shadow-2xl hover:scale-[1.01] transition-all duration-500"
+    >
       {post.image && (
         <Link to={`/blog/post/${post.id}`} className="block overflow-hidden">
           <div className="w-full aspect-video overflow-hidden bg-gray-100">
@@ -29,8 +30,7 @@ const PostCard = ({ post }) => {
             {post.categories.map((cat) => (
               <span
                 key={cat.id}
-                className="px-3 py-1 text-xs font-semibold rounded-full 
-                          bg-brand-blue/10 text-brand-blue border border-brand-blue/30"
+                className="px-3 py-1 text-xs font-semibold rounded-full bg-brand-blue/10 text-brand-blue border border-brand-blue/30"
               >
                 {cat.name.toUpperCase()}
               </span>
@@ -39,18 +39,26 @@ const PostCard = ({ post }) => {
         )}
 
         <div className="flex items-center gap-2 mt-3 text-xs md:text-sm text-gray-500">
-          <Heart
-            size={14}
-            className="text-brand-pink fill-brand-pink" />
-            <span className="font-medium">{post.totalLikes || 0} Suka</span>
+          <Heart size={14} className="text-brand-pink fill-brand-pink" />
+          <span className="font-medium">{post.totalLikes || 0} Suka</span>
         </div>
 
         <p className="mt-2 text-sm text-gray-600 line-clamp-3 flex-grow">
-          oleh <span className="font-semibold">{post.author?.name || "Penulis Tak Dikenal"}</span> —{" "}
-          {new Date(post.createdAt).toLocaleDateString("id-ID", { month: 'short', day: 'numeric', year: 'numeric' })}
+          oleh{" "}
+          <span className="font-semibold">
+            {post.author?.name || "Penulis Tak Dikenal"}
+          </span>{" "}
+          —{" "}
+          {new Date(post.createdAt).toLocaleDateString("id-ID", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+          })}
         </p>
 
-        <p className="mt-2 text-gray-600 line-clamp-3 flex-grow">{post.excerpt}</p>
+        <p className="mt-2 text-gray-600 line-clamp-3 flex-grow">
+          {post.excerpt}
+        </p>
 
         <Link
           to={`/blog/post/${post.id}`}
@@ -60,7 +68,7 @@ const PostCard = ({ post }) => {
         </Link>
       </div>
     </article>
-  );
-};
+  )
+}
 
-export default PostCard;
+export default PostCard

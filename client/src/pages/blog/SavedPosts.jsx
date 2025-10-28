@@ -17,8 +17,8 @@ const SavedPosts = () => {
         // Ambil data daftar post yang disimpan oleh user ini
         const res = await bookmarks.getUserBookmarks()
         setList(res.data || [])
-      } catch (err) {
-        console.error("Failed to fetch saved post:", err)
+      } catch (error) {
+        console.error("Failed to fetch saved post:", error)
       } finally {
         setLoading(false)
       }

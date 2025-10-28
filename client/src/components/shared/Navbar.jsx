@@ -286,6 +286,13 @@ export default function Navbar() {
               >
                 Postinganku
               </Link>
+              <Link
+                  to="/blog/saved"
+                  className="block py-2 text-gray-600 hover:text-blue-500"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Disimpan
+                </Link>
             </div>
           )}
 
