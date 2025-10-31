@@ -5,15 +5,14 @@ import "react-quill-new/dist/quill.snow.css"
 import { toast } from "react-toastify"
 import { upload } from "../../http/index.js"
 
+// Daftarkan modul BlotFormatter ke Quill agar gambar dapat diresize / drag
 Quill.register("modules/blotFormatter", BlotFormatter)
 
-const List = Quill.import("formats/list")
-List.tagName = "LI"
-Quill.register(List, true)
-
+// --- Konfigurasi modul Quill
 const modules = {
   blotFormatter: {},
   toolbar: {
+    // Daftar tombol toolbar
     container: [
       [{ header: [1, 2, 3, false] }],
       ["bold", "italic", "underline", "strike"],
@@ -23,8 +22,10 @@ const modules = {
       ["link", "image"],
       ["clean"],
     ],
+    // Handler custom untuk tombol di toolbar
     handlers: {
       image: () => {},
+      // Handler custom untuk List (memastikan tag yang benar digunakan)
       list: function (value) {
         const quill = this.quill
 
@@ -37,33 +38,26 @@ const modules = {
     },
   },
   clipboard: {
-    matchVisual: false,
+    matchVisual: false, // Memastikan paste dari luar tidak membawa styling aneh
   },
 }
 
+// --- Daftar format yang diizinkan
 const formats = [
-  "header",
-  "bold",
-  "italic",
-  "underline",
-  "strike",
-  "list",
-  "ordered",
-  "bullet",
-  "align",
-  "blockquote",
-  "code-block",
-  "link",
-  "image",
+  "header", "bold", "italic", "underline", "strike", "list",
+  "ordered", "bullet", "align", "blockquote", "code-block",
+  "link", "image",
 ]
 
 const RichTextEditor = ({ value, onChange }) => {
   const quillRef = useRef(null)
 
+  // useEffect: Menambahkan handler upload gambar custom
   useEffect(() => {
     const editor = quillRef.current?.getEditor()
     const toolbar = editor.getModule("toolbar")
 
+    // Ganti handler default tombol "image" dengan fungsi custom
     toolbar.addHandler("image", () => {
       const input = document.createElement("input")
       input.type = "file"
@@ -81,6 +75,7 @@ const RichTextEditor = ({ value, onChange }) => {
           const res = await upload.image(formData);
           const imageUrl = `${import.meta.env.VITE_BACKEND_URL}/${ res.data.url }`
 
+          // Sisipkan gambar ke dalam editor pada posisi kursor saat ini
           const range = editor.getSelection()
           editor.insertEmbed(range.index, "image", imageUrl)
           toast.success("📸 Gambar berhasil diunggah!")

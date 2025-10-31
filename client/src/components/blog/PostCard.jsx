@@ -2,10 +2,12 @@ import { Heart } from "lucide-react"
 import { Link } from "react-router-dom"
 
 const PostCard = ({ post }) => {
+  // --- Render utama ---
   return (
     <article
       className="bg-white rounded-xl overflow-hidden flex flex-col justify-between group shadow-lg hover:shadow-2xl hover:scale-[1.01] transition-all duration-500"
     >
+      {/* Bagian gambar utama */}
       {post.image && (
         <Link to={`/blog/post/${post.id}`} className="block overflow-hidden">
           <div className="w-full aspect-video overflow-hidden bg-gray-100">
@@ -18,13 +20,16 @@ const PostCard = ({ post }) => {
         </Link>
       )}
 
+      {/* Bagian konten kartu */}
       <div className="p-6 flex flex-col flex-grow">
+        {/* Judul post */}
         <Link to={`/blog/post/${post.id}`}>
           <h2 className="text-lg sm:text-xl font-bold text-brand-navy group-hover:text-brand-blue transition-colors duration-300 line-clamp-2">
             {post.title}
           </h2>
         </Link>
 
+        {/* Daftar kategori */}
         {post.categories?.length > 0 && (
           <div className="mt-3 flex flex-wrap gap-2">
             {post.categories.map((cat) => (
@@ -38,11 +43,13 @@ const PostCard = ({ post }) => {
           </div>
         )}
 
+        {/* Informasi jumlah like */}
         <div className="flex items-center gap-2 mt-3 text-xs md:text-sm text-gray-500">
           <Heart size={14} className="text-brand-pink fill-brand-pink" />
           <span className="font-medium">{post.totalLikes || 0} Suka</span>
         </div>
 
+        {/* Informasi penulis & tanggal dibuat */}
         <p className="mt-2 text-sm text-gray-600 line-clamp-3 flex-grow">
           oleh{" "}
           <span className="font-semibold">
@@ -56,10 +63,12 @@ const PostCard = ({ post }) => {
           })}
         </p>
 
+        {/* Ringkasan post */}
         <p className="mt-2 text-gray-600 line-clamp-3 flex-grow">
           {post.excerpt}
         </p>
 
+        {/* Tombol baca selengkapnya */}
         <Link
           to={`/blog/post/${post.id}`}
           className="mt-4 inline-flex items-center text-brand-blue font-semibold hover:text-brand-blue/80 transition duration-200"

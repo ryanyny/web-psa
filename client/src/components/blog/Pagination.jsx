@@ -4,21 +4,26 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   const getPageNumbers = () => {
     const pages = []
 
-    const showEllipsis = totalPages > 7
+    const showEllipsis = totalPages > 7 // Kriteria untuk elipsis
     if (!showEllipsis) {
+      // Case: Halaman sedikit (tampilkan semua)
       for (let i = 1; i <= totalPages; i++) {
         pages.push(i)
       }
     } else {
+      // Case: Halaman banyak (gunakan elipsis)
       if (currentPage <= 4) {
+        // Skenario A: Awal (tampilkan 1-5, elipsis, akhir)
         for (let i = 1; i <= 5; i++) pages.push(i)
         pages.push("ellipsis")
         pages.push(totalPages)
       } else if (currentPage >= totalPages - 3) {
+        // Skenario B: Akhir (tampilkan awal, elipsis, 4 terakhir)
         pages.push(1)
         pages.push("ellipsis")
         for (let i = totalPages - 4; i <= totalPages; i++) pages.push(i)
       } else {
+        // Skenario C: Tengah (tampilkan awal, elipsis, current±1, elipsis, akhir)
         pages.push(1)
         pages.push("ellipsis")
         for (let i = currentPage - 1; i <= currentPage + 1; i++) pages.push(i)
@@ -32,11 +37,13 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
 
   return (
     <div className="flex flex-col items-center mt-5 gap-4">
+      {/* Display status halaman */}
       <div className="text-base text-gray-500 font-medium">
         Halaman {currentPage} dari {totalPages}
       </div>
 
       <div className="flex items-center gap-1 md:gap-2">
+        {/* Tombol ke halaman pertama (<<) */}
         <button
           onClick={() => onPageChange(1)}
           disabled={currentPage === 1}
@@ -46,6 +53,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
           <ChevronsLeft className="w-5 h-5" />
         </button>
 
+        {/* Tombol ke halaman sebelumnya (<) */}
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
@@ -55,6 +63,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
           <ChevronLeft className="w-5 h-5" />
         </button>
 
+        {/* Nomor-nomor halaman dinamis  */}
         <div className="flex items-center gap-0.5 md:gap-1">
           {getPageNumbers().map((page, index) => {
             if (page === "ellipsis") {
@@ -68,6 +77,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
               )
             }
 
+            // Render tombol halaman
             return (
               <button
                 key={page}
@@ -83,7 +93,8 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
             )
           })}
         </div>
-
+        
+        {/* Tombol ke halaman selanjutnya (>) */}
         <button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
@@ -92,7 +103,8 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         >
           <ChevronRight className="w-5 h-5 text-gray-600" />
         </button>
-
+        
+        {/* Tombol ke halaman terakhir (>>) */}
         <button
           onClick={() => onPageChange(totalPages)}
           disabled={currentPage === totalPages}
