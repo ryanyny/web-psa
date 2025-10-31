@@ -12,6 +12,7 @@ const CommentList = ({
     onReplyAdded,
     isAuthenticated,
 }) => {
+    // Tampilan jika tidak ada komentar
     if (!comments || comments.length === 0) {
         return (
             <div className="text-center text-gray-500 py-6 bg-gray-50 rounded-lg">
@@ -34,6 +35,7 @@ const CommentList = ({
         const isEditing = editingCommentId === comment.id
         const isReplying = replyingToId === comment.id
 
+        // Format waktu
         const time = new Date(comment.createdAt).toLocaleTimeString("id-ID", {
             year: "numeric",
             month: "short",
@@ -42,11 +44,13 @@ const CommentList = ({
             minute: "2-digit",
         })
 
+        // Pembuatan avatar default menggunakan UI Avatars
         const authorName = comment.author?.name || "Anonim";
         const avatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(
             authorName
         )}&background=0284c7&color=ffffff&bold=true`
 
+        // --- Handler aksi UI ---
         const handleStartEdit = () => {
             setEditingCommentId(comment.id)
             setEditContent(comment.content)
@@ -69,8 +73,10 @@ const CommentList = ({
             setReplyingToId(null)
         }
 
+        // Label tambahan untuk penulis postingan atau komentar
         const authorLabel = comment.authorId === postAuthorId ? " (Penulis)" : isCommentAuthor ? " (Anda)" : ""
 
+        // --- Render utama ---
         return (
             <div
                 className={`transition-all duration-300 ${
@@ -78,6 +84,7 @@ const CommentList = ({
                 }`}
             >
                 <div className="flex space-x-3 md:space-x-4 py-5 border-b border-gray-100 last:border-b-0">
+                    {/* Display avatar */}
                     <img
                         src={avatar}
                         alt={authorName}
@@ -85,6 +92,7 @@ const CommentList = ({
                     />
 
                     <div className="flex-1">
+                        {/* Nama penulis & waktu */}
                         <div className="flex justify-between items-start">
                             <div>
                                 <p className="font-semibold text-brand-navy">
@@ -94,6 +102,7 @@ const CommentList = ({
                                 <p className="text-xs text-gray-500 mt-0.5">{time}</p>
                             </div>
                             
+                            {/* Tombol aksi (ubah & hapus) */}
                             {(canEdit || canDelete) && !isEditing && (
                                 <div className="flex gap-2">
                                     {canEdit && (
@@ -119,6 +128,7 @@ const CommentList = ({
                             )}
                         </div>
 
+                        {/* Mode pengeditan (textarea, simpan, & batal) */}
                         {isEditing ? (
                             <div className="mt-3">
                                 <textarea
@@ -144,6 +154,7 @@ const CommentList = ({
                                 </div>
                             </div>
                         ) : (
+                            // Mode tampilan normal
                             <>
                                 <p className="mt-3 text-gray-700 whitespace-pre-line">{comment.content}</p>
                                     {!isReply && isAuthenticated && (
@@ -157,6 +168,7 @@ const CommentList = ({
                             </>
                         )}
 
+                        {/* Form balasan (ditampilkan jika isReplying true) */}
                         {isReplying && (
                             <div className="mt-4">
                                 <CommentForm
@@ -170,6 +182,7 @@ const CommentList = ({
                     </div>
                 </div>
 
+                {/* --- Logika rekrusif untuk balasan */}
                 {comment.replies && comment.replies.length > 0 && (
                     <div className="mt-2">
                         {comment.replies.map((reply) => (
@@ -191,6 +204,7 @@ const CommentList = ({
         )
     }
     
+    // --- Render komentar tingkat atas ---
     return (
         <div className="space-y-2">
             {comments.map((comment) => (

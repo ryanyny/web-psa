@@ -11,10 +11,12 @@ const CommentForm = ({
     const [content, setContent] = useState("")
     const [loading, setLoading] = useState(false)
 
+    // Handler pengiriman formulir
     const handleSubmit = async (e) => {
         e.preventDefault()
-        if (!content.trim()) return
+        if (!content.trim()) return // Cegah pengiriman komentar kosong
 
+        // Jika ada parentId, payload akan menjadi balasan
         setLoading(true)
         try {
             const payload = { content }
@@ -26,7 +28,7 @@ const CommentForm = ({
             const res = await comments.create(postId, payload)
             const newComment = res.data.comment
 
-            toast.success(res.data.message || "Aksi berhasil!")
+            toast.success(res.data.message || "Berhasil mengirim komentar!")
 
             if (onCommentAdded) {
                 onCommentAdded(newComment)
@@ -35,12 +37,13 @@ const CommentForm = ({
             setContent("")
         } catch (error) {
             console.error("Gagal menambahkan komentar:", error)
-            toast.error(error.response?.data?.message || "Gagal mengirim komentar.")
+            toast.error(error.response?.data?.message || "Gagal mengirim komentar!")
         } finally {
             setLoading(false)
         }
     }
 
+    // --- Tampilan: Jika user belum login ---
     if (!isAuthenticated) {
         return (
             <div className="bg-gray-100 p-4 rounded-lg text-center text-gray-600">
@@ -56,6 +59,7 @@ const CommentForm = ({
         )
     }
 
+    // --- Render utama ---
     return (
         <form
             onSubmit={handleSubmit}
@@ -63,11 +67,14 @@ const CommentForm = ({
                 parentId ? "p-4 shadow-md" : "p-6 shadow-lg"
             }`}
         >
+            {/* Judul form (hanya tampil untuk komentar utama, bukan balasan) */}
             {!parentId && (
                 <h3 className="text-xl font-bold text-brand-navy mb-4">
                     Tinggalkan Komentar
                 </h3>
             )}
+
+            {/* Textarea input komentar */}
             <textarea
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-brand-blue focus:border-brand-blue resize-none transition"
                 rows={parentId ? 3 : 4}
@@ -78,6 +85,7 @@ const CommentForm = ({
                 disabled={loading}
             />
 
+            {/* Tombol kirim */}
             <div className="flex justify-end">
                 <button
                     type="submit"
