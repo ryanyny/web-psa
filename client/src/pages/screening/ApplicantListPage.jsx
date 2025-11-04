@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { applicants as applicantsApi } from '../../http/index'; // Pastikan path ini benar
+import { applicants as applicantsApi } from '../../http/index';
 import AuthContext from '../../context/AuthContext.jsx';
 
 const ApplicantListPage = () => {
   const [applicants, setApplicants] = useState([]);
+  const [filteredApplicants, setFilteredApplicants] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const { logout } = useContext(AuthContext);
@@ -14,9 +16,9 @@ const ApplicantListPage = () => {
     const fetchApplicants = async () => {
       try {
         setLoading(true);
-        // Panggil fungsi getAll dari file http/index.js
         const response = await applicantsApi.getAll(); 
         setApplicants(response.data);
+        setFilteredApplicants(response.data); // Initialize filtered applicants
       } catch (err) {
         setError('Gagal memuat data pelamar. Silakan coba lagi nanti.');
         console.error("Fetch error:", err);
@@ -26,7 +28,26 @@ const ApplicantListPage = () => {
     };
 
     fetchApplicants();
-  }, []); // Array dependensi kosong agar useEffect hanya berjalan sekali
+  }, []);
+
+  // Effect untuk filter data berdasarkan search term
+  useEffect(() => {
+    if (searchTerm.trim() === '') {
+      setFilteredApplicants(applicants);
+    } else {
+      const filtered = applicants.filter(applicant =>
+        applicant.fullName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        applicant.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        applicant.phone?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        applicant.alumni?.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredApplicants(filtered);
+    }
+  }, [searchTerm, applicants]);
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
 
   if (loading) {
     return <div className="text-center p-10">Memuat data...</div>;
@@ -53,6 +74,24 @@ const ApplicantListPage = () => {
         </div>
       </div>
       
+      {/* Search Bar */}
+      <div className="mb-6">
+        <div className="max-w-md">
+          <input
+            type="text"
+            placeholder="Cari pelamar berdasarkan nama, email, telepon, atau alumni..."
+            value={searchTerm}
+            onChange={handleSearchChange}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+          />
+        </div>
+        {searchTerm && (
+          <p className="text-sm text-gray-600 mt-2">
+            Menampilkan {filteredApplicants.length} dari {applicants.length} pelamar
+          </p>
+        )}
+      </div>
+      
       <div className="bg-white shadow-md rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full leading-normal">
@@ -67,8 +106,8 @@ const ApplicantListPage = () => {
               </tr>
             </thead>
             <tbody>
-              {applicants.length > 0 ? (
-                applicants.map((applicant) => (
+              {filteredApplicants.length > 0 ? (
+                filteredApplicants.map((applicant) => (
                   <tr key={applicant.id} className="hover:bg-gray-50">
                     <td className="px-5 py-4 border-b border-gray-200 bg-white text-sm">
                         <img
@@ -107,8 +146,8 @@ const ApplicantListPage = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="5" className="text-center py-10">
-                    Tidak ada data pelamar.
+                  <td colSpan="6" className="text-center py-10">
+                    {searchTerm ? 'Tidak ada pelamar yang sesuai dengan pencarian.' : 'Tidak ada data pelamar.'}
                   </td>
                 </tr>
               )}
