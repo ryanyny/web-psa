@@ -25,16 +25,6 @@ const modules = {
     // Handler custom untuk tombol di toolbar
     handlers: {
       image: () => {},
-      // Handler custom untuk List (memastikan tag yang benar digunakan)
-      list: function (value) {
-        const quill = this.quill
-
-        if (value === "ordered" || value === "bullet") {
-          quill.format("list", value, Quill.sources.USER)
-        } else {
-          quill.format("list", false, Quill.sources.USER)
-        }
-      },
     },
   },
   clipboard: {
@@ -45,7 +35,7 @@ const modules = {
 // --- Daftar format yang diizinkan
 const formats = [
   "header", "bold", "italic", "underline", "strike", "list",
-  "ordered", "bullet", "align", "blockquote", "code-block",
+  "align", "blockquote", "code-block",
   "link", "image",
 ]
 

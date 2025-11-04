@@ -306,6 +306,14 @@ Styling untuk tampilan konten (prose) yang dihasilkan dari quill editor
 .prose.quill-content ol[data-list="ordered"] {
   list-style-type: decimal !important;
 }
+.prose.quill-content ol li[data-list="bullet"],
+.prose.quill-content ul li[data-list="bullet"] {
+  list-style-type: disc !important;
+}
+.prose.quill-content ol li[data-list="ordered"],
+.prose.quill-content ul li[data-list="ordered"] {
+  list-style-type: decimal !important;
+}
 .prose.quill-content ul ul,
 .prose.quill-content ol ol,
 .prose.quill-content ul ol,
@@ -313,4 +321,26 @@ Styling untuk tampilan konten (prose) yang dihasilkan dari quill editor
   margin-top: 0.4em;
   margin-bottom: 0.4em;
   padding-left: 1.3em;
+}
+
+/* Memastikan parent <ol>/<ul> tidak override */
+.prose.quill-content ol:has(li[data-list="bullet"]) {
+  list-style-type: disc !important;
+}
+.prose.quill-content ol:has(li[data-list="ordered"]) {
+  list-style-type: decimal !important;
+}
+
+/* Nested lists */
+.prose.quill-content li[data-list="bullet"] li[data-list="bullet"] {
+  list-style-type: circle !important;
+}
+.prose.quill-content li[data-list="bullet"] li[data-list="bullet"] li[data-list="bullet"] {
+  list-style-type: square !important;
+}
+.prose.quill-content ol > li[data-list="bullet"] {
+  list-style: disc !important;
+}
+.prose.quill-content ol > li[data-list="ordered"] {
+  list-style: decimal !important;
 }

@@ -68,12 +68,14 @@ const EditPost = () => {
 
     // Validasi gambar (jika ada)
     if (image) {
-      const validTypes = ["image/jpeg", "image/png", "image/webp"]
-      
-      if (!validTypes.includes(image.type))
-        return "Format gambar tidak valid. Gunakan JPG, PNG, atau WEBP."
-      if (image.size > 3 * 1024 * 1024)
-        return "Ukuran gambar maksimal 3MB."
+      if (image instanceof File) {
+        const validTypes = ["image/jpeg", "image/png", "image/webp"]
+
+        if (!validTypes.includes(image.type))
+          return "Format gambar tidak valid. Gunakan JPG, PNG, atau WEBP."
+        if (image.size > 3 * 1024 * 1024)
+          return "Ukuran gambar maksimal 3MB."
+      }
     }
 
     return null // Null menandakan validasi sukses
