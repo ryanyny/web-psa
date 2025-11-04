@@ -12,6 +12,9 @@ import partnerRoutes from "./routes/landing/partnerRoutes.js"
 import participantRoutes from "./routes/landing/participantRoutes.js"
 import programRoutes from "./routes/landing/programRoutes.js"
 
+import applicantRoutes from "./routes/screening/applicantRoutes.js"
+import emailRoutes from "./routes/screening/emailRoutes.js"
+
 import "./models/userModel.js"
 import "./models/postModel.js"
 import "./models/categoryModel.js"
@@ -68,6 +71,9 @@ app.use("/api", routes)
 app.use("/api/mitra", partnerRoutes)
 app.use("/api/peserta", participantRoutes)
 app.use("/api/program", programRoutes)
+app.use("/api/applicants", applicantRoutes)
+app.use("/api", emailRoutes)
+
 
 // Melayani file statis dari folder 'uploads' di URL '/uploads'
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")))
