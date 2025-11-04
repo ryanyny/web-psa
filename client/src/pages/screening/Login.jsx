@@ -18,11 +18,10 @@ const LoginRecruiter = () => {
 
     try {
       // Panggil fungsi login dari context. Logikanya sudah terpusat di sana.
-      const res = await login({ email, password });
+      const user = await login({ email, password });
 
       // Pastikan user yang login punya role recruiter
-      const user = res?.data?.user || res?.user
-      if (user && user.role === 'recruiter') {
+      if (user?.role === 'recruiter') {
         navigate("/punya-skill-connect/applicants");
       } else {
         setError('Akun tidak memiliki izin recruiter.');

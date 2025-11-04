@@ -3,6 +3,7 @@ import dotenv from "dotenv"
 
 dotenv.config()
 
+// Inisialisasi instance untuk koneksi database
 const sequelize = new Sequelize(
     process.env.DB_NAME,
     process.env.DB_USER,
@@ -14,12 +15,14 @@ const sequelize = new Sequelize(
     }
 )
 
+// Fungsi untuk menguji database
 export const connectDb = async () => {
     try {
         await sequelize.authenticate()
         console.log("✅ MySQL Connected")
     } catch (error) {
         console.log("❌ Database connection failed: ", error.message)
+        // Menghentikan proses aplikasi jika koneksi gagal
         process.exit(1)
     }
 }

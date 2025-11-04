@@ -83,7 +83,7 @@ export default function DashboardUser() {
 
           {/* Right Content - Professional Education Image */}
           <div className="relative">
-            <div className="relative overflow-hidden rounded-3xl shadow-2xl hover:from-blue-700 hover:to-blue-800 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+            <div className="relative overflow-hidden rounded-3xl shadow-2xl hover:from-blue-700 hover:to-blue-800 transition-all duration-200 font-semibold hover:shadow-xl transform hover:-translate-y-0.5">
               {/* Main Image */}
               <img
                 src={ImgPro}
@@ -305,7 +305,7 @@ export default function DashboardUser() {
                       Bergabunglah dengan ribuan peserta yang telah merasakan
                       manfaatnya
                     </p>
-                    <button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-lg bg-gradient-to-r from-teal-500 to-blue-500 hover:from-blue-600 hover:to-teal-600 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                    <button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-lg hover:from-blue-600 hover:to-teal-600 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-1">
                       <a href="/daftar-program"> Daftar Sekarang</a>
                     </button>
                   </div>

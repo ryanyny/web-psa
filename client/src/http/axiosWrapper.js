@@ -1,27 +1,26 @@
 import axios from "axios"
 
-// Header default yang selalu dibawa di setiap request
+// Header default yang diinginkan di setiap request (menerima JSON)
 const defaultHeader = {
     Accept: "application/json",
 }
 
-// Buat instance axios khusus
+// --- Konfigurasi instance axios utama ---
 export const axiosWrapper = axios.create({
     baseURL: import.meta.env.VITE_BACKEND_URL,
     withCredentials: true,
     headers: { ...defaultHeader },
 })
 
-// Cek sebelum request dikirim
+// Interceptor ini dijalankan sebelum setiap request dikirim
 axiosWrapper.interceptors.request.use((config) => {
-    // Jika data yang dikirim berupa FormData (file)
+    // Jika data adalah FormData, hapus Content-Type
+    // Browser akan secara otomatis mengatur Content-Type menjadi 'multipart/form-data'
     if (config.data instanceof FormData) {
-        // Hapus Content-Type (browser otomatis isi "multipart/form-data")
         delete config.headers["Content-Type"]
     } else {
-        // Default menggunakan JSON jika bukan FormData
         config.headers["Content-Type"] = "application/json"
     }
-
+    
     return config
 })

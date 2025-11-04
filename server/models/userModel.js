@@ -2,15 +2,21 @@ import { DataTypes, Model } from "sequelize"
 import bcrypt from "bcrypt"
 import sequelize from "../config/database.js"
 
-// Definisi model User
+// Mendefinisikan class User yang mewarisi Model Sequelize
 class User extends Model {
-    // Method untuk compare password input dengan hash di database
+    // Metode instance: Membandingkan password yang dimasukkan dengan hash password di database
     async matchPassword(enteredPassword) {
         return await bcrypt.compare(enteredPassword, this.password)
     }
+
+    // Metode instance: Mengontrol output data User saat dikonversi ke JSON
+    toJSON() {
+        const values = { ...this.get() }
+        delete values.password
+        return values
+    }
 }
 
-// Inisialisasi struktur tabel User
 User.init(
     {
         name: {
@@ -39,10 +45,10 @@ User.init(
     {
         sequelize,
         modelName: "User",
-        // Hook yang berjalan sebelum data disimpan
         hooks: {
+            // Hook sebelum menyimpan: Hashing password
             beforeSave: async (user) => {
-                // Hash ulang jika password diubah
+                // Hanya hash password jika field password diubah atau baru dibuat
                 if (user.changed("password")) {
                     const salt = await bcrypt.genSalt(10)
                     user.password = await bcrypt.hash(user.password, salt)

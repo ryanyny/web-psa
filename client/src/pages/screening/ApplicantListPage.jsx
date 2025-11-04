@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { applicants as applicantsApi } from '../../http/index';
+import { applicants as applicantsApi } from '../../http/index.js';
 import AuthContext from '../../context/AuthContext.jsx';
 
 const ApplicantListPage = () => {

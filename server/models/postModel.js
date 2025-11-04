@@ -1,19 +1,30 @@
 import { DataTypes, Model } from "sequelize"
+import slugify from "slugify"
 import sequelize from "../config/database.js"
 import User from "./userModel.js"
 
-// Utility function untuk menghapus semua tag html dari teks
+// Helper function: Menghapus semua tag HTML dan spasi
 const stripHtml = (html = "") => html.replace(/<[^>]+>/g, "").trim()
 
-// Definisi model User
-class Post extends Model {}
+// Mendefinisikan class Post yang mewarisi Model sequelize
+class Post extends Model {
+    // Metode instance: Mengontrol output data User saat dikonversi ke JSON
+    toJSON() {
+        const values = { ...this.get() }
+        delete values.authorId
+        return values
+    }
+}
 
-// Inisialisasi struktur tabel Post
 Post.init(
     {
         title: {
             type: DataTypes.STRING,
             allowNull: false,
+        },
+        slug: {
+            type: DataTypes.STRING,
+            unique: true,
         },
         content: {
             type: DataTypes.TEXT("long"),
@@ -30,10 +41,15 @@ Post.init(
     {
         sequelize,
         modelName: "Post",
-        // Hook yang berjalan sebelum data disimpan
         hooks: {
+            // Hook sebelum validasi: Membuat slug dari judul jika belum ada
+            beforeValidate: (post) => {
+                if (post.title && !post.slug) {
+                    post.slug = slugify(post.title, { lower: true, strict: true })
+                }
+            },
+            // Hook sebelum menyimpan: Membuat excerpt jika belum ada
             beforeSave: (post) => {
-                // Otomatis membuat excerpt dari isi content (200 karakter pertama)
                 if (!post.excerpt && post.content) {
                     post.excerpt = stripHtml(post.content).slice(0, 200)
                 }
@@ -42,9 +58,8 @@ Post.init(
     },
 )
 
-// Relasi: satu user bisa mempunyai banyak post
-User.hasMany(Post, { foreignKey: "authorId", onDelete: "CASCADE" }) // Post ikut terhapus jika user dihapus
-// Relasi: satu post dimiliki oleh satu user (author)
-Post.belongsTo(User, { foreignKey: "authorId", as: "author" })
+// --- Definisi relasi (Associations) ---
+User.hasMany(Post, { foreignKey: "authorId", onDelete: "CASCADE", })
+Post.belongsTo(User, { foreignKey: "authorId", as: "author", })
 
 export default Post

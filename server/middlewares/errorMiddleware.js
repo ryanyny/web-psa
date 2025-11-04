@@ -1,15 +1,13 @@
-// Middleware untuk handle semua error di server
+// Middleware error handler global
 const errorHandler = (err, req, res, next) => {
-    // Ambil status code dari response, jika status code lebih dan sama dengan 400, default ke 500
-    const statusCode = res.statusCode >= 400
-        ? res.statusCode
-        : 500
-
-    // Kirim response JSON berisi message error dan stack trace
+    // Jika >= 400 (client error), jika tidak, gunakan 500 (internal server error) sebagai default
+    const statusCode = res.statusCode >= 400 ? res.statusCode : 500
+    
+    // Set status respons sesuai dengan kode yang ditentukan
     res.status(statusCode).json({
         success: false,
         message: err.message || "Something went wrong!",
-        // Stack trace hanya ditampilkan di development, bukan production
+        // Stack trace disembunyikan di production untuk keamanan
         stack: process.env.NODE_ENV === "production" ? undefined : err.stack,
     })
 }
