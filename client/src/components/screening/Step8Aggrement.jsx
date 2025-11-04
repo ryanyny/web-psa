@@ -17,7 +17,7 @@ const Step8Aggrement = ({ prevStep, handleSubmit, loading }) => {
             <div>
                 <h2 className="text-lg font-semibold mb-2">Persetujuan dan Pernyataan</h2>
                 <div className="bg-gray-100 p-4 rounded text-sm mb-2 overflow-auto">
-                    <p className="text-sm font-semibold">Mohon baca pernyataan berikut dengan tenang. Jika sudah setuju, cukup centang ✅ kotaknya.</p>
+                    <p className="text-sm font-semibold">Mohon baca pernyataan berikut dengan tenang. Jika sudah setuju, cukup centang (✓) kotaknya.</p>
                     <h6>Dengan mengisi form ini, saya menyatakan bahwa saya telah memahami dan menyetujui hal-hal berikut:</h6>
                     <ul className="pl-5 space-y-1">
                         <li>1. Data yang saya berikan adalah benar, akurat, dan dapat dipertanggungjawabkan.</li>

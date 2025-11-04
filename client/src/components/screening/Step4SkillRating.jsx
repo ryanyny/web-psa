@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import SkillRatingInput from './SkillRatingInput';
 import LevelIndicator from './LevelIndicator';
 
@@ -81,6 +81,8 @@ const Step4SkillRating = ({ prevStep, nextStep, handleChange, values }) => {
 
   return (
     <form onSubmit={continueStep} className="space-y-6">
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">Kompetensi Utama (Skillset)</h2>
+
       {/* Alert untuk skill yang belum diisi */}
       {showAlert && missingSkills.length > 0 && (
         <div className="bg-red-50 border border-red-200 text-red-800 p-4 rounded-lg shadow-sm animate-pulse">
@@ -116,7 +118,7 @@ const Step4SkillRating = ({ prevStep, nextStep, handleChange, values }) => {
       )}
 
       {/* Floating notification banner */}
-      {showAlert && missingSkills.length > 0 && (
+      {/* {showAlert && missingSkills.length > 0 && (
         <div className="fixed right-6 top-6 z-50 animate-bounce">
           <div className="bg-red-600 text-white px-4 py-3 rounded-lg shadow-lg flex items-center gap-3">
             <div className="bg-white text-red-600 rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm">
@@ -135,7 +137,7 @@ const Step4SkillRating = ({ prevStep, nextStep, handleChange, values }) => {
             </button>
           </div>
         </div>
-      )}
+      )} */}
 
       <div>
         <label htmlFor="hardskill" className="block text-sm font-medium mb-2">Hard Skills (Technical)</label>

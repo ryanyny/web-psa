@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 const Step6JobPreference = ({ prevStep, nextStep, handleCheckboxChange, values }) => {
   const [showValidation, setShowValidation] = useState(false);
-  const [touchedFields, setTouchedFields] = useState({});
+  const [setTouchedFields] = useState({});
 
   const continueStep = (e) => {
     e.preventDefault();
@@ -54,6 +54,8 @@ const Step6JobPreference = ({ prevStep, nextStep, handleCheckboxChange, values }
 
   return (
     <form onSubmit={continueStep} className="space-y-6">
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">Prefensi Karir</h2>
+
       {/* Jenis Pekerjaan */}
       <div>
         <label className="block text-sm font-medium mb-2">

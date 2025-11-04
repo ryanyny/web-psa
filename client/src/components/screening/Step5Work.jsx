@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import FileInputDisplay from './FileInputDisplay';
 
 // KOMPONEN UTAMA
@@ -73,7 +73,7 @@ const Step5Work = ({ prevStep, nextStep, handleChange, handleCheckboxChange, han
 
   return (
     <form onSubmit={continueStep} className="space-y-6">
-      <h2 className="text-xl font-bold mb-4 text-center text-gray-800">Pengalaman & Dokumen</h2>
+      <h2 className="text-xl font-bold mb-4 text-center text-gray-800">Pengalaman Kerja/Projek</h2>
       
       {/* Status Saat Ini */}
       <div>

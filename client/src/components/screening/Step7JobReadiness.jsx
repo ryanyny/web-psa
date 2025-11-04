@@ -40,7 +40,7 @@ const Step7JobReadiness = ({ prevStep, nextStep, handleValueChange, handleFileCh
     if (shouldShowValidation(fieldName)) {
       return 'border-2 border-red-300 bg-red-50 rounded-lg p-4 space-y-4';
     }
-    return 'space-y-4 mt-2';
+    return 'space-y-1 mt-2';
   };
 
   // Fungsi untuk mendapatkan class radio label
@@ -55,6 +55,8 @@ const Step7JobReadiness = ({ prevStep, nextStep, handleValueChange, handleFileCh
 
   return (
     <form onSubmit={continueStep} className="space-y-6">
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">Kesiapan Bekerja</h2>
+
       {/* Kapan Mulai Kerja */}
       <div>
         <label className="block text-sm font-medium mb-2">

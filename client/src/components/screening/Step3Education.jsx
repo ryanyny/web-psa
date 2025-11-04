@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const Step3Education = ({ prevStep, nextStep, handleChange, handleCheckboxChange, values }) => {
   const [showValidation, setShowValidation] = useState(false);
-  const [touchedFields, setTouchedFields] = useState({});
+  const [setTouchedFields] = useState({});
 
   // Custom handler untuk checkbox sertifikasi - DIPERBAIKI
   const handleCertificateChange = (e) => {
@@ -119,7 +119,7 @@ const Step3Education = ({ prevStep, nextStep, handleChange, handleCheckboxChange
 
   return (
     <form onSubmit={continueStep} className="space-y-6 max-w-2xl mx-auto p-6">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">Informasi Pendidikan</h2>
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">Pendidikan dan Sertifikasi</h2>
 
       {/* Pendidikan Terakhir */}
       <div>
