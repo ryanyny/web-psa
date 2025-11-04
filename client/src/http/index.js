@@ -25,4 +25,9 @@ export const applicants = {
     // update: (id, payload) => axiosWrapper.put(`/api/applicants/${id}`, payload), // Uncomment jika endpoint update ada
     remove: (id) => axiosWrapper.delete(`/api/applicants/${id}`),
 }
-export default { auth, posts, applicants }
+
+export const email = {
+    checkEmail: (email) => axiosWrapper.post("/api/check-email",{email}),
+}
+
+export default { auth, posts, applicants, email }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { email as emailAPI } from '../../http/index';
 
 // Custom hook untuk debounce
 const useDebounce = (value, delay) => {
@@ -15,30 +16,6 @@ const useDebounce = (value, delay) => {
   }, [value, delay]);
   
   return debouncedValue;
-};
-
-// API service untuk pengecekan email
-const emailAPI = {
-  checkEmail: async (email) => {
-    try {
-      const response = await fetch('http://localhost:8000/api/check-email', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      });
-      
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      
-      return await response.json();
-    } catch (error) {
-      console.error('API Error:', error);
-      throw error;
-    }
-  }
 };
 
 const Step2PersonalInfo = ({ prevStep, nextStep, handleChange, handleValueChange, values }) => {
@@ -72,8 +49,9 @@ const Step2PersonalInfo = ({ prevStep, nextStep, handleChange, handleValueChange
     setEmailError('');
 
     try {
-      const result = await emailAPI.checkEmail(email);
-
+      const response = await emailAPI.checkEmail(email);
+      const result = response.data;
+      
       if (result.success) {
         if (result.exists) {
           setEmailError(result.message || 'Email sudah terdaftar. Silakan gunakan email lain.');
@@ -213,6 +191,7 @@ const Step2PersonalInfo = ({ prevStep, nextStep, handleChange, handleValueChange
 
   return (
     <form onSubmit={continueStep} className="space-y-6">
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">Identitas Pribadi</h2>
 
       {/* Input Fields */}
       <div>
