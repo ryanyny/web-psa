@@ -48,7 +48,20 @@ export const likes = {
 export const bookmarks = {
     getSummary: (postId) => axiosWrapper.get(`/api/posts/${postId}/bookmarks`),
     toggle: (postId) => axiosWrapper.post(`/api/posts/${postId}/bookmarks/toggle`),
-    getUserBookmarks: () => axiosWrapper.get(`/api/posts/user/bookmarks`),
+    getUserBookmarks: () => axiosWrapper.get(`/api/posts/user/bookmarks`),  
 }
 
-export default { auth, posts, upload, categories, comments, likes, bookmarks }
+// API applicants
+export const applicants = {
+    getAll: () => axiosWrapper.get("/api/applicants"),
+    getById: (id) => axiosWrapper.get(`/api/applicants/${id}`),
+    create: (payload) => axiosWrapper.post("/api/applicants", payload),
+    // update: (id, payload) => axiosWrapper.put(`/api/applicants/${id}`, payload), // Uncomment jika endpoint update ada
+    remove: (id) => axiosWrapper.delete(`/api/applicants/${id}`),
+}
+
+export const email = {
+    checkEmail: (email) => axiosWrapper.post("/api/check-email",{email}),
+}
+
+export default { auth, posts, upload, categories, comments, likes, bookmarks, applicants, email }

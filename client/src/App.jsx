@@ -33,6 +33,13 @@ import NotFound from "./pages/NotFound"
 import ProtectedRoute from "./components/blog/ProtectedRoute"
 import SavedPosts from "./pages/blog/SavedPosts"
 
+import WelcomeFormPage from "./pages/screening/WelcomeFormPage"
+import ApplicantFormPage from "./pages/screening/ApplicantFormPage"
+import ApplicantListPage from "./pages/screening/ApplicantListPage"
+import ApplicantDetailPage  from "./pages/screening/ApplicantDetailPage"
+import LoginRecruiter from "./pages/screening/Login"
+import ScreeningProtectedRoute from "./components/screening/ProtectedRoute"
+
 // Halaman admin
 import DashboardAdmin from "./pages/admin/DashboardAdmin"
 import ProgramAdmin from "./pages/admin/ProgramAdmin"
@@ -227,6 +234,46 @@ function App() {
           }
         />
 
+                {/* ====== Punya Skill Connect ====== */}
+        <Route 
+          path="/punya-skill-connect" 
+          element={
+            <WelcomeFormPage />
+          } 
+        />
+
+        <Route 
+          path="/punya-skill-connect/form" 
+          element={
+            <ApplicantFormPage />
+          } 
+        />
+
+        <Route 
+          path="/punya-skill-connect/applicants" 
+          element={
+            <ScreeningProtectedRoute>
+              <ApplicantListPage />
+            </ScreeningProtectedRoute>
+          } 
+        />
+        
+        <Route 
+          path="/punya-skill-connect/applicants/:id" 
+          element={
+            <ScreeningProtectedRoute>
+              <ApplicantDetailPage />
+            </ScreeningProtectedRoute>
+          } 
+        />
+
+        <Route 
+          path="/punya-skill-connect/login" 
+          element={
+            <LoginRecruiter />
+          } 
+        />
+
         {/* ==========================
             Rute admin
             ========================== */}
@@ -279,6 +326,7 @@ function App() {
           }
         />
         
+
         {/* Catch-all route untuk penanganan error 404 */}
         <Route path="*" element={<NotFound />} />
       </Routes>
