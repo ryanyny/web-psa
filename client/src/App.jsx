@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"
 import { ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import ScrollToTop from "./components/shared/ScrollToTop"
+import ProtectedRoute from "./components/shared/ProtectedRoute"
 
 // Layout
 import UserLayout from "./layouts/UserLayout"
@@ -30,15 +31,14 @@ import CreatePost from "./pages/blog/CreatePost"
 import EditPost from "./pages/blog/EditPost"
 import MyPosts from "./pages/blog/MyPosts"
 import NotFound from "./pages/NotFound"
-import ProtectedRoute from "./components/blog/ProtectedRoute"
 import SavedPosts from "./pages/blog/SavedPosts"
 
+// Halaman screening
 import WelcomeFormPage from "./pages/screening/WelcomeFormPage"
 import ApplicantFormPage from "./pages/screening/ApplicantFormPage"
 import ApplicantListPage from "./pages/screening/ApplicantListPage"
 import ApplicantDetailPage  from "./pages/screening/ApplicantDetailPage"
 import LoginRecruiter from "./pages/screening/Login"
-import ScreeningProtectedRoute from "./components/screening/ProtectedRoute"
 
 // Halaman admin
 import DashboardAdmin from "./pages/admin/DashboardAdmin"
@@ -234,7 +234,9 @@ function App() {
           }
         />
 
-                {/* ====== Punya Skill Connect ====== */}
+        {/* ==========================
+            Rute screening
+            ========================== */}
         <Route 
           path="/punya-skill-connect" 
           element={
@@ -252,18 +254,18 @@ function App() {
         <Route 
           path="/punya-skill-connect/applicants" 
           element={
-            <ScreeningProtectedRoute>
+            <ProtectedRoute role="recruiter" redirectTo="/punya-skill-connect/login">
               <ApplicantListPage />
-            </ScreeningProtectedRoute>
+            </ProtectedRoute>
           } 
         />
         
         <Route 
           path="/punya-skill-connect/applicants/:id" 
           element={
-            <ScreeningProtectedRoute>
+            <ProtectedRoute role="recruiter" redirectTo="/punya-skill-connect/login">
               <ApplicantDetailPage />
-            </ScreeningProtectedRoute>
+            </ProtectedRoute>
           } 
         />
 
