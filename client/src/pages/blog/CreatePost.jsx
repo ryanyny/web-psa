@@ -1,111 +1,51 @@
-import { useState, useEffect, useCallback } from "react"
+import { useCallback, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
-import { categories, posts } from "../../http/index.js"
+import { posts } from "../../http/index.js"
+import usePostForm from "../../hooks/usePostForm.js"
 import RichTextEditor from "../../components/blog/RichTextEditor.jsx"
 
 const CreatePost = () => {
   const nav = useNavigate()
-  const [title, setTitle] = useState("")
-  const [content, setContent] = useState("")
-  const [image, setImage] = useState(null)
-  const [selectedCategories, setSelectedCategories] = useState([])
-  const [categoryList, setCategoryList] = useState([])
-  const [loading, setLoading] = useState(false)
+  const imageInputRef = useRef(null)
 
-  // --- useEffect: Ambil daftar kategori ---
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const res = await categories.getAll()
-        setCategoryList(res.data)
-      } catch (error) {
-        console.log(error)
-      }
-    }
-
-    fetchCategories()
-  }, []) // Dependency kososng: Hanya dijalankan saat mount
-
-  // --- Validasi Form ---
-  const validatePostForm = useCallback(() => {
-    const trimmedTitle = title.trim()
-    const trimmedContent = content.trim()
-
-    // Validasi judul
-    if (trimmedTitle.length < 5)
-      return "Judul minimal 5 karakter."
-    if (trimmedTitle.length > 100)
-      return "Judul maksimal 100 karakter."
-    if (!/^[a-zA-Z0-9\s.,!?'"-]+$/.test(trimmedTitle))
-      return "Judul mengandung karakter tidak valid."
-
-    // Validasi konten
-    if (trimmedContent.length < 30)
-      return "Konten terlalu pendek. Minimal 30 karakter."
-
-    // Validasi kategori
-    if (selectedCategories.length === 0)
-      return "Pilih minimal satu kategori."
-
-    // Validasi gambar (jika ada)
-    if (image) {
-      if (image instanceof File) {
-        const validTypes = ["image/jpeg", "image/png", "image/webp"]
-
-        if (!validTypes.includes(image.type))
-          return "Format gambar tidak valid. Gunakan JPG, PNG, atau WEBP."
-        if (image.size > 3 * 1024 * 1024)
-          return "Ukuran gambar maksimal 3MB."
-      }
-    }
-
-    return null // Null menandakan validasi sukses
-  }, [title, content, selectedCategories, image] )
-
-  // --- Handler pengiriman form ---
-  const handleSubmit = useCallback(async (e) => {
-    e.preventDefault()
-
-    const validationError = validatePostForm()
-    if (validationError) {
-      toast.error(validationError)
-      return
-    }
-
-    setLoading(true)
-
-    try {
-      const formData = new FormData() // Digunakan untuk mengirim data post termasuk file gambar
-
-      formData.append("title", title)
-      formData.append("content", content)
-
-      selectedCategories.forEach((id) => {
-        formData.append("categories[]", id)
-      })
-
-      if (image) formData.append("image", image)
-
-      const res = await posts.create(formData) // Kirim data
+  const handleCreatePost = useCallback(
+    async (FormData) => {
+      const res = await posts.create(FormData)
 
       toast.success("Blog berhasil diunggah!")
       nav(`/blog/post/${res.data.post.id}`)
       window.scrollTo({ top: 0, behavior: "smooth" })
-    } catch {
-      toast.error("Blog gagal diunggah!")
-    } finally {
-      setLoading(false);
+    }, [nav])
+
+  const {
+    title, setTitle,
+    content, setContent,
+    image, handleImageChange,
+    selectedCategories, handleCategoryChange,
+    categoryList,
+    isLoading,
+    isSubmitting, handleSubmit,
+    handleRemoveImage,
+  } = usePostForm(null, handleCreatePost)
+
+  const handleRemoveImageAndInput = useCallback(() => {
+    handleRemoveImage()
+
+    if (imageInputRef.current) {
+      imageInputRef.current.value = ""
     }
-  }, [title, content, selectedCategories, image, nav, validatePostForm])
+  }, [handleRemoveImage])
 
   // Tampilan loading
-  if (loading)
+  if (isLoading)
     return (
       <div className="flex justify-center items-center h-[50vh] text-gray-500 text-lg">
         Loading...
       </div>
-    );
+    )
+
+  const isFormDisabled = isSubmitting || selectedCategories.length === 0 || !title.trim() || !content.trim()
 
   // --- Render utama ---
   return (
@@ -132,13 +72,7 @@ const CreatePost = () => {
         </label>
         <select
           value={selectedCategories}
-          onChange={(e) => {
-            const values = Array.from(
-              e.target.selectedOptions,
-              (option) => option.value
-            )
-            setSelectedCategories(values)
-          }}
+          onChange={handleCategoryChange}
           className="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue min-h-[150px] transition"
           multiple
         >
@@ -153,21 +87,28 @@ const CreatePost = () => {
         <label className="text-gray-600 font-medium">Gambar (Opsional)</label>
         <div className="flex flex-col md:flex-row md:items-center gap-6 p-4 border border-gray-200 rounded-lg bg-gray-50">
           <input
+            ref={imageInputRef}
             type="file"
-            onChange={(e) => {
-              const file = e.target.files?.[0]
-              if (file) setImage(file)
-            }}
+            onChange={handleImageChange}
             className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-brand-blue/10 file:text-brand-blue hover:file:bg-brand-blue/20 cursor-pointer"
           />
 
           {/* Preview gambar */}
-          {image instanceof File && (
-            <img
-              src={URL.createObjectURL(image)}
-              alt="Preview"
-              className="w-24 h-24 object-cover rounded-md shadow-md border border-gray-100"
-            />
+          {image && (
+            <div className="relative">
+              <img
+                src={URL.createObjectURL(image)}
+                alt="Preview"
+                className="w-24 h-24 object-cover rounded-md shadow-md border border-gray-100"
+              />
+              <button
+                type="button"
+                onClick={handleRemoveImageAndInput}
+                className="absolute -top-2 -right-2 flex items-center justify-center w-6 h-6 rounded-full bg-red-500 text-white text-sm font-bold shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 transition-all duration-200 ease-in-out"
+              >
+                &times;
+              </button>
+            </div>
           )}
         </div>
 
@@ -180,15 +121,10 @@ const CreatePost = () => {
         {/* Tombol aksi untuk mengunggah post baru */}
         <button
           type="submit"
-          disabled={
-            loading ||
-            selectedCategories.length === 0 ||
-            !title.trim() ||
-            !content.trim()
-          }
+          disabled={isFormDisabled}
           className="w-full px-6 py-3 bg-brand-blue hover:bg-brand-blue/90 text-white font-bold rounded-lg shadow-md transition disabled:bg-gray-400 disabled:cursor-not-allowed mt-4"
         >
-          {loading ? "Mengunggah..." : "Unggah Postingan"}
+          {isSubmitting ? "Mengunggah..." : "Unggah Postingan"}
         </button>
       </form>
     </div>

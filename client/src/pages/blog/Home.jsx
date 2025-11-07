@@ -1,12 +1,11 @@
 import { useState, useEffect, useMemo, useCallback } from "react"
 import { posts, categories } from "../../http/index.js"
+import usePagination from "../../hooks/usePagination.js"
 import PostCard from "../../components/blog/PostCard.jsx"
 import Pagination from "../../components/blog/Pagination.jsx"
 
 const Home = () => {
   const [allPosts, setAllPosts] = useState([])
-  const [list, setList] = useState([])
-  const [currentPage, setCurrentPage] = useState(1)
   const [categoryList, setCategoryList] = useState([])
   const [selectedCategory, setSelectedCategory] = useState("")
   const [search, setSearch] = useState("")
@@ -20,12 +19,12 @@ const Home = () => {
       setLoading(true)
 
       try {
-        // Ambil semua postingan
-        const postsRes = await posts.getAll()
-        setAllPosts(postsRes.data)
+        const [postRes, categoryRes] = await Promise.all([
+          posts.getAll(),
+          categories.getAll(),
+        ])
 
-        // Ambil semua kategori
-        const categoryRes = await categories.getAll()
+        setAllPosts(postRes.data)
         setCategoryList(categoryRes.data)
       } catch (error) {
         console.error("Failed to fetch data:", error)
@@ -38,7 +37,7 @@ const Home = () => {
   }, []) // Dependency kososng: Hanya dijalankan saat mount
 
   // --- useMemo: Logika filtering dan pencarian ---
-  useMemo(() => {
+  const filteredList = useMemo(() => {
     let currentList = allPosts
 
     // Filter berdasarkan kategori
@@ -58,22 +57,10 @@ const Home = () => {
       )
     }
 
-    // Perbarui daftar hasil yang sudah difilter / dicari
-    setList(currentList)
-    // Reset halaman ke-1 setiap kali filter / pencarian berubah
-    setCurrentPage(1)
-
     return currentList
   }, [allPosts, selectedCategory, search])
 
-  // --- Handle interaksi pengguna ---
-
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber)
-    window.scrollTo({ top: 0, behavior: "smooth" })
-  }
-
-
+  // --- Handle Interaksi Pengguna ---
   const handleCategoryChange = useCallback((e) => {
     setSelectedCategory(e.target.value)
     setSearch("") // Hapus pencarian saat filter kategori diubah
@@ -84,11 +71,15 @@ const Home = () => {
     setSelectedCategory("") // Hapus filter kategori saat pencarian dimulai
   }, [])
 
-  // --- Logika paginasi ---
-  const indexOfLastPost = currentPage * postsPerPage
-  const indexOfFirstPost = indexOfLastPost - postsPerPage
-  const currentPosts = list.slice(indexOfFirstPost, indexOfLastPost)
-  const totalPages = Math.ceil(list.length / postsPerPage)
+  // --- Logika Paginasi ---
+  const {
+    currentPosts,
+    totalPages,
+    currentPage,
+    indexOfFirstPost,
+    indexOfLastPost,
+    handlePageChange,
+  } = usePagination(filteredList, postsPerPage)
 
   // Tampilan loading
   if (loading)
@@ -178,11 +169,11 @@ const Home = () => {
         {/* Teks status paginasi */}
         <div className="mb-5 text-sm text-gray-600">
           {search.trim()
-            ? `Menampilkan ${list.length} hasil untuk "${search}"`
+            ? `Menampilkan ${filteredList.length} hasil untuk "${search}"`
             : `Menampilkan ${indexOfFirstPost + 1}-${Math.min(
                 indexOfLastPost,
-                list.length
-              )} dari ${list.length} postingan`}
+                filteredList.length
+              )} dari ${filteredList.length} postingan`}
         </div>
 
         {/* Tampilan daftar postingan */}

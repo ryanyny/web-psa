@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react"
 import { bookmarks } from "../../http/index.js"
+import usePagination from "../../hooks/usePagination.js"
 import PostCard from "../../components/blog/PostCard.jsx"
 import Pagination from "../../components/blog/Pagination.jsx"
 
 const SavedPosts = () => {
   const [list, setList] = useState([])
-  const [currentPage, setCurrentPage] = useState(1)
   const [loading, setLoading] = useState(true)
 
   const postsPerPage = 9 // Menentukan jumlah post yang ditampilkan per halaman
@@ -13,6 +13,8 @@ const SavedPosts = () => {
   // --- useEffect: Pengambilan data postingan tersimpan ---
   useEffect(() => {
     const fetchSaved = async () => {
+      setLoading(true)
+
       try {
         // Ambil data daftar post yang disimpan oleh user ini
         const res = await bookmarks.getUserBookmarks()
@@ -27,18 +29,15 @@ const SavedPosts = () => {
     fetchSaved()
   }, []) // Dependency kososng: Hanya dijalankan saat mount
 
-
-  const handlePageChange = (page) => {
-    setCurrentPage(page)
-    // Gulir ke atas halaman agar user melihat post baru
-    window.scrollTo({ top: 0, behavior: "smooth" })
-  }
-
-  // --- Logika paginasi ---
-  const indexOfLastPost = currentPage * postsPerPage
-  const indexOfFirstPost = indexOfLastPost - postsPerPage
-  const currentPosts = list.slice(indexOfFirstPost, indexOfLastPost)
-  const totalPages = Math.ceil(list.length / postsPerPage)
+  const {
+    currentPage,
+    currentPosts,
+    totalPages,
+    indexOfFirstPost,
+    indexOfLastPost,
+    handlePageChange,
+    list: paginatedList,
+  } = usePagination(list, postsPerPage)
 
   // Tampilan loading
   if (loading)
@@ -61,7 +60,7 @@ const SavedPosts = () => {
           {/* Teks status paginasi */}
           <p className="mt-10 text-sm text-gray-600">
             Menampilkan {indexOfFirstPost + 1}-
-            {Math.min(indexOfLastPost, list.length)} dari {list.length}{" "}
+            {Math.min(indexOfLastPost, paginatedList.length)} dari {paginatedList.length}{" "}
             postingan yang disimpan
           </p>
         </div>

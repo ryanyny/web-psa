@@ -1,5 +1,6 @@
 import { useEffect, useState, useContext } from "react"
 import { posts } from "../../http/index.js"
+import usePagination from "../../hooks/usePagination.js"
 import AuthContext from "../../context/AuthContext.jsx"
 import PostCard from "../../components/blog/PostCard.jsx"
 import Pagination from "../../components/blog/Pagination.jsx"
@@ -7,7 +8,6 @@ import Pagination from "../../components/blog/Pagination.jsx"
 const MyPosts = () => {
   const { user } = useContext(AuthContext)
   const [list, setList] = useState([])
-  const [currentPage, setCurrentPage] = useState(1)
   const [loading, setLoading] = useState(true)
 
   const postsPerPage = 9 // Jumlah post yang ditampilkan per halaman
@@ -18,6 +18,8 @@ const MyPosts = () => {
     if (!user?.id) return
 
     const fetch = async () => {
+      setLoading(true)
+      
       try {
         // Ambil semua postingan
         const res = await posts.getAll()
@@ -38,17 +40,14 @@ const MyPosts = () => {
     fetch()
   }, [user?.id]) // Dependency user.id: jalankan ulang ketika user terautentikasi berubah
 
-  const handlePageChange = (page) => {
-    setCurrentPage(page)
-    // Gulir ke atas halaman agar user melihat post baru
-    window.scrollTo({ top: 0, behavior: "smooth" })
-  }
-
-  // --- Logika paginasi ---
-  const indexOfLastPost = currentPage * postsPerPage
-  const indexOfFirstPost = indexOfLastPost - postsPerPage
-  const currentPosts = list.slice(indexOfFirstPost, indexOfLastPost)
-  const totalPages = Math.ceil(list.length / postsPerPage)
+  const {
+    currentPage,
+    currentPosts,
+    totalPages,
+    indexOfFirstPost,
+    indexOfLastPost,
+    handlePageChange,
+  } = usePagination(list, postsPerPage)
 
   // Tampilan loading
   if (loading)

@@ -1,9 +1,11 @@
 import { useEffect, useState, useContext, useCallback } from "react"
 import { useParams, useNavigate, Link } from "react-router-dom"
 import { toast } from "react-toastify"
-import { Heart } from "lucide-react"
-import { Bookmark } from "lucide-react"
+import { Heart, Bookmark } from "lucide-react"
 import { posts, categories, comments, likes, bookmarks } from "../../http/index.js"
+import { usePostLikes, usePostBookmarks } from "../../hooks/usePostInteraction.js"
+import { updateNestedComment, filterNestedComments } from "../../utils/commentUtils.js"
+import { formatIndonesianDate } from "../../utils/formatters.js"
 import AuthContext from "../../context/AuthContext.jsx"
 import PostCard from "../../components/blog/PostCard.jsx"
 import ReadingProgress from "../../components/blog/ReadingProgress.jsx"
@@ -17,102 +19,74 @@ const PostDetail = () => {
 
   const [post, setPost] = useState(null)
   const [relatedPosts, setRelatedPosts] = useState([])
-
   const [commentsList, setCommentsList] = useState([])
   const [commentToDeleteId, setCommentToDeleteId] = useState(null)
-
-  const [likeCount, setLikeCount] = useState(0)
-  const [userLiked, setUserLiked] = useState(false)
-
-  const [bookmarkCount, setBookmarkCount] = useState(0)
-  const [userBookmarked, setUserBookmarked] = useState(false)
-
   const [showPostModal, setShowPostModal] = useState(false)
   const [showCommentModal, setShowCommentModal] = useState(false)
   const [loading, setLoading] = useState(true)
   const [commentsLoading, setCommentsLoading] = useState(true)
 
+  // --- Hook interaksi like & bookmark ---
+  const {
+    likeCount,
+    userLiked,
+    handleToggleLike,
+    setLikeCount,
+    setUserLiked,
+  } = usePostLikes(id, user, 0, false)
+
+  const {
+    bookmarkCount,
+    userBookmarked,
+    handleToggleBookmark,
+    setBookmarkCount,
+    setUserBookmarked,
+  } = usePostBookmarks(id, user, 0, false)
+
   // --- Fungsi pengambilan data ---
-  const fetchPostData = useCallback(async () => {
+  const fetchPostDetail = useCallback(async () => {
     setLoading(true)
 
+    const fetchers = [
+      posts.getById(id),
+      comments.getCommentsByPost(id).then(res => res.data),
+      likes.get(id).then(res => res.data),
+      bookmarks.getSummary(id).then(res => res.data),
+    ]
+
     try {
-      const res = await posts.getById(id)
-      setPost(res.data)
+      const [postRes, commentsData, likesData, bookmarksData] = await Promise.all(fetchers)
+
+      setPost(postRes.data)
+      setCommentsList(commentsData)
+      setLikeCount(likesData.totalLikes ?? 0)
+      setUserLiked(likesData.userLiked ?? false)
+      setBookmarkCount(bookmarksData.totalBookmarks ?? 0)
+      setUserBookmarked(bookmarksData.userBookmarked ?? false)
 
       // Ambil postingan terkait
-      if (res.data.categories && res.data.categories.length > 0) {
-        const primaryCategoryId = res.data.categories[0].id
+      if (postRes.data.categories && postRes.data.categories.length > 0) {
+        const primaryCategoryId = postRes.data.categories[0].id
         const relatedRes = await categories.getPosts(primaryCategoryId)
         const filteredRelated = relatedRes.data
-          .filter((p) => String(p.id) !== id) // Kecualikan post saat ini
-          .slice(0, 3) // Ambil maksimal 3 post
+          .filter((p) => String(p.id) !== id)
+          .slice(0, 3)
         setRelatedPosts(filteredRelated)
       }
     } catch (error) {
       console.error(error)
+      if (error.response && error.response.status === 404) {
+        setPost(null)
+      }
     } finally {
       setLoading(false)
-    }
-  }, [id])
-
-  const fetchComments = useCallback(async () => {
-    if (!id) return
-
-    setCommentsLoading(true)
-
-    try {
-      const res = await comments.getCommentsByPost(id) // Ambil komentar dengan balasan bersarang
-      setCommentsList(res.data)
-    } catch (error) {
-      console.error("Failed to load comment:", error)
-    } finally {
       setCommentsLoading(false)
     }
-  }, [id])
+  }, [id, setLikeCount, setUserLiked, setBookmarkCount, setUserBookmarked])
 
-  const fetchLikes = useCallback(async () => {
-    if (!id) return
-
-    try {
-      const res = await likes.get(id) // Ambil total like dan status user liked
-
-      setLikeCount(res.data.totalLikes ?? 0)
-      setUserLiked(res.data.userLiked ?? false)
-    } catch (error) {
-      console.error("Failed to load likes:", error)
-    }
-  }, [id])
-
-  const fetchBookmarks = useCallback(async () => {
-    if (!id) return
-
-    try {
-      const res = await bookmarks.getSummary(id) // Ambil total bookmark dan status user bookmarked
-
-      setBookmarkCount(res.data.totalBookmarks ?? 0)
-      setUserBookmarked(res.data.userBookmarked ?? false)
-    } catch (error) {
-      console.error("Failed to load bookmarks", error)
-    }
-  }, [id])
-
-  // --- useEffect utama: Menggabungkan semua fetching ---
   useEffect(() => {
-    (async () => {
-      setLoading(true)
-
-      // Menjalankan semua fetching secara paralel
-      await Promise.allSettled([
-        fetchPostData(),
-        fetchComments(),
-        fetchLikes(),
-        fetchBookmarks(),
-      ])
-
-      setLoading(false)
-    })()
-  }, [id, fetchPostData, fetchComments, fetchLikes, fetchBookmarks])
+    fetchPostDetail()
+  }, [id, fetchPostDetail])
 
   // --- Handler aksi post (hapus) ---
   const handleDeletePost = async () => {
@@ -129,7 +103,6 @@ const PostDetail = () => {
   }
 
   // --- Handler aksi komentar (tambah, balas, edit, hapus) ---
-
   const handleCommentAdded = (newComment) => {
     const commentWithRepliesInit = { ...newComment, replies: [] }
     setCommentsList((prev) => [commentWithRepliesInit, ...prev])
@@ -151,22 +124,13 @@ const PostDetail = () => {
   const handleEditComment = useCallback(async (commentId, newContent) => {
     try {
       const res = await comments.update(commentId, { content: newContent })
-      const updatedCommentData = res.data.comment
+      const updatedContent = res.data.comment.content
 
       toast.success("Komentar berhasil diperbarui!")
 
-      setCommentsList((prevList) => {
-        const updateRecursively = (arr) =>
-          arr.map((c) => {
-            if (c.id === commentId)
-              return { ...c, content: updatedCommentData.content }
-            if (c.replies)
-              return { ...c, replies: updateRecursively(c.replies) }
-            return c
-          })
-
-        return updateRecursively(prevList)
-      })
+      setCommentsList((prevList) =>
+        updateNestedComment(prevList, commentId, updatedContent)
+      )
     } catch (error) {
       console.error("Gagal mengedit komentar:", error)
       toast.error(error.response?.data?.message || "Gagal memperbarui komentar!")
@@ -185,17 +149,9 @@ const PostDetail = () => {
       await comments.remove(commentToDeleteId)
       toast.success("Komentar berhasil dihapus!")
 
-      setCommentsList((prevList) => {
-        const filterRecursively = (arr) =>
-          arr.filter((c) => {
-            if (c.id === commentToDeleteId) return false
-            if (c.replies) c.replies = filterRecursively(c.replies)
-
-            return true
-          })
-
-        return filterRecursively(prevList)
-      })
+      setCommentsList((prevList) =>
+        filterNestedComments(prevList, commentToDeleteId)
+      )
     } catch (error) {
       toast.error(error.response?.data?.message || "Gagal menghapus komentar.")
     } finally {
@@ -203,44 +159,6 @@ const PostDetail = () => {
       setCommentToDeleteId(null)
     }
   }, [commentToDeleteId])
-
-  // --- Handler interaksi (like & bookmark)
-
-  const handleToggleLike = async () => {
-    if (!user) return toast.info("Login untuk menyukai postingan ini!")
-
-    try {
-      const res = await likes.toggle(id)
-
-      if (res.data.liked) {
-        setLikeCount((prev) => prev + 1)
-        setUserLiked(true)
-      } else {
-        setLikeCount((prev) => Math.max(prev - 1, 0))
-        setUserLiked(false)
-      }
-    } catch (error) {
-      console.error("Failed toggle like:", error)
-    }
-  }
-
-  const handleToggleBookmark = async () => {
-    if (!user) return toast.info("Login untuk menyimpan postingan!")
-
-    try {
-      const res = await bookmarks.toggle(id)
-
-      if (res.data.bookmarked) {
-        setBookmarkCount((prev) => prev + 1)
-        setUserBookmarked(true)
-      } else {
-        setBookmarkCount((prev) => Math.max(prev - 1, 0))
-        setUserBookmarked(false)
-      }
-    } catch (error) {
-      console.error("Failed toggle bookmark: ", error)
-    }
-  }
 
   // Tampilan loading
   if (loading)
@@ -306,12 +224,7 @@ const PostDetail = () => {
           </span>{" "}
           —{" "}
           <span className="font-light">
-            {new Date(post.createdAt).toLocaleDateString("id-ID", {
-              weekday: "long",
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })}
+            {formatIndonesianDate(post.createdAt)}
           </span>
         </p>
         

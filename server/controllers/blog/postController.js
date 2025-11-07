@@ -176,26 +176,38 @@ export const updatePost = async (req, res, next) => {
       throw new Error("Not authorized to update this post!")
     }
 
+    const shouldDeleteImage = req.body.delete_image === "true"
+
+    let newImageLink = post.image
+
     // Logika update gambar: Jika ada file baru diunggah dan post lama punya gambar
-    if (req.file && post.image) {
-      // Hapus file gambar lama dari direktori "uploads"
+    if (req.file) {
+      if (post.image) {
+        const oldImagePath = path.join(
+          process.cwd(),
+          "uploads",
+          path.basename(post.image)
+        )
+        deleteFileIfExists(oldImagePath)
+      }
+
+      newImageLink = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`
+    } else if (shouldDeleteImage && post.image) {
       const oldImagePath = path.join(
         process.cwd(),
         "uploads",
         path.basename(post.image)
       )
-      deleteFileIfExists(oldImagePath)
 
-      // Update URL gambar di database dengan file yang baru 
-      post.image = `${req.protocol}://${req.get("host")}/uploads/${
-        req.file.filename
-      }`
+      deleteFileIfExists(oldImagePath)
+      newImageLink = null
     }
 
     // Update field title, content, dan excerpt jika ada di body request
     post.title = req.body.title || post.title
     post.content = req.body.content || post.content
     post.excerpt = req.body.excerpt || post.excerpt
+    post.image = newImageLink
 
     // Simpan perubahan data post
     await post.save()
