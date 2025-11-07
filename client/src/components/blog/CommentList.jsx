@@ -26,7 +26,7 @@ const CommentList = ({
         const [editContent, setEditContent] = useState("")
         const [replyingToId, setReplyingToId] = useState(null)
 
-        const isCommentAuthor = currentUser && currentUser.id === comment.authorI
+        const isCommentAuthor = currentUser && currentUser.id === comment.authorId
         const isPostAuthor = currentUser && currentUser.id === postAuthorId
 
         const canDelete = isCommentAuthor || isPostAuthor

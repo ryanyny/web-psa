@@ -1,5 +1,6 @@
 import { Heart } from "lucide-react"
 import { Link } from "react-router-dom"
+import { formatIndonesianDate } from "../../utils/formatters"
 
 const PostCard = ({ post }) => {
   // --- Render utama ---
@@ -56,11 +57,7 @@ const PostCard = ({ post }) => {
             {post.author?.name || "Penulis Tak Dikenal"}
           </span>{" "}
           —{" "}
-          {new Date(post.createdAt).toLocaleDateString("id-ID", {
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-          })}
+          {formatIndonesianDate(post.createdAt)}
         </p>
 
         {/* Ringkasan post */}
