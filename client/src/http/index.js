@@ -64,4 +64,14 @@ export const email = {
     checkEmail: (email) => axiosWrapper.post("/api/check-email",{email}),
 }
 
-export default { auth, posts, upload, categories, comments, likes, bookmarks, applicants, email }
+export const admin = {
+    stats: () => axiosWrapper.get("/api/admin/stats"),
+    getUsers: () => axiosWrapper.get("/api/admin/users"),
+    updateUserRole: (id, role) => axiosWrapper.put(`/api/admin/users/${id}/role`, { role }),
+    deleteUser: (id) => axiosWrapper.delete(`/api/admin/users/${id}`),
+
+    getPosts: () => axiosWrapper.get("/api/admin/posts"),
+    deletePost: (id) => axiosWrapper.delete(`/api/admin/posts/${id}`),
+}
+
+export default { auth, posts, upload, categories, comments, likes, bookmarks, applicants, email, admin }

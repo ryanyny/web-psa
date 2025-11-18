@@ -28,10 +28,10 @@ const cookieOptionsClear = {
 // --- Controller: REGISTER ---
 export const register = async (req, res, next) => {
   try {
-    const { name, email, password } = req.body
+    const { name, email, gender, role, password } = req.body
 
     // Validasi: Semua field wajib diisi
-    if (!name || !email || !password) {
+    if (!name || !email || !gender || !role || !password) {
       res.status(400)
       throw new Error("Please fill in all fields!")
     }
@@ -44,7 +44,7 @@ export const register = async (req, res, next) => {
     }
 
     // Buat user baru
-    const user = await User.create({ name, email, password })
+    const user = await User.create({ name, email, gender, role, password })
     const token = generateToken(user.id)
 
     // Set token sebagai cookie
@@ -56,6 +56,7 @@ export const register = async (req, res, next) => {
         id: user.id,
         name: user.name,
         email: user.email,
+        gender: user.gender,
         role: user.role
       },
     })

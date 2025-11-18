@@ -6,12 +6,14 @@ import categoryRoutes from "./blog/categoryRoutes.js"
 import commentRoutes from "./blog/commentRoutes.js"
 import likeRoutes from "./blog/likeRoutes.js"
 import bookmarkRoutes from "./blog/bookmarkRoutes.js"
+import adminRoutes from "./adminRoutes.js"
 
 const router = express.Router()
 
 // Routes dasar / global
 router.use("/auth", authRoutes)
 router.use("/upload", uploadRoutes)
+router.use("/admin", adminRoutes)
 
 // Routes blog
 router.use("/posts", postRoutes)

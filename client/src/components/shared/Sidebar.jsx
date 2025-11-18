@@ -1,138 +1,65 @@
-import { useNavigate, useLocation, Link } from "react-router-dom";
-import React from "react";
+import { useContext } from "react"
+import { useNavigate, useLocation, Link } from "react-router-dom"
+import { Home, LayoutDashboard, FolderKanban, Users, FileText, MessageCircle, HelpCircle, Notebook } from "lucide-react"
+import AuthContext from "../../context/AuthContext.jsx"
 
 export default function Sidebar() {
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    navigate("/");
-  };
+  const navigate = useNavigate()
+  const location = useLocation()
+  const { logout } = useContext(AuthContext)
 
   const menuItems = [
     {
       label: "Dashboard",
       path: "/dashboard-admin",
-      icon: (
-        <svg
-          className="w-5 h-5 mr-3"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-        >
-          <path d="M3 12l2-2m0 0l7-7 7 7M13 5v6h6m-6 0H7v6h10v-6h-4z" />
-        </svg>
-      ),
+      icon: <Home className="w-5 h-5 mr-3" />,
+    },
+    {
+      label: "Dashboard Blog",
+      path: "/blog/dashboard-admin",
+      icon: <LayoutDashboard className="w-5 h-5 mr-3" />,
     },
     {
       label: "Program",
       path: "/program-admin",
-      icon: (
-        <svg
-          className="w-5 h-5 mr-3"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-        >
-          <path d="M9 12h6m2 0a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v3a2 2 0 002 2z" />
-        </svg>
-      ),
+      icon: <Notebook className="w-5 h-5 mr-3" />,
     },
     {
       label: "Mitra",
       path: "/mitra-admin",
-      icon: (
-        <svg
-          className="w-5 h-5 mr-3"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-        >
-          <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M9 20H4v-2a3 3 0 015.356-1.857M16 11a4 4 0 10-8 0 4 4 0 008 0z" />
-        </svg>
-      ),
+      icon: <Users className="w-5 h-5 mr-3" />,
     },
     {
       label: "Data Peserta",
       path: "/peserta-admin",
-      icon: (
-        <svg
-          className="w-5 h-5 mr-3"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M5.121 17.804A9 9 0 1118.88 17.804M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-          />
-        </svg>
-      ),
+      icon: <Users className="w-5 h-5 mr-3" />,
     },
     {
       label: "Data Testimoni",
       path: "/testimoni-admin",
-      icon: (
-        <svg
-          className="w-5 h-5 mr-3"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M9 12h6m-6 4h6M9 8h.01M4 6a2 2 0 012-2h12a2 2 0 012 2v14l-4-4H6a2 2 0 01-2-2V6z"
-          />
-        </svg>
-      ),
+      icon: <MessageCircle className="w-5 h-5 mr-3" />,
     },
     {
       label: "Data FAQ",
       path: "/FAQ-admin",
-      icon: (
-        <svg
-          className="w-5 h-5 mr-3"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M9 12h6m-6 4h6M9 8h.01M4 6a2 2 0 012-2h12a2 2 0 012 2v14l-4-4H6a2 2 0 01-2-2V6z"
-          />
-        </svg>
-      ),
+      icon: <HelpCircle className="w-5 h-5 mr-3" />,
     },
     {
-      label: "Data Kategori",
-      path: "/kategori-admin",
-      icon: (
-        <svg
-          className="w-5 h-5 mr-3"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M9 12h6m-6 4h6M9 8h.01M4 6a2 2 0 012-2h12a2 2 0 012 2v14l-4-4H6a2 2 0 01-2-2V6z"
-          />
-        </svg>
-      ),
+      label: "Data Pengguna",
+      path: "/blog/manage-users-admin",
+      icon: <Users className="w-5 h-5 mr-3" />,
     },
-  ];
+    {
+      label: "Data Postingan",
+      path: "/blog/manage-posts-admin",
+      icon: <FileText className="w-5 h-5 mr-3" />,
+    },
+  ]
+
+  const handleLogout = async () => {
+    await logout()
+    navigate("/")
+  }
 
   return (
     <div className="fixed top-0 left-0 w-64 h-screen bg-gray-900 text-white flex flex-col shadow-xl z-50">
@@ -177,5 +104,5 @@ export default function Sidebar() {
         </div>
       </nav>
     </div>
-  );
+  )
 }

@@ -42,11 +42,13 @@ import LoginRecruiter from "./pages/screening/Login"
 
 // Halaman admin
 import DashboardAdmin from "./pages/admin/DashboardAdmin"
+import DashboardBlog from "./pages/admin/blog/DashboardBlog"
 import ProgramAdmin from "./pages/admin/ProgramAdmin"
 import MitraAdmin from "./pages/admin/MitraAdmin"
 import PesertaAdmin from "./pages/admin/PesertaAdmin"
 import TestimoniAdmin from "./pages/admin/TestimoniAdmin"
-import KategoriAdmin from "./pages/admin/KategoriAdmin"
+import ManageUsersAdmin from "./pages/admin/blog/ManageUsersAdmin"
+import ManagePostsAdmin from "./pages/admin/blog/ManagePostsAdmin"
 
 function App() {
   return (
@@ -288,6 +290,14 @@ function App() {
           }
         />
         <Route
+          path="/blog/dashboard-admin"
+          element={
+            <AdminLayout>
+              <DashboardBlog />
+            </AdminLayout>
+          }
+        />
+        <Route
           path="/program-admin"
           element={
             <AdminLayout>
@@ -320,13 +330,19 @@ function App() {
           }
         />
         <Route
-          path="/kategori-admin"
+          path="/blog/manage-users-admin"
           element={
             <AdminLayout>
-              <KategoriAdmin />
+              <ManageUsersAdmin />
             </AdminLayout>
-          }
-        />
+          } />
+        <Route
+          path="/blog/manage-posts-admin"
+          element={
+            <AdminLayout>
+              <ManagePostsAdmin />
+            </AdminLayout>
+          } />
         
 
         {/* Catch-all route untuk penanganan error 404 */}
