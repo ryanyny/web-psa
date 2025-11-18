@@ -56,7 +56,8 @@ export const register = async (req, res, next) => {
         id: user.id,
         name: user.name,
         email: user.email,
-        role: user.role
+        role: user.role,
+        isApproved: user.isApproved
       },
     })
   } catch (error) {
@@ -101,6 +102,7 @@ export const login = async (req, res, next) => {
         name: user.name,
         email: user.email,
         role: user.role,
+        isApproved: user.isApproved
       },
     })
   } catch (error) {
