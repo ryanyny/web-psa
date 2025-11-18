@@ -5,6 +5,7 @@ import ScrollToTop from "./components/shared/ScrollToTop"
 
 // Layout
 import UserLayout from "./layouts/UserLayout"
+import RecruiterLayout from "./layouts/RecruiterLayout"
 import AdminLayout from "./layouts/AdminLayout"
 
 // Halaman autentikasi
@@ -241,8 +242,8 @@ function App() {
   <Route path="/punya-skill-connect" element={<RecruiterAuthProvider><Outlet /></RecruiterAuthProvider>}>
           <Route index element={<WelcomeFormPage />} />
           <Route path="form" element={<ApplicantFormPage />} />
-          <Route path="applicants" element={<ScreeningProtectedRoute><ApplicantListPage /></ScreeningProtectedRoute>} />
-          <Route path="applicants/:id" element={<ScreeningProtectedRoute><ApplicantDetailPage /></ScreeningProtectedRoute>} />
+          <Route path="applicants" element={<RecruiterLayout><ScreeningProtectedRoute><ApplicantListPage /></ScreeningProtectedRoute></RecruiterLayout>} />
+          <Route path="applicants/:id" element={<RecruiterLayout><ScreeningProtectedRoute><ApplicantDetailPage /></ScreeningProtectedRoute></RecruiterLayout>} />
           <Route path="login" element={<LoginRecruiter />} />
           <Route path="register" element={<RegisterRecruiter />} />
           <Route path="thank-you" element={<ThankYouForRegister />} />
