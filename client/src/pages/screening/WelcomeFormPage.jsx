@@ -37,35 +37,48 @@ export default function Home() {
                 kerja dengan mitra Punya Skill Akademi, baik itu pekerjaan full-time, freelance, magang, atau project, </b> kamu punya peluang lebih besar karena profilmu merupakan 
                 alumni Punya Skill Akademi.
             </p>
-
-            <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
-              <div className="text-sm text-yellow-700">
-                <p><span className="font-semibold">Tips:</span><br />Siapkan dokumen dan 
-                informasi yang diperlukan sebelum mulai mengisi form sebagai berikut:</p>
-                <ul className="list-disc list-inside mt-2 space-y-1">
-                    <li>
-                        Curriculum Vitae (CV)
-                    </li>
-                    <li>
-                        Portofolio
-                    </li>
-                    <li>
-                        Pas Photo
-                    </li>
-                    <li>
-                        Data Diri
-                    </li>
-                </ul>
-              </div>
-            </div>
           </div>
-          <div className="flex justify-end">
-            <Link 
+          <div className="border-t border-gray-200 pt-8 mt-8">
+            <h2 className="text-xl font-semibold text-gray-800 text-center mb-6">
+              Bergabunglah Bersama Kami
+            </h2>
+            
+            <div className="flex flex-col md:flex-row gap-10 justify-center items-center">
+              {/* Button Alumni */}
+              <Link
                 to="/punya-skill-connect/form"
-                className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-            >
-                Lanjutkan ke Pendaftaran
-            </Link>
+                className="group relative flex items-center gap-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-8 rounded-lg shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300 w-full md:w-auto"
+              >
+                <div className="bg-white bg-opacity-20 rounded-full p-2">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                  </svg>
+                </div>
+                <span className="text-lg">Daftar Sebagai Alumni</span>
+                <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+
+              {/* Divider */}
+              <div className="hidden md:block text-gray-400 text-lg font-light">atau</div>
+
+              {/* Button Mitra */}
+              <Link
+                to="/punya-skill-connect/register"
+                className="group relative flex items-center gap-3 bg-green-600 hover:bg-green-700 text-white font-semibold py-4 px-8 rounded-lg shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300 w-full md:w-auto"
+              >
+                <div className="bg-white bg-opacity-20 rounded-full p-2">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  </svg>
+                </div>
+                <span className="text-lg">Daftar Sebagai Mitra</span>
+                <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

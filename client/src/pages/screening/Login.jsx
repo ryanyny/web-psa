@@ -1,35 +1,30 @@
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import AuthContext from "../../context/AuthContext.jsx"; // Pastikan path ini benar
+import RecruiterAuthContext from "../../context/RecruiterAuthContext";
 import psaImg from "../../assets/images/img-logo-PSA.png";
 
 const LoginRecruiter = () => {
-  // Ambil fungsi login dan status loading dari AuthContext
-  const { login, loading } = useContext(AuthContext);
-
+  // Ambil fungsi login dan status loading dari RecruiterAuthContext
+  const { login, loading } = useContext(RecruiterAuthContext);
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(""); // State untuk pesan error
+  const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); // Reset error setiap kali submit
-
+    setError("");
+    setIsSubmitting(true);
     try {
-      // Panggil fungsi login dari context. Logikanya sudah terpusat di sana.
-      const user = await login({ email, password });
-
-      // Pastikan user yang login punya role recruiter
-      if (user?.role === 'recruiter') {
-        navigate("/punya-skill-connect/applicants");
-      } else {
-        setError('Akun tidak memiliki izin recruiter.');
-      }
-
+      // login di context sudah validasi role dan isApproved
+      await login({ email, password });
+      navigate("/punya-skill-connect/applicants");
     } catch (err) {
-      // Tangkap error yang dilempar dari fungsi login di context
-      setError(err.message || "Email atau password salah. Silakan coba lagi.");
+      setError(err.message || "Email atau password salah atau akun belum di-approve.");
+    }
+    finally {
+      setIsSubmitting(false);
     }
   };
   return (
@@ -81,10 +76,15 @@ const LoginRecruiter = () => {
               <button
                 type="submit"
                 className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-blue-300"
-                disabled={loading} // Tombol dinonaktifkan saat loading
+                disabled={isSubmitting} // Tombol dinonaktifkan hanya saat submit
               >
-                {loading ? "Memproses..." : "Masuk"}
+                {isSubmitting ? "Memproses..." : "Masuk"}
               </button>
+
+              {/* Jika provider masih memeriksa sesi, beri tahu pengguna (tidak menonaktifkan tombol) */}
+              {/* {loading && (
+                <p className="text-sm text-gray-500 mt-2 text-center">Memeriksa sesi, tunggu sebentar...</p>
+              )} */}
             </form>
           </div>
         </div>

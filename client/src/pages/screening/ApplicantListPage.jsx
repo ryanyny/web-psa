@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { applicants as applicantsApi } from '../../http/index.js';
-import AuthContext from '../../context/AuthContext.jsx';
+import RecruiterAuthContext from '../../context/RecruiterAuthContext.jsx';
 
 const ApplicantListPage = () => {
   const [applicants, setApplicants] = useState([]);
@@ -9,16 +9,16 @@ const ApplicantListPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const { logout } = useContext(AuthContext);
+  const { logout } = useContext(RecruiterAuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchApplicants = async () => {
       try {
         setLoading(true);
+        // Panggil fungsi getAll dari file http/index.js
         const response = await applicantsApi.getAll(); 
         setApplicants(response.data);
-        setFilteredApplicants(response.data); // Initialize filtered applicants
       } catch (err) {
         setError('Gagal memuat data pelamar. Silakan coba lagi nanti.');
         console.error("Fetch error:", err);
