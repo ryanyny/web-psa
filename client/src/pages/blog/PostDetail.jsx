@@ -11,6 +11,7 @@ import PostCard from "../../components/blog/PostCard.jsx"
 import ReadingProgress from "../../components/blog/ReadingProgress.jsx"
 import CommentForm from "../../components/blog/CommentForm.jsx"
 import CommentList from "../../components/blog/CommentList.jsx"
+import ConfirmModal from "../../components/shared/confirmModal.jsx"
 
 const PostDetail = () => {
   const { id } = useParams()
@@ -349,60 +350,26 @@ const PostDetail = () => {
       </div>
 
       {/* Modal konfirmasi hapus post */}
-      {showPostModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50">
-          <div className="bg-white rounded-xl shadow-xl p-6 w-80 text-center">
-            <h2 className="text-lg font-semibold mb-3">
-              Yakin mau hapus blog ini?
-            </h2>
-            <p className="text-gray-500 mb-5 text-sm">
-              Aksi ini tidak bisa dibatalkan setelah dilakukan.
-            </p>
-            <div className="flex justify-center gap-3">
-              <button
-                onClick={() => setShowPostModal(false)}
-                className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100 transition"
-              >
-                Batal
-              </button>
-              <button
-                onClick={handleDeletePost}
-                className="px-4 py-2 rounded-lg bg-brand-pink text-white hover:bg-brand-pink/90 transition"
-              >
-                Hapus
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ConfirmModal
+        open={showPostModal}
+        title="Yakin mau hapus blog ini?"
+        message="Aksi ini tidak bisa dibatalkan setelah dilakukan."
+        confirmText="Hapus"
+        cancelText="Batal"
+        onCancel={() => setShowPostModal(false)}
+        onConfirm={handleDeletePost}
+      />
 
       {/* Modal konfirmasi hapus komentar */}
-      {showCommentModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50">
-          <div className="bg-white rounded-xl shadow-xl p-6 w-80 text-center">
-            <h2 className="text-lg font-semibold mb-3">
-              Yakin mau hapus komentar ini?
-            </h2>
-            <p className="text-gray-500 mb-5 text-sm">
-              Aksi ini tidak bisa dibatalkan setelah dilakukan.
-            </p>
-            <div className="flex justify-center gap-3">
-              <button
-                onClick={() => setShowCommentModal(false)}
-                className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100 transition"
-              >
-                Batal
-              </button>
-              <button
-                onClick={confirmDeleteComment}
-                className="px-4 py-2 rounded-lg bg-brand-pink text-white hover:bg-brand-pink/90 transition"
-              >
-                Hapus
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ConfirmModal
+        open={showCommentModal}
+        title="Yakin mau hapus komentar ini?"
+        message="Aksi ini tidak bisa dibatalkan setelah dilakukan."
+        confirmText="Hapus"
+        cancelText="Batal"
+        onCancel={() => setShowCommentModal(false)}
+        onConfirm={confirmDeleteComment}
+      />
     </div>
   )
 }

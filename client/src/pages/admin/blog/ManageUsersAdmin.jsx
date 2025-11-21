@@ -29,9 +29,7 @@ export default function ManageUsersAdmin() {
         const newRole = u.role === "admin" ? "user" : "admin"
         
         try {
-            await admin.updateUserRole({
-                role: newRole
-            })
+            await admin.updateUserRole(u.id, newRole)
 
         fetchUsers()
         } catch (e) {
