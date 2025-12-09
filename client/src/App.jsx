@@ -1,10 +1,11 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom"
 import { ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import ScrollToTop from "./components/shared/ScrollToTop"
 
 // Layout
 import UserLayout from "./layouts/UserLayout"
+import RecruiterLayout from "./layouts/RecruiterLayout"
 import AdminLayout from "./layouts/AdminLayout"
 
 // Halaman autentikasi
@@ -38,7 +39,9 @@ import ApplicantFormPage from "./pages/screening/ApplicantFormPage"
 import ApplicantListPage from "./pages/screening/ApplicantListPage"
 import ApplicantDetailPage  from "./pages/screening/ApplicantDetailPage"
 import LoginRecruiter from "./pages/screening/Login"
+import RegisterRecruiter from "./pages/screening/Register"
 import ScreeningProtectedRoute from "./components/screening/ProtectedRoute"
+import { RecruiterAuthProvider } from "./context/RecruiterAuthContext"
 
 // Halaman admin
 import DashboardAdmin from "./pages/admin/DashboardAdmin"
@@ -47,6 +50,7 @@ import MitraAdmin from "./pages/admin/MitraAdmin"
 import PesertaAdmin from "./pages/admin/PesertaAdmin"
 import TestimoniAdmin from "./pages/admin/TestimoniAdmin"
 import KategoriAdmin from "./pages/admin/KategoriAdmin"
+import ThankYouForRegister from "./pages/screening/ThanksForRegisterPage"
 
 function App() {
   return (
@@ -235,44 +239,15 @@ function App() {
         />
 
                 {/* ====== Punya Skill Connect ====== */}
-        <Route 
-          path="/punya-skill-connect" 
-          element={
-            <WelcomeFormPage />
-          } 
-        />
-
-        <Route 
-          path="/punya-skill-connect/form" 
-          element={
-            <ApplicantFormPage />
-          } 
-        />
-
-        <Route 
-          path="/punya-skill-connect/applicants" 
-          element={
-            <ScreeningProtectedRoute>
-              <ApplicantListPage />
-            </ScreeningProtectedRoute>
-          } 
-        />
-        
-        <Route 
-          path="/punya-skill-connect/applicants/:id" 
-          element={
-            <ScreeningProtectedRoute>
-              <ApplicantDetailPage />
-            </ScreeningProtectedRoute>
-          } 
-        />
-
-        <Route 
-          path="/punya-skill-connect/login" 
-          element={
-            <LoginRecruiter />
-          } 
-        />
+  <Route path="/punya-skill-connect" element={<RecruiterAuthProvider><Outlet /></RecruiterAuthProvider>}>
+          <Route index element={<WelcomeFormPage />} />
+          <Route path="form" element={<ApplicantFormPage />} />
+          <Route path="applicants" element={<RecruiterLayout><ScreeningProtectedRoute><ApplicantListPage /></ScreeningProtectedRoute></RecruiterLayout>} />
+          <Route path="applicants/:id" element={<RecruiterLayout><ScreeningProtectedRoute><ApplicantDetailPage /></ScreeningProtectedRoute></RecruiterLayout>} />
+          <Route path="login" element={<LoginRecruiter />} />
+          <Route path="register" element={<RegisterRecruiter />} />
+          <Route path="thank-you" element={<ThankYouForRegister />} />
+        </Route>
 
         {/* ==========================
             Rute admin

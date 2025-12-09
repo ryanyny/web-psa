@@ -2,9 +2,9 @@ import { DataTypes, Model } from "sequelize"
 import bcrypt from "bcrypt"
 import sequelize from "../config/database.js"
 
-// Mendefinisikan class User yang mewarisi Model Sequelize
+// Definisi model User
 class User extends Model {
-    // Metode instance: Membandingkan password yang dimasukkan dengan hash password di database
+    // Method untuk compare password input dengan hash di database
     async matchPassword(enteredPassword) {
         return await bcrypt.compare(enteredPassword, this.password)
     }
@@ -40,6 +40,11 @@ User.init(
         password: {
             type: DataTypes.STRING,
             allowNull: false,
+        },
+        isApproved: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: false,
         },
     },
     {
